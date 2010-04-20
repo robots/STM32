@@ -16,7 +16,7 @@ void LisXXX_Init() {
 	ReadReg(&val, WHO_AM_I);    // have to be 0x3A
 	
 	// Set CTRL_REG1
-	WriteReg(0xC7, CTRL_REG1);
+	WriteReg(0xC7, CTRL_REG1);// 40hz sampling ?
 	
 	// Set CTRL_REG2
 	WriteReg(0x55, CTRL_REG2);

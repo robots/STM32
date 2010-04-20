@@ -40,49 +40,44 @@ void nRF_ReadStatus() {
 }
 
 uint8_t nRF_ReadCmd(uint8_t cmd, uint8_t *buf, uint8_t size) {
-	uint8_t in[33]; // status + 32 max
-	uint8_t out[33]; // cmd + 32 nop
-	
+	uint8_t in_stat;
+	uint8_t in[32]; // 32 max
+	uint8_t out[32] = {0, }; // 32 nop
+
+	if (size > 32) return 0xff;
+
 	SPIx_Lock(SPI1);
 	
-	/* write the cmd */
-	memset(out, 0, 33);
-	out[0] = cmd;
-
 	NRF_CS_WRITE(Bit_RESET);
-	SPIx_TranscieveBuffer(SPI1, &nRFSPIConf, &out[0], size+1, &in[0], size+1);
+	// send out CMD, first received byte is STATUS reg
+	SPIx_TranscieveBuffer(SPI1, &nRFSPIConf, &cmd, 1, &in_stat, 1);
+	// receive register content
+	if (size > 0)
+		SPIx_TranscieveBuffer(SPI1, &nRFSPIConf, &out[0], size, &buf[0], size);
 	NRF_CS_WRITE(Bit_SET);
-	/* 
-	 * in[0] - status register content
-	 * in[1] - reg content
-	 */
 	SPIx_Unlock(SPI1);
 
-	memcpy(buf, &in[1], size);
-
-	return in[0];
+	return in_stat;
 
 }
 
 uint8_t nRF_WriteCmd(uint8_t cmd, uint8_t *buf, uint8_t size) {
-	uint8_t in[1];
-	uint8_t out[33]; // cmd + 32 max
+	uint8_t in_stat;
 	
+	if (size > 32) return 0xff;
+
 	SPIx_Lock(SPI1);
 	
-	/* write the cmd */
-	out[0] = cmd;
-	memcpy(&out[1], buf, size);
-
 	NRF_CS_WRITE(Bit_RESET);
-	SPIx_TranscieveBuffer(SPI1, &nRFSPIConf, &out[0], size+1, &in[0], 1);
+	// send out CMD, first received byte is STATUS reg
+	SPIx_TranscieveBuffer(SPI1, &nRFSPIConf, &cmd, 1, &in_stat, 1);
+	// send register content
+	if (size > 0)
+		SPIx_TranscieveBuffer(SPI1, &nRFSPIConf, &buf[0], size, NULL, 0);
 	NRF_CS_WRITE(Bit_SET);
-	/* 
-	 * in[0] - status register content
-	 */
 	SPIx_Unlock(SPI1);
 
-	return in[0];
+	return in_stat;
 }
 
 

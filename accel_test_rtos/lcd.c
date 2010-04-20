@@ -44,18 +44,13 @@ unsigned char  LcdCmd[LCD_CMD_SIZE];
 
 static void taskLCD( void *pvParameters );
 
+static void Delay(uint32_t a) { while (--a!=0); }
 
 void LCD_Init() {
 	xLCDMutex = xSemaphoreCreateMutex();
 	vSemaphoreCreateBinary(xLCDGo);
 	xTaskCreate( taskLCD, ( signed char * ) "LCD", configMINIMAL_STACK_SIZE, NULL, LCD_PRIORITY, NULL );
-
-}
-
-static void taskLCD( void *pvParameters ) {
-
-	const portTickType xDelay = 50 / portTICK_RATE_MS;
-
+	
 	LcdSPIConf.SPI_Direction = SPI_Direction_2Lines_FullDuplex;
 	LcdSPIConf.SPI_Mode = SPI_Mode_Master;
 	LcdSPIConf.SPI_DataSize = SPI_DataSize_8b;
@@ -71,18 +66,22 @@ static void taskLCD( void *pvParameters ) {
   // D/C high
   LCD_DC_WRITE(Bit_SET);
 
-  // LCD_E - disable
-  LCD_E_WRITE(Bit_SET);
-
 	// Set Reset pin (active low)
 	LCD_RESET_WRITE(Bit_SET);
+  // LCD_E - disable
+  LCD_E_WRITE(Bit_SET);
+	Delay(100000);
+
 
   // Toggle display reset pin.
   LCD_RESET_WRITE(Bit_RESET);
-  vTaskDelay(xDelay);
+	Delay(100000);
 	LCD_RESET_WRITE(Bit_SET);
-  vTaskDelay(xDelay);
+	Delay(100000);
 
+}
+
+static void taskLCD( void *pvParameters ) {
   // Send sequence of command
   LCD_CMD_Add(0x21);  // LCD Extended Commands.
   LCD_CMD_Add(0xC8);  // Set LCD Vop (Contrast).

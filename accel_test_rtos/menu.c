@@ -16,10 +16,11 @@
 #include "lisXXX.h"
 
 #include "ADIS1625x.h"
-#include "fixed-point.h"
-#include "quaternion.h"
-#include "vector.h"
-#include "matrix.h"
+
+#include "mems.h"
+#include "mems_quaternion.h"
+#include "mems_vector.h"
+#include "mems_matrix.h"
 
 
 #include "menu.h"
@@ -30,14 +31,12 @@ static void taskMenu(void *pvParameters);
 static void Menu_ContrastCallback();
 static void Menu_AccelRunRaw();
 static void Menu_AccelRunAligned();
+static void Menu_AccelCalib();
 static void Menu_AccelAlign();
 static void Menu_GyroRun();
 
 uint32_t blabla = 435;
 uint32_t contrast = 0x45;
-
-// rotation matrix for accelerometer
-struct matrix_t accel_rot;
 
 static const struct menuitem_t gyroMenu[] = {
 	{
@@ -61,7 +60,7 @@ static const struct menuitem_t accelMenu[] = {
 		.type = MENU_LABEL_INV,
 		.callback = 0,
 		{
-			.num = 4,
+			.num = 5,
 		},
 	},
 	{
@@ -73,6 +72,11 @@ static const struct menuitem_t accelMenu[] = {
 		.text = " Run Aligned  ",
 		.type = MENU_EXEC,
 		.callback = Menu_AccelRunAligned,
+	},
+	{
+		.text = " Calibrate    ",
+		.type = MENU_EXEC,
+		.callback = Menu_AccelCalib,
 	},
 	{
 		.text = " Alignment    ",
@@ -169,6 +173,8 @@ static void taskMenu(void *pvParameters) {
 	const portTickType xDelay = 100 / portTICK_RATE_MS;
 	uint16_t newPos;
 	const struct menuitem_t *menu;
+		
+	vTaskDelay(500 / portTICK_RATE_MS);
 
 	menuDepth = 0;
 	menuPosStack[menuDepth] = 1;
@@ -401,15 +407,15 @@ static void Menu_AccelRunAligned() {
 		vect_meas.coef[2] = (frac)accelRaw.az;
 
 	//	vector_normalize(&vect_meas);
-		matrix_mul(&vect_out, &accel_rot, &vect_meas);
+		matrix_mul(&vect_out, &mems_sensors.accel.align, &vect_meas);
 		
 		LCD_Clear();
 		LCD_Str(0, "     Accel    ", 1);
-		siprintf(buf, "x: %+06d", (int)vect_out.coef[0]);
+		sprintf(buf, "x: %0.2f", vect_out.coef[0]);
 		LCD_Str(2, buf, 0);
-		siprintf(buf, "y: %+06d", (int)vect_out.coef[1]);
+		sprintf(buf, "y: %0.2f", vect_out.coef[1]);
 		LCD_Str(3, buf, 0);
-		siprintf(buf, "z: %+06d", (int)vect_out.coef[2]);
+		sprintf(buf, "z: %0.2f", vect_out.coef[2]);
 		LCD_Str(4, buf, 0);
 		LCD_Str(5, "<-            ", 0);
 		LCD_Update();
@@ -452,11 +458,11 @@ static void Menu_AccelAlign() {
 		LCD_Str(0, "     Accel    ", 1);
 		siprintf(buf, "iter: %d", iter);
 		LCD_Str(1, buf, 0);
-		siprintf(buf, "x: %+06d", (int)vect_meas.coef[0]);
+		sprintf(buf, "x: %0.2f", vect_meas.coef[0]);
 		LCD_Str(2, buf, 0);
-		siprintf(buf, "y: %+06d", (int)vect_meas.coef[1]);
+		sprintf(buf, "y: %0.2f", vect_meas.coef[1]);
 		LCD_Str(3, buf, 0);
-		siprintf(buf, "z: %+06d", (int)vect_meas.coef[2]);
+		sprintf(buf, "z: %0.2f", vect_meas.coef[2]);
 		LCD_Str(4, buf, 0);
 		LCD_Str(5, "<-            ", 0);
 		LCD_Update();
@@ -477,12 +483,16 @@ static void Menu_AccelAlign() {
 	// test for "cancelation"
 	if (iter == 0) {
 		struct quaternion_t quat;
-		struct vector_t vect_g = { .coef = { 0, 0, -FP_ONE } };
+		struct vector_t vect_g = { .coef = { 0, 0, -mems_ONE } };
 		
 		// compute matrix
 		quaternion_align(&quat, &vect_g, &vect_meas);
-		quaternion_toRotMatrix(&quat, &accel_rot);
+		quaternion_toRotMatrix(&quat, &mems_sensors.accel.align);
 	}
+
+}
+
+static void Menu_AccelCalib() {
 
 }
 

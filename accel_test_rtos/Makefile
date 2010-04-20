@@ -49,7 +49,7 @@ OUTDIR = $(RUN_MODE)
 TARGET = stm32_menu
 
 # Pathes to libraries
-APPLIBDIR = ./lib
+APPLIBDIR = ../lib
 RTOSDIR = $(APPLIBDIR)/FreeRTOS
 RTOSSRCDIR = $(RTOSDIR)
 RTOS_PORT = GCC/ARM_CM3
@@ -73,7 +73,7 @@ STMEEEMULINCDIR = $(STMEEEMULDIR)/include
 # use file-extension c for "c-only"-files
 
 ## Application:
-SRC = fault_handlers.c main.c rtc_bkp.c spi.c adc.c lcd.c input.c menu.c i2c.c lisXXX.c ADIS1625x.c timertest.c
+SRC = fault_handlers.c main.c rtc_bkp.c spi.c adc.c lcd.c input.c menu.c i2c.c lisXXX.c ADIS1625x.c timertest.c mems.c
 
 ## compiler-specific sources
 SRC += startup_stm32f10x.c
@@ -106,10 +106,15 @@ SRC += $(RTOSMEMSRCDIR)/heap_2.c
 SRC += $(RTOSMEMSRCDIR)/alloc.c
 
 # mems testing
-SRC += $(MEMSDIR)/fixed-point.c
-SRC += $(MEMSDIR)/quaternion.c
-SRC += $(MEMSDIR)/vector.c
-SRC += $(MEMSDIR)/matrix.c
+SRC += $(MEMSDIR)/mems_math.c
+SRC += $(MEMSDIR)/mems_quaternion.c
+SRC += $(MEMSDIR)/mems_vector.c
+SRC += $(MEMSDIR)/mems_matrix.c
+SRC += $(MEMSDIR)/mems_accel.c
+SRC += $(MEMSDIR)/mems_gyro.c
+SRC += $(MEMSDIR)/mems_norm.c
+SRC += $(MEMSDIR)/mems_pos.c
+SRC += $(MEMSDIR)/mems_kalman.c
 
 ## EEprom Emulation AppNote Code
 #SRC += $(STMEEEMULSRCDIR)/eeprom.c
@@ -285,7 +290,7 @@ LDFLAGS = -nostartfiles -Wl,-Map=$(OUTDIR)/$(TARGET).map,--cref,--gc-sections
 LDFLAGS += $(patsubst %,-L%,$(EXTRA_LIBDIRS))
 LDFLAGS += -lc
 LDFLAGS += $(patsubst %,-l%,$(EXTRA_LIBS))
-#LDFLAGS += $(MATH_LIB)
+LDFLAGS += $(MATH_LIB)
 LDFLAGS += $(CPLUSPLUS_LIB)
 LDFLAGS += -lc -lgcc 
 
