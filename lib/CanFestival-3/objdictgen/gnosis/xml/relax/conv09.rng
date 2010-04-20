@@ -1,0 +1,9 @@
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+
+<include href="res09.rng"/>
+
+<define name="y">
+  <ref name="z"/>
+</define>
+
+</grammar>

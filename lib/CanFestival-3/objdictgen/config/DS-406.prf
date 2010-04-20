@@ -1,0 +1,119 @@
+global Mapping, AddMenuEntries
+
+"""
+MappingDictionary for DS-406
+"""
+
+Mapping = {
+    0x6000 : {"name" : "Operating Parameters", "struct" : var, "need" : True, "values" :
+                [{"name" : "Operating Parameters", "type" : 0x06, "access" : 'rw', "pdo" : False}]},
+    0x6001 : {"name" : "Measuring Units per Revolution", "struct" : var, "need" : False, "values" :
+                [{"name" : "Measuring Units per Revolution", "type" : 0x07, "access" : 'rw', "pdo" : False}]},
+    0x6002 : {"name" : "Total Measuring Range in Measuring Unit", "struct" : var, "need" : False, "values" :
+                [{"name" : "Total Measuring Range in Measuring Unit", "type" : 0x07, "access" : 'rw', "pdo" : False}]},
+    0x6003 : {"name" : "Preset Value", "struct" : var, "need" : False, "values" :
+                [{"name" : "Preset Value", "type" : 0x07, "access" : 'rw', "pdo" : False}]},
+    0x6004 : {"name" : "Position Value", "struct" : var, "need" : True, "values" :
+                [{"name" : "Position Value", "type" : 0x07, "access" : 'ro', "pdo" : True}]},
+    0x6005 : {"name" : "Linear Encoder Measuring Step Settings", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of Objects", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Position Step Setting", "type" : 0x07, "access" : 'rw', "pdo" : False},
+                 {"name" : "Speed Step Setting", "type" : 0x07, "access" : 'rw', "pdo" : False},
+                 {"name" : "Acceleration Step Setting", "type" : 0x07, "access" : 'rw', "pdo" : False},
+                 {"name" : "Jerk Step Setting", "type" : 0x07, "access" : 'rw', "pdo" : False}]},
+    0x6008 : {"name" : "High Precision Position Value", "struct" : var, "need" : False, "values" :
+                [{"name" : "High Precision Position Value", "type" : 0x1B, "access" : 'ro', "pdo" : True}]},
+    0x6009 : {"name" : "High Precision Preset Value", "struct" : var, "need" : False, "values" :
+                [{"name" : "High Precision Preset Value", "type" : 0x1B, "access" : 'rw', "pdo" : False}]},
+
+
+    0x6010 : {"name" : "Preset Value for Multi-Sensor Device", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Available Channels", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Preset Value Channel %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xFE}]},
+    0x6020 : {"name" : "Position Value for Multi-Sensor Device", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Available Channels", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Position Value Channel %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6030 : {"name" : "Speed Value", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Available Channels", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Speed Value Channel %d[(sub)]", "type" : 0x03, "access" : 'ro', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6040 : {"name" : "Acceleration Value", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Available Channels", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Acceleration Value Channel %d[(sub)]", "type" : 0x03, "access" : 'ro', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6050 : {"name" : "Jerk Value", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Available Channels", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Jerk Value Channel %d[(sub)]", "type" : 0x03, "access" : 'ro', "pdo" : True, "nbmax" : 0xFE}]},
+
+
+    0x6200 : {"name" : "Cyclic Timer", "struct" : var, "need" : False, "values" :
+                [{"name" : "Cyclic Timer", "type" : 0x06, "access" : 'rw', "pdo" : False}]},
+
+
+    0x6300 : {"name" : "CAM State Register", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Available Channels", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CAM State Channel %d[(sub)]", "type" : 0x05, "access" : 'ro', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6301 : {"name" : "CAM Enable", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Available Channels", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CAM Enable Channel %d[(sub)]", "type" : 0x05, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6302 : {"name" : "CAM Polarity", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Available Channels", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CAM Polarity Channel %d[(sub)]", "type" : 0x05, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+
+
+    0x6310 : {"name" : "CAM%d Low Limit[(idx)]", "struct" : plurirec, "incr" : 1, "need" : False, "nbmax" : 0x08, "values" :
+                [{"name" : "Number of Available Channels", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CAM%d Low Limit Channel %d[(idx,sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xFE}]},
+    0x6320 : {"name" : "CAM%d High Limit[(idx)]", "struct" : plurirec, "incr" : 1, "need" : False, "nbmax" : 0x08, "values" :
+                [{"name" : "Number of Available Channels", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CAM%d High Limit Channel %d[(idx,sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xFE}]},
+    0x6330 : {"name" : "CAM%d Hysteresis[(idx)]", "struct" : plurirec, "incr" : 1, "need" : False, "nbmax" : 0x08, "values" :
+                [{"name" : "Number of Available Channels", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CAM%d Hysteresis Channel %d[(idx,sub)]", "type" : 0x06, "access" : 'rw', "pdo" : False, "nbmax" : 0xFE}]},
+
+
+    0x6400 : {"name" : "Area State Register", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Available Channels", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Work Area State Channel %d[(sub)]", "type" : 0x05, "access" : 'ro', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6401 : {"name" : " Work Area Low Limit", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Available Channels", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Work Area Low Limit Channel %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xFE}]},
+    0x6402 : {"name" : " Work Area High Limit", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Available Channels", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Work Area High Limit Channel %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xFE}]},
+
+
+    0x6500 : {"name" : "Operating Status", "struct" : var, "need" : True, "values" :
+                [{"name" : "Operating Status", "type" : 0x06, "access" : 'ro', "pdo" : False}]},
+    0x6501 : {"name" : "Single Turn Resolution", "struct" : var, "need" : True, "values" :
+                [{"name" : "Single Turn Resolution", "type" : 0x07, "access" : 'ro', "pdo" : False}]},
+    0x6502 : {"name" : "Number of Distinguishable Revolutions", "struct" : var, "need" : True, "values" :
+                [{"name" : "Number of Distinguishable Revolutions", "type" : 0x06, "access" : 'rw', "pdo" : True}]},
+    0x6503 : {"name" : "Alarms", "struct" : var, "need" : False, "values" :
+                [{"name" : "Alarms", "type" : 0x06, "access" : 'ro', "pdo" : True}]},
+    0x6504 : {"name" : "Supported Alarms", "struct" : var, "need" : False, "values" :
+                [{"name" : "Supported Alarms", "type" : 0x06, "access" : 'ro', "pdo" : False}]},
+    0x6505 : {"name" : "Warnings", "struct" : var, "need" : False, "values" :
+                [{"name" : "Warnings", "type" : 0x06, "access" : 'ro', "pdo" : True}]},
+    0x6506 : {"name" : "Supported Warnings", "struct" : var, "need" : False, "values" :
+                [{"name" : "Supported Warnings", "type" : 0x06, "access" : 'ro', "pdo" : False}]},
+    0x6507 : {"name" : "Profile and Software Version", "struct" : var, "need" : False, "values" :
+                [{"name" : "Profile and Software Version", "type" : 0x07, "access" : 'ro', "pdo" : False}]},
+    0x6508 : {"name" : "Operating Time", "struct" : var, "need" : False, "values" :
+                [{"name" : "Operating Time", "type" : 0x07, "access" : 'ro', "pdo" : False}]},
+    0x6509 : {"name" : "Offset Value", "struct" : var, "need" : False, "values" :
+                [{"name" : "Offset Value", "type" : 0x04, "access" : 'ro', "pdo" : False}]},
+    0x650A : {"name" : "Module Identification", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Manufacturer Offset Value", "type" : 0x04, "access" : 'ro', "pdo" : False},
+                 {"name" : "Manufacturer Min Position Value", "type" : 0x04, "access" : 'ro', "pdo" : False},
+                 {"name" : "Manufacturer Max Position Value", "type" : 0x04, "access" : 'ro', "pdo" : False}]},
+    0x650B : {"name" : "Serial Number", "struct" : var, "need" : False, "values" :
+                [{"name" : "Serial Number", "type" : 0x07, "access" : 'ro', "pdo" : False}]},
+    0x650C : {"name" : "Offset Values for Multi-Sensor Devices", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Available Channels", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Offset Value Channel %d[(sub)]", "type" : 0x04, "access" : 'ro', "pdo" : False, "nbmax" : 0xFE}]},
+
+    0x6510 : {"name" : "Number of High Precision Revolutions", "struct" : var, "need" : True, "values" :
+                [{"name" : "Number of High Precision Revolutions", "type" : 0x18, "access" : 'ro', "pdo" : False}]}
+}
+
+AddMenuEntries = [("CAM",[0x6310, 0x6320, 0x6330])]

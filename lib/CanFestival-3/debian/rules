@@ -1,0 +1,118 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+# Uncomment this to turn on verbose mode.
+export DH_VERBOSE=1
+
+# This has to be exported to make some magic below work.
+export DH_OPTIONS
+
+CFLAGS = -Wall -g
+
+ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
+	CFLAGS += -O0
+else
+	CFLAGS += -O2
+endif
+
+config.status: configure
+	#### CONFIG.STATUS ####	
+	dh_testdir
+	
+	# Add here commands to configure the package.
+	cp debian/control-$(shell echo $(CAN_INTERFACE)) debian/control; \
+	./configure --can=$(shell echo $(CAN_INTERFACE)) --prefix=/usr --wx=0
+	 
+build: build-indep
+
+build-indep: build-indep-stamp
+
+build-indep-stamp:  config.status
+	#### BUILD-INDEP-STAMP ####
+	# Add here commands to compile the indep part of the package.
+	$(MAKE)
+	
+clean:
+	#### CLEAN ####
+	dh_testdir
+	dh_testroot
+	rm -f build-indep-stamp #CONFIGURE-STAMP#
+
+	# Add here commands to clean up after the build process.
+	-$(MAKE) clean
+ifneq "$(wildcard /usr/share/misc/config.sub)" ""
+	cp -f /usr/share/misc/config.sub config.sub
+endif
+ifneq "$(wildcard /usr/share/misc/config.guess)" ""
+	cp -f /usr/share/misc/config.guess config.guess
+endif
+
+
+	dh_clean 
+
+install: install-indep install-arch
+install-indep:
+	#### INSTALL-INDEP ####
+	dh_testdir
+	dh_testroot
+	dh_clean -k -i 
+	dh_installdirs -i
+
+	# Add here commands to install the indep part of the package into
+	# debian/<package>-doc.
+	$(MAKE) -C drivers PREFIX=$(CURDIR)/debian/canfestival/usr install
+	$(MAKE) -C src PREFIX=$(CURDIR)/debian/canfestival/usr install
+	$(MAKE) -C drivers PREFIX=$(CURDIR)/debian/canfestival/usr install
+	$(MAKE) -C examples PREFIX=$(CURDIR)/debian/canfestival/usr install
+	$(MAKE) -C objdictgen PREFIX=$(CURDIR)/debian/canfestival/usr/share/CanFestival-3 install
+
+	mkdir -p $(CURDIR)/debian/canfestival/usr/share/CanFestival-3/src
+	mkdir -p $(CURDIR)/debian/canfestival/usr/share/CanFestival-3/include
+	mkdir -p $(CURDIR)/debian/canfestival/usr/share/CanFestival-3/drivers/unix
+	cp -a $(CURDIR)/debian/canfestival/usr/include/canfestival/* $(CURDIR)/debian/canfestival/usr/share/CanFestival-3/include
+	cp -a $(CURDIR)/debian/canfestival/usr/lib/* $(CURDIR)/debian/canfestival/usr/share/CanFestival-3/src
+	cp -a $(CURDIR)/debian/canfestival/usr/lib/libcanfestival_unix.a $(CURDIR)/debian/canfestival/usr/share/CanFestival-3/drivers/unix
+	cp $(CURDIR)/debian/canfestival/usr/share/CanFestival-3/objdictgen/canfestival_config.py $(CURDIR)/debian/canfestival/usr/share/CanFestival-3/objdictgen/canfestival_config_ori.py 
+	
+	mkdir -p $(CURDIR)/debian/canfestival/usr/share/applications
+	cp objdictgen/networkedit.ico $(CURDIR)/debian/canfestival/usr/share/CanFestival-3/objdictgen
+	cp objdictgen/networkedit.png $(CURDIR)/debian/canfestival/usr/share/CanFestival-3/objdictgen	
+	cp debian/objdictedit.desktop $(CURDIR)/debian/canfestival/usr/share/applications/objdictedit.desktop
+	
+	dh_install -i --sourcedir=debian/canfestival
+
+binary-common:
+	#### BINARY-COMMON ####
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs CHANGES
+#	dh_installdocs
+#	dh_installexamples
+#	dh_installmenu
+#	dh_installdebconf	
+#	dh_installlogrotate	
+#	dh_installemacsen
+#	dh_installpam
+#	dh_installmime
+#	dh_python
+#	dh_installinit
+#	dh_installcron
+#	dh_installinfo
+#	dh_installman
+	dh_link
+	dh_strip
+	dh_compress
+	dh_fixperms
+#	dh_perl
+#	dh_makeshlibs
+	dh_installdeb
+#	dh_shlibdeps -l /usr/lib
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+# Build architecture independant packages using the common target.
+binary-indep: build-indep install-indep
+	$(MAKE) -f debian/rules DH_OPTIONS=-i binary-common
+
+binary: binary-indep
+.PHONY: build clean binary-indep binary install install-indep

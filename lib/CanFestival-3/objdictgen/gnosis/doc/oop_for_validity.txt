@@ -1,0 +1,257 @@
+(c) WestTech, 2002 -- may be freely distributed if unaltered
+
+XML ZONE TIP: Creating Valid XML with OOP Programming
+Squeezing OOP data into XML rules
+
+David Mertz, Ph.D.
+Gesticulator, Gnosis Software, Inc.
+February, 2002
+
+    This tip points to some techniques programmers in object
+    oriented languages can use to programmatically ensure the
+    validity of XML documents at the time of their creation.
+
+
+INTRODUCTION
+------------------------------------------------------------------------
+
+  XML has something of a dual identity.  On the one hand, in its
+  SGML roots, XML is a way of expressing formally and rigidly
+  structured data--DTD's and XML Schemas describe said
+  structures.  On the other hand, as seen by popular APIs--DOM,
+  SAX and XSLT, but also by other XML libraries--XML is merely a
+  way of indicating generically hierarchical data. Unfortunately,
+  the two sides communicate poorly.  The *creation* of valid
+  documents falls outside these APIs (validation is usually
+  ghettoized to the parse phase).  However, by using just a few
+  special strategies one can convince OOP objects to look at
+  least a lot like valid XML.
+
+
+WHAT MAKES UP VALIDITY?
+------------------------------------------------------------------------
+
+  The sorts of validity constraints one can express with a DTD
+  differ somewhat from those one can express with a W3C XML
+  Schema.  For this tip, I will focus on issues common to the
+  different validity constraint specification styles.
+
+  The basic idea of XML validity is to specify -what- can occur
+  inside an element, how -often- it can occur, and what
+  -alternatives- exist about what can occur.  As well, when
+  multiple things can occur inside an element, the order of
+  occurence can be specified (or left open, as needed).  Let us
+  look at a highly simplified hypothetical 'dissertation.dtd':
+
+      #---- A "dissertation" DTD with all basic constraints ---#
+      <!ELEMENT dissertation (dedication?, chapter+, appendix*)>
+      <!ELEMENT dedication (#PCDATA)>
+      <!ELEMENT chapter (title, paragraph+)>
+      <!ELEMENT title (#PCDATA)>
+      <!ELEMENT paragraph (#PCDATA | figure | table)>
+      <!ELEMENT figure EMPTY>
+      <!ELEMENT table EMPTY>
+      <!ELEMENT appendix (#PCDATA)>
+
+  In other words, a dissertation -may- contain -one- dedication,
+  -must- contain (one or more) chapters, and -may- contain (zero
+  or more) appendixes.  The various subelement occur in the
+  listed order (if at all).  Some elements contain only character
+  data.  In the case of the '<paragraph>' tag, it may contain
+  -either- character data -or- a '<figure>' subelement -or- a
+  '<table>' subelement.  Structures can nest, but every basic
+  validity concept is in the example.
+
+
+MAKING AN OBJECT LOOK LIKE A DOCUMENT
+------------------------------------------------------------------------
+
+  Although DOM does not do so, OOP languages have all the basic
+  data structures to represent validity (some languages more
+  completely than others).  The trick, basically, is to create
+  objects whose attributes are constrained so as to only allow
+  the allowable things into them.  Whether this is done at
+  compile time or runtime depends on the language used, but
+  either approach can introduce needed constraints.  In any case,
+  creating the right sorts of objects is something to do for each
+  document type, not generically for all of XML.
+
+  XML documents are hierarchical, and objects that can contain
+  other objects as attributes are likewise hierarchical.  At a
+  first brush, this general hierarchy gives us a homomorphism.
+  We just need to pick a few object types for the various
+  attributes.
+
+  At a document root--and at other levels underneath it--we want
+  to specify the specific children that can occur, and their
+  order.  Two approaches come to mind.  One option is to create a
+  heterogeneous sequence of the things that occur in the element.
+  Haskell and Python tuples have the nice quality of being
+  immutable (as are, e.g., Fortran records), but a regular list
+  or array (e.g. of void pointers) can serve also.  For example,
+  in Ruby we might "declare":
+
+      #----- Init'ing Ruby "Root" class with member "part" ----#
+      dissertation = Root.new [ Maybe_dedication.new, \
+                                Some_chapter.new, \
+                                Any_appendix.new ]
+      # Example of accessing part of root element sequence
+      dissertation.part[1].addchapter(some, arguments, here)
+
+  The example leaves open exactly what the classes
+  'Maybe_dedication', 'Some_chapter' and 'Any_appendix' do, but
+  contains the sequence idea.  'dissertation' is an instance of
+  the class 'Root', whose job it is to hold a sequence (and
+  probably has a few other methods, like writing the XML or
+  validating the current instance).
+
+  A second approach that is easier in many languages is to make
+  the things occur as the root attributes directly, but reserve a
+  special attribute that indicates the sequence.  For example,
+  Java might do something like:
+
+      #--- Java class to hold dissertation parts as members ---#
+      public class dissertation {
+          Maybe dedication = new Maybe(dedication_type);
+          Some chapter = new Some(chapter_type);
+          Any appendix = new Any(appendix_type);
+          Seq _seq = new Seq[] {dedication, chapter, appendix};
+      }
+      /* Access is somewhat more natural now */
+      dissertation.chapter.add(some, arguments, here);
+
+
+EXPRESSING QUANTIFICATION
+------------------------------------------------------------------------
+
+  We have seen that the "parts" of elements can be allowed to
+  occur in various number: one or zero; one or more; zero or
+  more.  We need objects to represent these quantities.  The
+  "possibility" case (zero or more) is straightforwardly
+  represented by standard (homogeneous) sequences--lists, arrays,
+  vectors, or whatever the langauges calls them and provides.  In
+  order to provide other behaviors, it is probably worth wrapping
+  a basic sequence in a custom class.
+
+  The "limitation" case (one or zero, i.e. not more than one) has
+  less of an obvious structure.  Most likely a 'Maybe' class (and
+  descendents like 'Maybe_dedication') should be built around a
+  basic sequence object, with guards against adding more than one
+  thing in the provided methods.  This is similar to our example
+  for the "existential" case (one or more).  So let us look at a
+  possible (incomplete) Python implementation:
+
+      #------ Python class to hold "one or more" things -------#
+      class ExistentialList(UserList.UserList):
+          def __init__(self, tag=None, initlist=[]):
+              if tag is None:
+                  raise ValueError, "Must specify tag name"
+              self.tag = tag
+              UserList.__init__(self, initlist)
+          def __delitem__(self, i):
+              del self.data[i]
+              self.validate()
+          def __repr__(self):
+              self.validate()
+              return '\n'.join(['<%s>%s</%s>' % (self.tag, item, self.tag)
+                                for item in self.data])
+          def validate(self):
+              if not len(initlist):
+                  raise "ExistentialError", "List must have length >= 1"
+
+  A more robust example might add features like checks for proper
+  item types in the '.append()', '.extend()', '.__setitem__()'
+  and other methods that can add to the list.  A language with
+  static typing would simply declare the type of things in the
+  list, but would use a similar validation of size.  In C++, one
+  might use templates and generic programming to implement the
+  general features of an' ExistentialList', but specialize to
+  subelement type.
+
+  An important feature for every object that represents a
+  subelement is the ability to serialize itself to XML.  Python
+  reserves a "magic" method called '__repr__()'; other language
+  might use a method called '.write()' or '.toXML()'.  The
+  serialization also needs recursively to descend into children,
+  which is handled "automatically" by Python with the magic
+  method.  In other cases, some manual calls on attribute objects
+  will be needed.
+
+
+EXPRESSING DISJUNCTIONS
+------------------------------------------------------------------------
+
+  Alternation between occurrence patterns is more difficult to
+  express in most OOP languages.  There are a few languages--like
+  Pascal, Fortran, and most elegantly Haskell--that allow
+  enumerated types (discriminated union), but these are the
+  exception, not the rule.  In most languages, one just has to
+  add custom checking to make sure one of the allowable things is
+  contained by an instance.
+
+  One might program polymorphic constructor functions, perhaps by
+  providing multiple type signatures to the constructors.  Each
+  allowable thing in an alternation pattern would have a
+  constructor (including, possibly, sequence types where
+  quantifiers are used with the disjoins).
+
+  However, a more flexible approach is to use a generic framework
+  that receives its alternation list either via initialization
+  arguments, or by inheritence from an "Or" superclass.  Such a
+  child might look like:
+
+      #----- Python specialization of "Or" abstract class -----#
+      class paragraph(Or):
+          disjoins = (PCDATA, figure, table)
+
+  Assuming the base functionality of the abstract class "Or"
+  knows to look for a 'disjoins' class member, this could be
+  sufficient specialization.  Naturaly, guarded setters and
+  getters need be defined in the parent (in the Python case,
+  probably with magic methods).
+
+
+CONCLUSION
+------------------------------------------------------------------------
+
+  Using data classes with some constraints on the values
+  contained therein allows us to mirror the validity requirements
+  of XML documents.  Containment of classes can be structured in
+  the same manner containment of subelements.  With a good
+  framework of base classes in place, one can basicaly directly
+  copy a DTD into a set of class definitions or initializations.
+  Instances becomes members of other instances, and eventually
+  one winds up with a "root" object instance whose self and
+  attributes have various methods for manipulating data in ways
+  that cannot break the validity requirements (in contrast to how
+  easily one can break validity with basic types like strings and
+  arrays). At the end of the manipulation, the root object should
+  have some method to write out the XML--recursively descending
+  into its attribute instances--which produces a fully grown
+  valid XML document.  An 'ExistentialList', for example, can
+  contain other 'ExistentialList' objects, nested serialization
+  (the 'print' statement) works beautifully with the given
+  sample.
+
+
+RESOURCES
+------------------------------------------------------------------------
+
+  Everything one really -needs- to know about XML is in the
+  Extensible Markup Language (XML) 1.0 W3C Recommendation.  Of
+  course understanding exactly what this signifies requires some
+  subtlety:
+
+    http://www.w3.org/TR/REC-xml
+
+  _XML Matters_ #7 compared DTDs and Schemas.  For the issues
+  with each, take a look there.
+
+ABOUT THE AUTHOR
+------------------------------------------------------------------------
+
+  {Picture of Author: http://gnosis.cx/cgi-bin/img_dqm.cgi}
+  David Mertz uses a wholly unstructured brain to write about
+  structured document formats.  David may be reached at
+  mertz@gnosis.cx; his life pored over at
+  http://gnosis.cx/publish/.

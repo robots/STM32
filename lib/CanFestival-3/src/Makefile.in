@@ -1,0 +1,143 @@
+#! gmake
+
+#
+# Copyright (C) 2006 Laurent Bessard
+# 
+# This file is part of canfestival, a library implementing the canopen
+# stack
+# 
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+# 
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+# 
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# 
+
+ifneq ($(KERNELRELEASE),)
+# Kbuild part of Makefile
+obj-m := canfestival.o
+canfestival-objs := $(OBJS)
+
+else
+# Normal Makefile
+CC = SUB_CC
+PROG_CFLAGS = SUB_PROG_CFLAGS
+OS_NAME = SUB_OS_NAME
+ARCH_NAME = SUB_ARCH_NAME
+PREFIX = SUB_PREFIX
+BINUTILS_PREFIX = SUB_BINUTILS_PREFIX
+TARGET = SUB_TARGET
+CAN_DRIVER = SUB_CAN_DRIVER
+TIMERS_DRIVER = SUB_TIMERS_DRIVER
+ENABLE_LSS = SUB_ENABLE_LSS
+
+INCLUDES = -I../include -I../include/$(TARGET) -I../include/$(TIMERS_DRIVER) -I../drivers/$(TARGET)
+
+OBJS = $(TARGET)_objacces.o $(TARGET)_lifegrd.o $(TARGET)_sdo.o\
+	    $(TARGET)_pdo.o $(TARGET)_sync.o $(TARGET)_nmtSlave.o $(TARGET)_nmtMaster.o $(TARGET)_states.o $(TARGET)_timer.o $(TARGET)_dcf.o $(TARGET)_emcy.o
+
+
+ifeq ($(ENABLE_LSS),1)
+OBJS += $(TARGET)_lss.o
+endif
+
+# # # # Target specific paramters # # # #
+
+ifeq ($(TARGET),hcs12)
+OPT_CFLAGS = -Os
+PROGDEFINES = -mnoshort -Wall -Wmissing-prototypes -fno-strict-aliasing
+endif
+
+ifeq ($(TARGET),unix)
+OPT_CFLAGS = -O2
+endif
+
+# # # # Options # # # # 
+
+all: canfestival
+
+ifeq ($(TIMERS_DRIVER), timers_kernel)
+OBJS := $(shell echo $(OBJS) | sed "s:$(TARGET)_::g")
+OBJS += symbols.o
+OBJS += ../drivers/unix/libcanfestival_$(TARGET).o
+EXTRA_CFLAGS := $(shell echo $(INCLUDES) | sed "s:-I:-I$(src)/:g")
+EXTRA_CFLAGS += $(PROG_CFLAGS)
+KERNELDIR := SUB_KERNELDIR
+export OBJS
+export EXTRA_CFLAGS
+
+canfestival:
+	@echo " "
+	@echo "*********************************************"
+	@echo "**Building [canfestival.o]"
+	@echo "*********************************************"
+	$(MAKE) -C $(KERNELDIR) M=$(shell pwd) modules
+
+clean:
+	$(MAKE) -C $(KERNELDIR) M=$(shell pwd) clean
+	rm -f Module.symvers
+
+install:
+	$(MAKE) -C $(KERNELDIR) M=$(shell pwd) modules_install
+	mkdir -p $(PREFIX)/include/canfestival
+	cp ../include/*.h $(PREFIX)/include/canfestival
+
+uninstall:
+	rm -rf $(PREFIX)/include/canfestival
+
+else
+CFLAGS = SUB_OPT_CFLAGS
+
+ifeq ($(TARGET),none)
+canfestival: libcanfestival.o
+else
+canfestival: libcanfestival.a
+endif
+
+libcanfestival.a: $(OBJS)
+	@echo " "
+	@echo "*********************************************"
+	@echo "**Building [libcanfestival.a]"
+	@echo "*********************************************"
+	$(BINUTILS_PREFIX)ar rc $@ $(OBJS)
+	$(BINUTILS_PREFIX)ranlib $@
+
+libcanfestival.o: $(OBJS)
+	@echo " "
+	@echo "*********************************************"
+	@echo "**Prelink [libcanfestival.o]"
+	@echo "*********************************************"
+	$(BINUTILS_PREFIX)ld -r $(OBJS) -o $@
+
+$(TARGET)_%o: %c
+	@echo " "
+	@echo "*********************************************"
+	@echo "**Compiling $< -> $@"
+	@echo "*********************************************"
+	$(CC) $(CFLAGS) $(PROG_CFLAGS) ${PROGDEFINES} $(INCLUDES) -o $@ -c $<
+
+install: libcanfestival.a
+	mkdir -p $(PREFIX)/lib/
+	mkdir -p $(PREFIX)/include/canfestival
+	cp libcanfestival.a $(PREFIX)/lib/
+	cp ../include/*.h $(PREFIX)/include/canfestival
+
+uninstall:
+	rm -f $(PREFIX)/lib/libcanfestival.a
+	rm -rf $(PREFIX)/include/canfestival
+
+clean:
+	rm -f $(OBJS) libcanfestival.a libcanfestival.o
+
+endif
+mrproper: clean
+
+endif

@@ -1,0 +1,440 @@
+(c) WestTech, 2002 -- may be freely distributed if unaltered
+
+CHARMING PYTHON #B11: Declarative Mini-Languages
+Programming as assertion rather than instruction
+
+David Mertz, Ph.D.
+Essence Preceder, Gnosis Software, Inc.
+December, 2002
+
+    The object orientation and transparent introspective
+    capabilities of Python allow you to easily create
+    -declarative mini-lanaguages- for programming tasks.  This
+    installment is not so much interested in using Python to
+    interpret or translate other specialized languages (although
+    that is possible), but rather in ways that Python code itself
+    can be helpfully restricted to a set of declarative elements.
+    Ideally a developer can use declarative techniques to state
+    application requirements in a concise and clear way, while
+    letting the "behind-the-scenes" framework do the heavy work.
+
+
+BACKGROUND ON DECLARATIVE STYLES
+------------------------------------------------------------------------
+
+  When most programmers think about programming, they imagine
+  -imperative- styles and techniques for writing applications.
+  The most popular general purpose programming
+  languages--including Python and other object-oriented
+  languages--are predominantly imperative in style.  On the other
+  hand, there are also many programming languages that are
+  -declarative- in style, including both functional and logic
+  languages, and also including both general purpose and
+  specialized ones.
+
+  Let me list a few languages that fall in various categories.
+  Many readers have used many of these tools, without necessarily
+  thinking about the categorical differences among them.  Python,
+  C, C++, Java, Perl, Ruby, Smalltalk, Fortran, Basic, xBase are
+  all straightforwardly imperative programming languages.  Some
+  of these are object oriented, but that is simply a matter of
+  the organization of code and data, not of the fundamental
+  programming style.  In these languages, you -command- the
+  program to carry out a sequence of instructions: -put- some
+  data in a variable; -fetch- the data back out of the variable;
+  -loop- through a block of instructions -until- some condition
+  is satisfied; do something -if- something else is true.  One
+  nice thing about all these languages is that it is easy to
+  think about them within familiar temporal metaphors.  Ordinary
+  life consists of doing one thing, making a choice, then doing
+  another thing, maybe using some tools along the way.  It is
+  easy to imagine the computer that runs a program as a cook, or
+  a bricklayer, or an automobile driver.
+
+  Languages like Prolog, Mercury, SQL, XSLT, EBNF grammars, and
+  indeed configuration files of various formats, all -declare-
+  that something is the case, or that certain constraints apply.
+  Mathematics is generally the same way. The functional
+  languages--e.g. Haskell, ML, Dylan, Ocaml, Scheme--are similar,
+  but with more of an emphasis on stating internal (functional)
+  relationships between programming objects (recursion, lists,
+  etc.).  Our ordinary life, at least in its narrative quality,
+  provides no direct analog for the programming constructs of
+  these languages.  For those problems you can naturally
+  describe in these languages, however, declarative descriptions
+  are far more concise, and -far- less error prone than are
+  imperative solutions.  For example, consider a set of linear
+  equations:
+
+        #------------- Linear equations system sample ---------#
+        10x + 5y - 7z + 1 = 0
+        17x + 5y - 10z + 3 = 0
+        5x - 4y + 3z - 6 = 0
+
+  This is a rather elegant shorthand that names several
+  relationships among objects (x, y, and z).  You might come
+  across these facts in various ways in real life, but actually
+  "solving for x" with pencil-and-paper is a matter of messy
+  details, prone to error.  Writing the steps in Python is
+  probably even worse from a debugging perspective.
+
+  Prolog is a language that comes close to logic or mathematics.
+  In it, you simply write statements you know to be true, then
+  ask the application to derive consequences for you.  Statements
+  are composed in no particular order (as the linear equations
+  have no order), and you the programmer/user have no real idea
+  what steps are taken to derive results.  For example:
+
+      #--------------- family.pro Prolog sample ----------------#
+      /* Adapted from sample at:
+      <http://www.engin.umd.umich.edu/CIS/course.des/cis479/prolog/>
+      This app can answer questions about sisterhood & love, e.g.:
+      # Is alice a sister of harry?
+      ?-sisterof( alice, harry )
+      # Which of alice' sisters love wine?
+      ?-sisterof( X, alice ), love( X, wine)
+      */
+      sisterof( X, Y ) :- parents( X, M, F ),
+                          female( X ),
+                          parents( Y, M, F ).
+      parents( edward, victoria, albert ).
+      parents( harry, victoria, albert ).
+      parents( alice, victoria, albert ).
+      female( alice ).
+      loves( harry, wine ).
+      loves( alice, wine ).
+
+  Not quite identical, but similar in spirit is an EBNF grammar
+  declaration (Extended Backus-Naur Form).  You might write some
+  declarations like:
+
+      #--------------------- EBNF sample -----------------------#
+      word        := alphanums, (wordpunct, alphanums)*, contraction?
+      alphanums   := [a-zA-Z0-9]+
+      wordpunct   := [-_]
+      contraction := "'", ("clock"/"d"/"ll"/"m"/"re"/"s"/"t"/"ve")
+
+  This is a compact way of stating what a word -would- look like
+  if you were to encounter one, without actually giving
+  sequential instructions on how to recognize one.  A regular
+  expression is similar (and in fact suffices for this particular
+  grammar production).
+
+  For yet another declarative example, consider a document type
+  declaration that describes a dialect of valid XML documents.
+
+      #-------- An XML document type declaration ---------------#
+      <!ELEMENT dissertation (chapter+)>
+      <!ELEMENT chapter (title, paragraph+)>
+      <!ELEMENT title (#PCDATA)>
+      <!ELEMENT paragraph (#PCDATA | figure)+>
+      <!ELEMENT figure EMPTY>
+
+  As with the other examples, the DTD language does not contain
+  any instructions about what to do to recognize or create a
+  valid XML document.  It merely describes what one would be like
+  if it were to exist.  There is a subjunctive mood to
+  declarative languages.
+
+PYTHON AS INTERPRETER VERSUS PYTHON AS ENVIRONMENT
+------------------------------------------------------------------------
+
+  Python libraries can utilize declarative languages in one of
+  two, fairly distinct, ways.  Perhaps the more common technique
+  is to parse and process non-Python declarative languages as
+  data.  An application or a library can read in an external
+  source (or a string defined internally, but just as a "blob"),
+  then figure out a set of imperative steps to carry out that
+  conform in some way with those external declaration.  In
+  essence, these types of libraries are "data-driven" systems;
+  there is a conceptual and category gap between the declarative
+  language and what a Python application does to carry out or
+  utilize its declarations.  In fact, quite commonly,
+  libraries to process those identical declarations are
+  also implemented for other programming languages.
+
+  All the examples given above fall under this first technique.
+  The libary [PyLog] is a Python implementation of a Prolog
+  system.  It reads a Prolog data file like the sample, then
+  creates Python objects to -model- the Prolog declarations.  The
+  EBNF sample uses the particular variant of [SimpleParse], which
+  is a Python library that transforms these declarations into
+  state tables that can be used by [mx.TextTools].
+  [mx.TextTools] is itself an extension library for Python that
+  uses an underlying C engine to run code stored in Python data
+  structures, but having little to do with Python -per se-.
+  Python is great -glue- for these tasks, but the languages glued
+  together are very different from Python.  Most Prolog
+  implementations, furthermore, are written in languages other
+  than Python, as are most EBNF parsers.
+
+  A DTD is similar to the other examples.  If you use a
+  validating parser like [xmlproc], you can utilize a DTD to
+  verify the dialect of an XML document.  But the language of a
+  DTD is un-Pythonic, and [xmlproc] just uses it as data that
+  needs to be parsed.  Moroever, XML validating parsers have been
+  written in many programming languages.  An XSLT transformation
+  is similar again, it is not Python specific, and a module like
+  [ft.4xslt] just uses Python as glue.
+
+  While there is nothing -wrong- with the above approaches and the
+  abovementioned tools (I use them all the time), it might be
+  more elegant--and in some ways more expressive--if Python
+  itself could be the declarative language.  If nothing else,
+  libraries that facilitated this would not require programmers
+  to think about two (or more) languages when writing one
+  application.  At times it is natural and powerful to lean on
+  Python introspective capabilities to implement "native"
+  declarations.
+
+
+THE MAGIC OF INTROSPECTION
+------------------------------------------------------------------------
+
+  The parsers [Spark] and [PLY] let users declare Python values
+  -in Python-, then use some magic to let the Python runtime
+  environment act as the configuration of parsing.  For example,
+  let us look at the [PLY] equivalent of the prior [SimpleParse]
+  grammar.  [Spark] is similar to the example:
+
+      #---------------------- PLY sample -----------------------#
+      tokens = ('ALPHANUMS','WORDPUNCT','CONTRACTION','WHITSPACE')
+      t_ALPHANUMS = r"[a-zA-Z0-0]+"
+      t_WORDPUNCT = r"[-_]"
+      t_CONTRACTION = r"'(clock|d|ll|m|re|s|t|ve)"
+      def t_WHITESPACE(t):
+          r"\s+"
+          t.value = " "
+          return t
+      import lex
+      lex.lex()
+      lex.input(sometext)
+      while 1:
+          t = lex.token()
+          if not t: break
+
+  I have written about [PLY] in my forthcoming book _Text
+  Processing in Python_, and have written about [Spark] in this
+  column.  Without going into details of the libraries, what you
+  should notice here is that it is the Python bindings themselves
+  that configure the parsing (actually lexing/tokening in this
+  example).  The [PLY] module just happens to know enough about
+  the Python environment it is running in to act on these pattern
+  declarations.
+
+  Just -how- [PLY] knows what it does involves some pretty fancy
+  Python programming.  At a first level, an intermediate
+  programmer will realize that she can probe the contents of the
+  'globals()' and 'locals()' dictionaries.  That would be fine if
+  the declaration style were slightly different.  For example,
+  imagine the code were more like:
+
+      #----------- Using imported module namespace -------------#
+      import basic_lex as _
+      _.tokens = ('ALPHANUMS','WORDPUNCT','CONTRACTION')
+      _.ALPHANUMS = r"[a-zA-Z0-0]+"
+      _.WORDPUNCT = r"[-_]"
+      _.CONTRACTION = r"'(clock|d|ll|m|re|s|t|ve)"
+      _.lex()
+
+  This style would not be any less declarative, and the [basic_lex]
+  module could hypothetically contain something simple like:
+
+      #--------------------- basic_lex.py ----------------------#
+      def lex():
+          for t in tokens:
+              print t, '=', globals()[t]
+
+  Which would produce:
+
+      % python basic_app.py
+      ALPHANUMS = [a-zA-Z0-0]+
+      WORDPUNCT = [-_]
+      CONTRACTION = '(clock|d|ll|m|re|s|t|ve)
+
+  [PLY] manages to poke into the namespace of the importing
+  module using stack frame information.  For example:
+
+      #--------------------- magic_lex.py ----------------------#
+      import sys
+      try: raise RuntimeError
+      except RuntimeError:
+          e,b,t = sys.exc_info()
+          caller_dict = t.tb_frame.f_back.f_globals
+      def lex():
+          for t in caller_dict['tokens']:
+              print t, '=', caller_dict['t_'+t]
+
+  This produces the same output given in the 'basic_app.py'
+  sample, but with declarations using the prior 't_TOKEN' style.
+
+  There is more magic than this in the actual [PLY] module.  We
+  saw that the tokens named with the pattern 't_TOKEN' can
+  actually be either strings containing regular expressions, or
+  functions that contain both regular expression docstrings along
+  with action code.  Some type checking allows polymorphic
+  behavior:
+
+      #--------------------- polymorphic_lex -------------------#
+      # ...determine caller_dict using RuntimeError...
+      from types import *
+      def lex():
+          for t in caller_dict['tokens']:
+              t_obj = caller_dict['t_'+t]
+              if type(t_obj) is FunctionType:
+                  print t, '=', t_obj.__doc__
+              else:
+                  print t, '=', t_obj
+
+  Obviously, the actual [PLY] module does something more
+  interesting with these declared patterns than the toy examples,
+  but these demonstrate some techniques involved.
+
+THE MAGIC OF INHERITANCE
+------------------------------------------------------------------------
+
+  Letting a support library poke around in and manipulate an
+  application's namespace can enable an elegant declarative
+  style.  But often, using inheritance structures together with
+  introspection allows an even greater flexibility.
+
+  The module [gnosis.xml.validity] is a framework for creating
+  classes that map directly to DTD productions.  Any
+  [gnosis.xml.validiy] class can -only- be instantiated with
+  arguments obeying XML dialect validity constraints.  Actually
+  that is not quite true, the module will also infer the proper
+  types from simpler arguments when there is only one,
+  unambiguous, way of "lifting" the arguments to the correct
+  types.
+
+  Since I wrote the [gnosis.xml.validity] module, I am biased to
+  thinking its purpose is itself interesting.  But for this
+  article, I just want to look at the declarative style in which
+  validity classes are created.  A set of rules/classes matching
+  the prior DTD sample consists of:
+
+      #--------- gnosis.xml.validity rule declarations ---------#
+      from gnosis.xml.validity import *
+      class figure(EMPTY):      pass
+      class _mixedpara(Or):     _disjoins = (PCDATA, figure)
+      class paragraph(Some):    _type = _mixedpara
+      class title(PCDATA):      pass
+      class _paras(Some):       _type = paragraph
+      class chapter(Seq):       _order = (title, _paras)
+      class dissertation(Some): _type = chapter
+
+  You might create instances out of these declarations using:
+
+      ch1 = LiftSeq(chapter, ("1st Title","Validity is important"))
+      ch2 = LiftSeq(chapter, ("2nd Title","Declaration is fun"))
+      diss = dissertation([ch1, ch2])
+      print diss
+
+  Notice how closely the classes match the prior DTD.  The
+  mapping is basically one-to-one; except it is necessary to use
+  intermediaries for quantification and alternation of nested
+  tags (intermediary names are marked by a leading underscore).
+
+  Notice also that these classes, while created using standard
+  Python syntax, are unusual (and more concise) in having no
+  methods or instance data.  Classes are defined solely to
+  inherit from some framework, where that framework is narrowed
+  by a single class attribute.  For example, a '<chapter>' is a
+  sequence of other tags, namely a '<title>' followed by one or
+  more '<paragraph>' tags.  But all we need to do to assure the
+  constrain is obeyed in the instances is -declare- the 'chapter'
+  class in this straightforward manner.
+
+  The main "trick" involved in programming parent classes like
+  'gnosis.xml.validity.Seq' is to look at the '.__class__'
+  attribute of an -instance- during initialization.  The class
+  'chapter' does not have its own initialization, so its parent's
+  '__init__()' method is called.  But the 'self' passed to the
+  parent '__init__()' is an instance of 'chapter', and it knows
+  it.  To illustrate, this is part of the implementation of
+  'gnosis.xml.validity.Seq':
+
+      #--------------- Class gnosis.xml.validity.Seq -----------#
+      class Seq(tuple):
+          def __init__(self, inittup):
+              if not hasattr(self.__class__, '_order'):
+                  raise NotImplementedError, \
+                      "Child of Abstract Class Seq must specify order"
+              if not isinstance(self._order, tuple):
+                  raise ValidityError, "Seq must have tuple as order"
+              self.validate()
+              self._tag = self.__class__.__name__
+
+  Once an application programmer tries to create a 'chapter'
+  instance, the instantiation code checks that 'chapter' was
+  declared with the required '._order' class attribute, and that
+  this attribute is the needed tuple object. The method
+  '.validate()' peforms some further checks to make sure that the
+  objects the instance was initialized with belong to the
+  corresponding classes specified in '._order'.
+
+WHEN TO DECLARE
+------------------------------------------------------------------------
+
+  A declarative programming style is -almost always- a more
+  direct way of stating constraints than is an imperative or
+  procedural one.  Of course, not all programming problems are
+  about constraints--or at least that is not always a natural
+  formulation.  But problems of rule based systems, such as
+  grammars and inference systems, are much easier to manage if
+  they can be described declaratively.  Imperative verification
+  of grammaticality quickly turns into spaghetti code, and is
+  difficult to debug.  Statments of patterns and rules can remain
+  much simpler.
+
+  Of course, at least in Python, the verification or enforcement
+  of declared rules will always boil down to procedural checks.
+  But the right place for such procedural checks is is
+  well-tested library code.  Individual applications should rely
+  on the simpler declarative interfaces provided by libraries
+  like [Spark], or [PLY], or [gnosis.xml.validity].  Other
+  libraries like [xmlproc], [SimpleParse], or [ft.4xslt] also
+  enable declarative styles, although not declarations -in
+  Python- (which is appropriate for their domains, of course).
+
+RESOURCES
+------------------------------------------------------------------------
+
+  The Python implementation of Prolog [PyLog] can be found at:
+
+    http://christophe.delord.free.fr/en/pylog/index.html
+
+  The module [SimpleParse] can be downloaded from:
+
+    http://simpleparse.sourceforge.net/
+
+  I discussed [SimpleParse] in a prior _Charming Python_
+  installment:
+
+    http://www-106.ibm.com/developerworks/library/l-simple.html
+
+  And [Spark] in:
+
+    http://www-106.ibm.com/developerworks/library/l-spark.html
+
+  My column _XML Matters_ had a prior column looking at
+  [gnosis.xml.validity]:
+
+    http://www-106.ibm.com/developerworks/library/x-matters20.html
+
+  I wrote about both [SimpleParse] and [PLY] in my forthcoming
+  book _Text Processing in Python_, whose drafts can be found at:
+
+    http://gnosis.cx/TPiP/
+
+
+ABOUT THE AUTHOR
+------------------------------------------------------------------------
+
+  {Picture of Author: http://gnosis.cx/cgi-bin/img_dqm.cgi}
+  David Mertz, being a sort of Foucauldian Berkeley, believes,
+  -esse est denunte-.  David may be reached at mertz@gnosis.cx;
+  his life pored over at http://gnosis.cx/publish/.  Suggestions
+  and recommendations on this, past, or future, columns are
+  welcomed.
+

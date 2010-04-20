@@ -1,0 +1,18 @@
+start = element bar { fivefoo, upto25foo }
+fivefoo =
+  element foo { empty },
+  element foo { empty },
+  element foo { empty },
+  element foo { empty },
+  element foo { empty }
+maybefoo = element foo { empty }?
+upto25foo =
+  fivefoo?,
+  fivefoo?,
+  fivefoo?,
+  fivefoo?,
+  maybefoo,
+  maybefoo,
+  maybefoo,
+  maybefoo,
+  maybefoo

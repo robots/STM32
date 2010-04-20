@@ -1,0 +1,428 @@
+(c) Tenco Media, 2000 -- may be freely distributed if unaltered
+
+XML MATTERS #1
+On the Pythonic Treatment of XML Documents As Objects (I)
+
+David Mertz, Ph.D.
+Data Masseur, Gnosis Software, Inc.
+August 2000
+
+WHAT IS XML? WHAT IS PYTHON?
+------------------------------------------------------------------------
+
+  XML is a simplified dialect of the Standard Generalized Markup
+  Language (SGML).  Many readers will be most familiar with SGML
+  via one particular document type, HTML.  XML documents are
+  similar to HTML in being composed of text interspersed with and
+  structured by markup tags in angle-brackets.  But XML
+  encompasses many systems of tags that allow XML documents to be
+  used for many purposes:  magazine articles and user
+  documentation, files of structured data (like CSV or EDI
+  files), messages for interprocess communication between
+  programs, architectural diagrams (like CAD formats), and many
+  other purposes.  A set of tags can be created to capture any
+  sort of structured information one might want to represent,
+  which is why XML is growing in popularity as a common standard
+  for representing diverse information.
+
+  Python is a freely available, very-high-level, interpreted
+  language developed by Guido van Rossum.  It combines a clear
+  syntax with powerful (but optional) object-oriented semantics.
+  Python is available for almost every computer platform you
+  might find yourself working on, and has strong portability
+  between platforms.
+
+
+INTRODUCTION: THE PROJECT
+-------------------------------------------------------------------
+
+  There exist a number of techniques and tool for dealing with
+  XML documents in Python.  The Resources section provides links
+  to two developerWorks articles by this author that discuss
+  general techniques, as well as links to other documents on
+  XML/Python topics.  However, one thing that most existing
+  XML/Python tools have in common is that they are much more
+  XML-centric than Python-centric.  Certain constructs and
+  coding techniques feel "natural" in a given programming
+  language, and others feel much more like they are imported from
+  other domains.  The latter type of construct can certainly get
+  a job done--and in many cases a certain degree of stylistic
+  clash between a programming tool and its problem domain is
+  inevitable.  But in an ideal environment all constructs fit
+  intuitively into their domain, and domains merge seamlessly.
+  When it does, programmers can wax poetic rather than merely
+  "make it work."
+
+  This author has begun a research project of creating a more
+  seamless and more natural integration between XML and Python.
+  This article, and subsequent articles in this column, will
+  discuss some of the goals, decisions, and limitations of this
+  project; and hopefully along the way provide readers with a set
+  of modules and techniques that are useful to them, and that
+  point to easier ways to meet programming goals.  All tools
+  created as part of the Project will be released to the public
+  domain.
+
+  Python is a language with a flexible object system and a rich
+  set of built-in types.  The richness of Python is both an
+  advantage and a disadvantage for the Project.  On the one hand,
+  having a wide range of native facilities in Python makes it
+  easier to represent a wide range of XML structures easily.  On
+  the other hand, however, the range of native types and
+  structures of Python makes for more cases to worry about in
+  representing native Python objects in XML.  As a result of
+  those asymmetries that exist between XML and Python, the
+  Project--at least initially--contains two separate modules: one
+  for representing arbitrary Python objects in XML
+  ([xml_pickle]); a second one ([xml_objectify]) for "native"
+  representation of XML documents as Python objects.  This
+  article will address the former module.
+
+
+PART I: [xml_pickle]
+-------------------------------------------------------------------
+
+  Python's standard [pickle] module already provides a simple and
+  convenient method of serializing Python objects, which is in
+  turn useful for persistent storage or transmission over a
+  network.  In some cases, however, it is desirable to perform
+  serialization to a format with several properties not possessed
+  by [pickle]:  (1) The format is human-readable; (2) The format
+  may be parsed, manipulated, and objects imported, by languages
+  other than Python; (3) The format supports validation of stored
+  serialized objects.  [xml_pickle] provides each of these
+  features, while maintaining interface compatibility with
+  [pickle].  However, [xml_pickle] is not a general-purpose
+  replacement for [pickle] since [pickle] retains several
+  advantages of its own, such as faster operation (especially via
+  [cPickle]) and far more compact object representation.
+
+  This article discusses the design goals and decisions that went
+  into [xml_pickle], as well as thoughts on the module's likely
+  uses.
+
+
+USING [xml_pickle]
+-------------------------------------------------------------------
+
+  Even though the interface of [xml_pickle] is mostly the same as
+  as that of [pickle], it is worth illustrating the (quite
+  simple) usage of [xml_pickle] for readers who are not familiar
+  with Python or with [pickle]:
+
+      #------- Python code to demonstrate [xml_pickle] -------#
+      import xml_pickle  # import the module
+
+      # declare some classes to hold some attributes
+      class MyClass1: pass
+      class MyClass2: pass
+
+      # create a class instance, and add some basic data members to it
+      o = MyClass1()
+      o.num = 37
+      o.str = "Hello World"
+      o.lst = [1, 3.5, 2, 4+7j]
+
+      # create an instance of a different class, add some members
+      o2 = MyClass2()
+      o2.tup = ("x", "y", "z")
+      o2.num = 2+2j
+      o2.dct = { "this": "that", "spam": "eggs", 3.14: "about PI" }
+
+      # add the second instance to the first instance container
+      o.obj = o2
+
+      # print an XML representation of the container instance
+      xml_string = xml_pickle.XML_Pickler(o).dumps()
+      print xml_string
+
+  Everything except the first line and the next to last line is
+  generic Python for working with object instances.  It might be a
+  little contrived and a little simple, but essentially
+  everything you do with instance data members is contained in
+  the example (including nesting instances as container data,
+  which is how most complex structures are built in Python).  All
+  a Python programmer needs to do to encode her objects as XML is
+  make one method call.
+
+  Of course, once you have 'pickled' your objects, you will want
+  to also restore them later (or elsewhere).  Supposing the above
+  few lines have already run, restoring the object representation
+  is as simple as:
+
+      #-- Creating object from xml_pickle'd representation ---#
+      new_object = xml_pickle.XML_Pickler().loads(xml_string)
+
+  Obviously, in real cases you would want to do something more
+  interesting with the created XML document than just hold it in
+  memory during runtime.  For example, you might save the XML
+  document to disk (maybe using the 'XML_Pickler.dump()' method),
+  or transmit it over a communication channel.  Actually, the
+  example *does* print to paper, which might well be a good
+  durable storage format.
+
+
+SAMPLE PYOBJECTS.DTD DOCUMENT
+-------------------------------------------------------------------
+
+  Running the sample code above will produce a pretty good
+  example of the features of an [xml_pickle] representation of a
+  Python object.  However, the below example is a hand-coded
+  test case developed by the author.  The test case has the
+  advantage of containing every XML structure, tag and attribute
+  allowed in document type.  The specific data is invented, but
+  it is not hard to imagine the application the data might belong
+  to:
+
+      <?xml version="1.0"?>
+      <!DOCTYPE PyObject SYSTEM "PyObjects.dtd">
+      <PyObject class="Automobile">
+         <attr name="doors" type="numeric" value="4" />
+         <attr name="make" type="string" value="Honda" />
+         <attr name="tow_hitch" type="None" />
+         <attr name="prev_owners" type="tuple">
+            <item type="string" value="Jane Smith" />
+            <item type="tuple">
+               <item type="string" value="John Doe" />
+               <item type="string" value="Betty Doe" />
+            </item>
+            <item type="string" value="Charles Ng" />
+         </attr>
+         <attr name="repairs" type="list">
+            <item type="string" value="June 1, 1999:  Fixed radiator" />
+            <item type="PyObject" class="Swindle">
+               <attr name="date" type="string" value="July 1, 1999" />
+               <attr name="swindler" type="string" value="Ed's Auto" />
+               <attr name="purport" type="string" value="Fix A/C" />
+            </item>
+         </attr>
+         <attr name="options" type="dict">
+            <entry>
+               <key type="string" value="Cup Holders" />
+               <val type="numeric" value="4" />
+            </entry>
+            <entry>
+               <key type="string" value="Custom Wheels" />
+               <val type="string" value="Chrome Spoked" />
+            </entry>
+         </attr>
+         <attr name="engine" type="PyObject" class="Engine">
+            <attr name="cylinders" type="numeric" value="4" />
+            <attr name="manufacturer" type="string" value="Ford" />
+         </attr>
+      </PyObject>
+
+  A formal document type definition (DTD) is currently being
+  developed, and should be available in this article's source
+  archive by the time the article first appears (check
+  Resources).  Informally, it is not difficult to see the
+  structure of a 'PyObjects.dtd' XML document.  But the DTD may
+  disambiguate any issues the author has overlooked.
+
+  Looking at the sample XML document, one can see that the three
+  stated design goals of [xml_pickle] have been met: (1) The
+  format is human readable; (2) The XML representations may be
+  manipulate by means other than [xml_pickle], whether that is
+  unrelated Python/XML modules, XML libraries in other
+  programming languages, XML-enhanced editors and utilities, or
+  just simply text-editors (as was used in creation of the
+  sample); (3) XML representations of Python objects may be
+  validated--at least this will be possible using standard XML
+  validators once 'PyObjects.dtd' is completed and tested.  Once
+  the DTD is in place, *all and only* DTD conformant documents
+  will be representations of valid Python objects.
+
+
+DESIGN FEATURES, CAVEATS AND LIMITATIONS
+-------------------------------------------------------------------
+
+  CONTENT MODEL.  The content model of Python and XML are in
+  certain respects simply different.  One difference to pay heed
+  to is that XML documents are inherently linear in form.  Python
+  object attributes--and also Python dictionaries--have no
+  definitional order (although implementation details create
+  arbitrary ordering, such as of hashed keys).  In this respect,
+  the Python object model is closer to the relational model:
+  rows of a relational table have no "natural" sequence, and
+  primary or secondary keys may or may not provide any meaningful
+  ordering on a table (the keys are always orderable by
+  comparison operators, but this order may be unrelated to the
+  semantics of the keys).
+
+  An XML document always lists its tag elements in a particular
+  order.  The order may not be significant to a particular
+  application, but being a linear document format the XML
+  document order is always there.  The effect of the differing
+  significance of key order in Python and XML is that the XML
+  documents produced by [xml_pickle] are not guaranteed to
+  maintain element order through pickle/unpickle cycles.  For
+  example, a hand prepared PyObjects.dtd XML document like the
+  above may be "unpickled" into a Python object.  If the
+  resultant object is then "pickled" the <attr> tags will most
+  likely occur in a different order than in the original
+  document.  This is a feature, not a bug, but the fact should be
+  understood.
+
+  LIMITATIONS.  Several known limitations occur in [xml_pickle]
+  as of the current version (0.2).  One potentially serious flaw
+  is that no effort is made to trap cyclical references in
+  compound/container objects.  If an object attribute refers back
+  to the container object (or some recursive version of this),
+  [xml_pickle] will exhaust the Python stack.  Cyclical
+  references are likely to indicate a flaw in object design to
+  start with, but later versions of [xml_pickle] will certainly
+  attempt to deal with them more intelligently.
+
+  Another limitation exists in that the namespace of XML
+  attribute values (such as the "123" in <attr name="123">) is
+  larger than the namespace of valid Python variables and
+  instance members.  If attributes are (manually) created outside
+  the Python namespace they will have the odd status of existing
+  in an instance's '.__dict__' magic attribute, but being
+  inaccessible by normal attribute syntax (e.g.  "obj.123" is a
+  syntax error).  This is only an issue where XML documents are
+  created or modified by means other than [xml_pickle] itself.
+  The author simply has not decided what the best way of handling
+  this (somewhat obscure) issue will be.
+
+  Not all attributes of Python objects are handled by
+  [xml_pickle] either.  All the "usual" data members (strings,
+  numbers, dictionaries, etc.) are pickled well.  But instance
+  methods, and class and function objects as attributes, are not
+  handled.  Methods are simply ignored in pickling (as with
+  [pickle]).  If class or function objects exist as attributes,
+  an XMLPicklingError is raised.  This is probably the correct
+  ultimate behavior, but a final decision has not been made yet.
+
+  DESIGN CHOICES.  One genuine ambiguity in XML document design
+  is the choice of when to use tag attributes, and when to use
+  sub-elements.  Opinions on this design issue differ, and XML
+  programmers often feel strongly about their conflicting views.
+  This was probably the biggest issue in deciding the
+  [xml_pickle] document structure.
+
+  The general principle decided on was that a *thing* that is
+  naturally "plural" should be represented by sub-elements.  For
+  example, a Python list can contain as many items as you like,
+  and is therefore represented by a sequence of <item>
+  sub-elements.  On the other side, a number is a singular thing
+  (the value might be more than 1, but there is only one *thing*
+  in it).  In that case it seemed much more logical to use an XML
+  attribute called "value".  The real difficult case was with
+  Python strings.  In a basic way, they are *sequence*
+  objects--just like lists.  But representing each character in a
+  string using a hypothetical <char> tag would destroy the goal
+  of human-readability, as well as make for enormous XML
+  representations.  The decision was made to put strings in the
+  XML "value" attribute, just as with numbers.  However, from an
+  aesthetic point-of-view this is probably less desirable than
+  within a tag container, especially for multi-line strings.
+  But this decision seemed more consistent since there was no
+  other "naked" #PCDATA in the specification.
+
+  In part because strings are stored in XML "value"
+  attributes--but mostly to maintain the syntacticality of the
+  XML document, Python strings needed to be stored in a "safe"
+  form.  There are a few unsafe things that could occur in Python
+  strings.  The first type is the basic markup characters like
+  greater-than and less-than.  A second type is the quote and
+  apostrophe characters that set off attributes.  The third type
+  is questionable ASCII values, such as a null character.  One
+  possibility considered was to encode the whole Python strings
+  in something like base64 encoding.  This would make strings
+  "safe," but also completely unreadable to humans.  The decision
+  was made to use a mixed approach.  The basic XML characters are
+  escaped in the style of "&amp;", "&gt;" or "&quot;".
+  Questionable ASCII values are escaped in Python-style, such as
+  "\000".  The combination makes for easily human-readable XML
+  representations, but requires a somewhat mixed approach to
+  decoding stored strings.
+
+
+ANTICIPATED USES
+------------------------------------------------------------------------
+
+  There are a number of things that [xml_pickle] is likely to be
+  good for, and some user-feedback has indicated that it has
+  entered preliminary usage.  Below are a few ideas.
+
+    - XML representations of Python objects may be indexed and
+      cataloged using existing XML-centric tools (not necessarily
+      written in Python).  This provides a ready means of
+      indexing Python object databases (such as ZODB, PAOS, or
+      simply [shelve]).
+
+    - XML representations of Python objects could be restored as
+      objects of *other* OOP languages, especially ones having
+      a similar range of basic types.  This is something yet to
+      do.  Much "heavier" protocols like CORBA, XML-RPC, and
+      SOAP have overlapping purpose, but [xml_pickle] is pretty
+      "light-weight" as an object transport specification.
+
+    - Tools for printing and displaying XML documents can be used
+      to provide convenient human-readable representations of
+      Python objects via their XML intermediate form.
+
+    - It is possible to manually "debug" Python objects via their
+      XML representation using XML specific editors, or simply
+      text editors.  Once hand-modified objects are unpickled,
+      the effects of the edits on program operation can be
+      examined.  Other debuggers and wrappers exist for Python,
+      but this provides an additional option.
+
+  If readers develop additional uses for [xml_pickle] or see
+  enhancements that would open the module to additional uses, the
+  author would very much like to receive suggestions.
+
+
+RESOURCES
+------------------------------------------------------------------------
+
+  Charming Python #1: An Introduction to XML Tools for Python
+
+    http://gnosis.cx/cgi-bin/txt2html.cgi?source=../publish/programming/charming_python_1.txt
+
+  Charming Python #2: A Closer Look at Python's [xml.dom] Module
+
+    http://gnosis.cx/cgi-bin/txt2html.cgi?source=../publish/programming/charming_python_2.txt
+
+  A friendly introduction to Python for programmers with an XML
+  background is the below book.  McGrath uses his book largely to
+  argue the virtues of his [pyxie] module and associated tools
+  and techniques as the best approach to XML processing.  Whether
+  or not [pyxie] is the best approach to your specific problem,
+  McGrath's is a useful introduction to Python (but less so to
+  XML) .
+
+    _XML Processing with Python_, Sean McGrath, Prentice Hall
+    PTR, Upper Saddle River, NJ, 2000.
+
+  The Python Special Interest Group on XML:
+
+    http://www.python.org/sigs/xml-sig/
+
+  The World Wide Web Consortium's DOM page.
+
+    http://www.w3.org/DOM/
+
+  The DOM Level 1 Recommendation.
+
+    http://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/
+
+  Files used and mentioned in this article:
+
+    http://gnosis.cx/download/xml_matters_1.zip
+
+
+ABOUT THE AUTHOR
+------------------------------------------------------------------------
+
+  {Picture of Author: http://gnosis.cx/cgi-bin/img_dqm.cgi}
+  David Mertz finds there to be a hysteretic relationship between
+  writing and comprehension.  He has begun, for example, to
+  comprehend his own doctoral work.  David may be reached at
+  mertz@gnosis.cx; his life pored over at
+  http://gnosis.cx/publish/.  Suggestions and recommendations on
+  this, past, or future, columns are welcomed.
+
+

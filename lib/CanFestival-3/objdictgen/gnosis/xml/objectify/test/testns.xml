@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<!DOCTYPE Spam>
+<SpamNS:Spam xmlns:SpamNS="http://www.spam.ns" version="1.0">
+  <Eggs>Some text about eggs.</Eggs>
+  <MoreSpam>Ode to Spam</MoreSpam>
+</SpamNS:Spam>

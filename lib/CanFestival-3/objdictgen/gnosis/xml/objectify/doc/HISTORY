@@ -1,0 +1,215 @@
+0.1    Initial version
+
+0.11   Minor tweaks, and improvements to pyobj_printer().
+       Added 'keep_containers()' function.
+
+0.2    Grant Munsey pointed out my gaff in allowing ad-hoc
+       contained instances (subtags) to collide with Python
+       names already in use.  Fixed by name-mangling ad-hoc
+       classes to form "_XO_klass" corresponding with tag
+       <klass>.  Attributes still use actual tag name, e.g.,
+
+         >>> py_obj.klass
+         <xml_objectify._XO_klass instance at 165a50>
+
+0.21   Costas Malamas pointed out that creating a template
+       class does not actually *work* to create class
+       behaviors.  It is necessary to get this class into the
+       xml_objectify namespace.  Generally, this will involve
+       an assignment similar to:
+
+         xml_objectify._XO_Eggs = otherscope.Eggs
+
+       A simple example can be found at:
+
+         http://gnosis.cx/download/xo_test.py
+
+0.30   Costas Malamas proposed the useful improvement of
+       defining __getitem__ behavior for dynamically created
+       child instances.  As a result, you can use constructs
+       like:
+
+         for myegg in spam.egg:
+             print pyobj_printer(myegg)
+
+       without needing to worry whether spam.egg is a list of
+       instances or a single instance.
+
+0.40   Altered by Kapil Thangavelu to work with the latest
+       version of PyXML 0.61.  Mainly syntax changes to
+       reflect PyXML's move to 4DOM.
+
+0.45   Mario Ruggier goaded me to make xml_objectify compatible
+       with Python 2.0 (his intent is presumably described
+       differently :-) ).  Always optimistic, I (dqm) hope this
+       will continue working with later PyXML and Python
+       versions.
+
+0.50   Costas Malamas provided a far faster expat-based parser
+       to replace the DOM-based 'pyobj_from_dom()' technique
+       (orders of magnitude, with a better complexity order).
+       However, when using 'ExpatFactory' to produce a
+       'py_obj', there no longer remains a 'xml_obj._dom'
+       attribute to refer to for element-sequence or other
+       DOM information.  As well, 'ExpatFactory' does not
+       collect the 'py_obj._XML' attribute that character-
+       oriented markup might want preserved.
+
+       Use of the new parser simply requires an extra (named)
+       argument at 'XML_Objectify' initialization, e.g.:
+
+         xml_obj = XML_Objectify('spam.xml',EXPAT)   # or
+         xml_obj = XML_Objectify('spam.xml',DOM)     # or
+         xml_obj = XML_Objectify('spam.xml',parser=EXPAT)
+
+       Conceivably, other parsers could be added in the
+       future (but probably not).  The default option is
+       the backward-compatible 'DOM'.
+
+0.51   Minor cleanup of 0.50 changes.  Also, gave
+       'keep_containers()' three states, rather than just
+       two:
+
+         NEVER:  do not store the _XML attribute
+         MAYBE:  store _XML if there is char-level markup
+         ALWAYS: keep _XML attribute for every element
+
+0.52   Niggly bug fixes (mostly to Unicode handling, and a few
+       Python 2.0+ enhancements).  Definitely requires Python
+       2.0 now.
+
+       Looking through old notes, I remembered Costas Malamas'
+       suggestion for an _XO_.__len__() magic method.  This
+       enables calls like:
+
+         poached_eggs = map(poach, spam.egg)
+         raw_eggs = filter(isRaw, spam.egg)
+
+       whether spam.egg is an object or a list of objects.
+       See 0.30 history for comparison.
+
+0.53   Attribute name mangling modified slightly.  Dash in XML
+       tag name now becomes double-underscore as a py_obj
+       attribute name (important for [xml2sql]).
+
+0.54   Added function '_dir()' for legacy behavior of builtin
+       'dir()' under both Python 2.2 and earlier versions
+
+0.60   Module refactored into gnosis.xml package (along with
+       [xml_pickle].  This is a first pass, and various
+       documentation and test cases should be added later.
+
+0.61   Additional name mangling fixes at the suggestion of
+       Bruno Lienard and Frank McIngvale.  Also changed all
+       [string] functions to the string methods (since we
+       already require 2.0+).
+
+0.62   At the suggestion of Arnold Weis, XML_Objectify sources
+       were made a bit more flexible, and now include any
+       "file-like" objects (i.e. cStringIO, urllib, etc).
+
+mm/yy: --------- Revisions by date -----------------------------
+
+06/02: Greg Aumann added caching of dynamic class creation,
+       for a significant speed increase.
+
+       Reorganized xml_objectify into subpackage directories to
+       fit better with the Gnosis_Utils structure.  Should not
+       affect import line for anyone already using the gnosis.xml
+       package.
+
+       Version numbering now only for 'gnosis' package as a
+       whole.  This HISTORY will simply use approximate dates of
+       changes.
+
+07/02: Rene Jager added the option to work directly with an
+       existing DOM tree.  This is helpful in contexts--
+       especially in Jython--where a DOM is already built for
+       you.  Usage is:
+
+         xml_object = XML_Objectify(dom)
+
+08/02: Bob Gibson and Ville Vainio observed that in adding
+       objectification of DOM trees, I failed to rename a
+       variable used in objectifying files.  Fixed that.
+
+05/03: At Rene Jagar's request XML_Objectify grew the class
+       attributes expat_args, expat_kwargs to configure the EXPAT
+       parser.  This is needed to handle namespaces in XML
+       documents (see test cases).
+
+06/03: Additional check for passed DOM node (has either
+       childNodes or documentElement), suggested by W.McVey.
+
+       Added heuristic to let users pass in XML(-ish) string at
+       initialization.
+
+07/03: Added _XO_.__repr__ method to make nodes print in a
+       nicer, more compact fashion.
+
+       Added ._seq attribute to node objects to support structure
+       preserving convenience functions.  Specifically, older
+       versions of gnosis.xml.objectify lost information about
+       mixed content and the order of children.  E.g.,
+
+         >>> xml = '<foo>Mixed <i>content</i> is <b>good</b></foo>'
+         >>> obj = XO(xml,EXPAT).make_instance()
+         >>> obj.PCDATA, obj.i.PCDATA, obj.b.PCDATA
+         (u'Mixed is', u'content', u'good')
+
+       We had no way of knowing where inside <foo> the <i> and
+       the <b> occur, nor even which child element occurs first.
+
+       Now we can recover that information:
+
+         >>> from gnosis.xml.objectify import content, children
+         >>> content(obj)
+         [u'Mixed ', <i id="30264c">, u' is ', <b id="30292c">]
+         >>> children(obj)
+         [<i id="30264c">, <b id="30292c">]
+
+       Sequence information and convenience methods are NOT
+       SUPPORTED (yet?) for the DOM parser, only for EXPAT!
+
+       Changed default parser to EXPAT.  If you have relied on
+       the special attribute ._XML that the DOM parser attaches
+       to nodes, you will now need to explicitly specify DOM as
+       the parser used.  However, the new sequence functions
+       pretty well handle the job pyobj._XML used to do (in a
+       different way).
+
+02/04: Frank von Delft addressed a Geometric slowdown in
+       _objectify.ExpatFactory.__init__() when make_instance()
+       is called many times.  Still, rather than:
+
+         newNode = gnosis.xml.objectify.make_instance('<TD/>')
+
+       it is certainly better to use:
+
+         newNode = gnosis.xml.objectify.createPyObj('TD')
+
+       ...which avoids the prior issue anyway.
+
+       Added convenience function addChild(),
+
+       Silly fixes in pyobj_printer() for Python version oddness
+
+       For Python 2.3+, need to skip DocumentType nodes in
+       pyobj_from_dom() function.
+
+       Fixed/improved test cases.
+
+01/05: Adam Feuer fixed two bugs causing leaks in long running
+       processes (file close and expat base class).
+
+       Created support functions in gnosis.xml.objectify.utils.
+       See gnosis/docs/xml_matters_39.txt for more discussion.
+
+       - addChild()  # moved to utils subpackage
+       - walk_xo()   # Recursively traverse the nodes 
+       - write_xml() # Serialize an _XO_ object back into XML
+       - XPath()     # Find node(s) within an _XO_ object
+       - pyobj_printer()  # moved to utils subpackage 
+
+       Significant speedups by miscellaneous refactoring/cleanup.  
+       

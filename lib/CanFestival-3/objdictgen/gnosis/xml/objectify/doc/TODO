@@ -1,0 +1,15 @@
+- Add name munging to attributes (not just to tagnames), e.g.:
+
+  >>> from gnosis.xml.objectify import make_instance
+  >>> dir(make_instance('<foo bar-baz="bam"><spam-eggs/></foo>'))
+  ['PCDATA', ..., '_seq', u'bar-baz', 'spam__eggs']
+
+- Add a PyRXP (validating) parser.  Also, try some timings vs EXPAT.
+
+- In Python 2.3, the DOM parser produces a list of two elements, e.g.:
+
+    [<Spam id="249b6c">, <Spam id="24980c">]
+
+  However, the first element contains only empty (None) PCDATA, and no
+  children.  I do not know why this happens, and only starting with
+  2.3; but then, EXPAT is currently the preferred parser.

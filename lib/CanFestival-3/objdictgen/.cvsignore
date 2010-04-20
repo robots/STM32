@@ -1,0 +1,10 @@
+Makefile
+objdict.xml
+gnosis
+Gnosis_Utils-1.2.1.tar.gz
+*.od
+*.pyc
+*.c
+*.h
+*.eds
+canfestival_config.py

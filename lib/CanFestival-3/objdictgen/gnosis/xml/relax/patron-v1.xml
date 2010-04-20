@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<patron>
+  <book isbn="0-528-84460-X"/>
+  <name>John Doe</name>
+  <id-num>12345678</id-num>
+  <book title="Why RELAX is Clever"/>
+</patron>

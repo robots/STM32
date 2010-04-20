@@ -1,0 +1,42 @@
+Source: canfestival
+Section: devel
+Priority: standard
+Maintainer: edouard <edouard.tisserant@gmail.com>
+Build-Depends: debhelper (>= 5), libwxgtk2.8-dev
+Standards-Version: 3.7.2
+
+Package: canfestival
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: <insert up to 60 chars description>
+
+Package: canfestival-devel
+Architecture: all
+Description: Canfestival library
+ This package contains the CanFestival library for unix platform.
+
+Package: canfestival-examples
+Architecture: all
+Description: Program's Examples for canfestival
+ This package contains some test programs you can use as example
+ for your own developments.
+ - TestMasterSlave : Two CanOpen nodes in the same process
+ - TestMasterMicromod : A CanOpen master that control a peak MicroMod module
+ - DS401_Master : Master Node for the DS401_Slave_Gui
+ - DS401_Slave_Gui : Simulate an I/O module with GUI
+
+Package: canfestival-doc
+Architecture: all
+Description: Documentation for canfestival
+
+Package: canfestival-socket
+Architecture: all
+Description: Can interface for Socket-CAN
+
+Package: canfestival-objdictedit
+Architecture: all
+Depends: python-wxgtk2.8, xpdf
+Description: A CanOpen Node Editor
+ Objdictedit, the Object Dictionary Editor, is a WxPython based GUI that is used to
+ create the C file needed to create a new CanOpen node.
+

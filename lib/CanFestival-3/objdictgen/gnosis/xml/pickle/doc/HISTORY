@@ -1,0 +1,213 @@
+0.10  Initial version
+
+0.22  Compatible with PyXML 0.52
+
+0.30  Compatible with PyXML 0.61+
+
+0.40  Joshua Macy added several worthwhile things.  This
+      version is compatibility with Python 2.1 (and 2.0),
+      assuming nothing changes between the beta and release.
+
+      More importantly, Joshua added checks for cyclical
+      references and for multiple bindings of identical
+      objects.  Previously, xml_pickle effectively forced a
+      deep copy; for example:
+
+       obj.a = aDict
+       obj.b = aDict
+       obj.b is obj.a   # True
+       ... pickle then restore ...
+       obj.a is obj.b   # False
+
+      With version 0.40, object identity is preserved across
+      pickling.
+
+0.45  Finally added Curtis Jensen's enhancements to use NumPy
+      array type.
+
+0.46  Joe Kraska pointed out referential inconsistencies in
+      cyclical references, and provided changes (OK'd by Joshua
+      Macy, who did the referential code to start with).
+
+0.47  Improvement of the '_tag_completer()' flow control in
+      case of referential objects (consistent fall- through to
+      single 'return' statement.
+
+0.48  Modified string concatenation strategy to more
+      efficiently emit large XML documents (i.e. orders of
+      magnitude better; specifically, O(n) rather than O(n^2))
+
+0.49  Chip Salzenberg corrected a sloppy typo in the code for
+      outputting Unicode strings.
+
+0.50  Francesc Alted noticed a problem with pickling
+      [xml_objectify] objects.  A narrow solution to the
+      problem is to a avoid pickling the special '.__parent__'
+      attribute that the EXPAT option in 'XML_Objectify()'
+      uses.  A better solution to the broader issue of upward
+      cyclical reference might be provided later.
+
+0.51  Frank McIngvale contributed the addition of mxDateTime
+      to pickleable types
+
+0.60  Frank McIngvale added a large number of improvements and
+      extensions to the system (with a bit of advice and help
+      from David Mertz along the way):
+
+      - Simplified minidom.parse call (dqm)
+
+      - Pickle compiled SREs.
+
+      - Before bailing out on unknown objects, try saving them
+        in their pickled form (type="rawpickle").
+
+      - All types can read/store their value either in the
+        element body or the tag.
+
+      - Changes for Python 2.2 compatibility:
+            dir() changed
+            node.attributes[tuple] stopped working
+            more portable test for SRE type
+
+      - Added a generalized extension system (non-builtins
+        moved to xml_pickle_ext, except for NumPy, since it
+        acts as a builtin).  Made mxDateTime format better,
+        since code is out-of-line now (doesn't have to be so
+        clever).
+
+      - Refactored XML_Pickle to eliminate recursion problem,
+        and removed unneeded PyObject template class.
+
+      - Added XML_Pickle().dumps(object) form, and
+        pickle-compatible inline dump(),dumps(),load(),loads()
+        forms (added __all__ so these aren't auto-imported).
+
+      - XML_Pickle is now more flexible about how it loads
+        classes, and can restore full class functionality (just
+        like pickle does).  However, as this could present
+        security concerns, the PARANOIA setting was created -
+        see docs.
+
+      - Full __getstate__()/__setstate__() support, as well as
+        __getinitargs__ (i.e. we're now compatible with the
+        regular pickle protocol).
+
+      - Handle all types as key/val/items, and fixed ref
+        handling of key/val/items.  Catch unknown types in both
+        elif blocks.
+
+      - Fixed visited{} handling to properly keep temporary
+        object from being reused.
+
+      - Added DEEPCOPY to provide pre-0.40 behavior if desired.
+
+      - Implemented dqm's suggestion that ref's keep the
+        referenced typename, for better readibility and to make
+        it easier for external tools to parse the XML
+        (unfortunately, xml_pickle <= 0.51 won't be able to
+        read these pickles -- we can still read old pickles,
+        though).
+
+0.70  Module refactored into a package.  Should make maintenance
+      and further improvements easier.  Much extra
+      documentation and test cases now included with package.
+
+0.71  Various additional tweaking of the refactoring.
+      Rearrangement of doc/ subpackage, and minor code cleanup
+      throughout.
+
+0.72  Added compressed-binary option to XML_Pickle.dump() and
+      XML_Pickle.dumps(), and automatic recognition of compressed
+      pickles.  Usage matches "binary" option of cPickle.
+
+0.73  Some more bits from Frank McIngvale (frankm@hiwaay.net):
+
+      - Split DOM parser off from _pickle.py and created
+        parsers/ subdirectory. Added get/set parser functions.
+
+      - Added SAX parser.
+
+      - Replaced helpers with much superior mutator mechanism.
+        Objects can now be decomposed (mutated) into any builtin
+        type for pickling, instead of just a string.
+
+      - Fixed Numeric handling so array.arrays and Numeric.arrays
+        can both be pickled/unpickled in the same file.
+        Moved Numeric and array out of "core" code and into a
+        mutator extension.
+
+      - Added setInBody() so user can customize placement of
+        element text.
+
+      - (With dqm) Added StreamWriter/StreamReader to genericize
+        handling of compressed, etc., streams.
+
+      - (With dqm) Added pickling of toplevel objects (handled
+        as a mutated type).
+
+      - More bits moved to util.py to aid reuse in parsers.
+
+      - Fixed handling of self-referencing objects.
+
+      - Handle FunctionType, BuiltinFunctionType, and ClassType
+
+      - New tests; improved test harness.
+
+      - Minimized "mini" inspect module.
+
+      - setVerbose() to control verbosity of XML stream
+
+MM/YY = Revision dates, from here on
+
+05/02: Changes by dqm & fpm:
+
+      - Version numbering now only for 'gnosis' package as a whole.
+        This HISTORY will simply use approximate dates of
+        changes.
+
+      - Handle objects derived from builtins (Python >= 2.2)
+
+      - Handle __slots__, as a superset of the cPickle behavior
+        (we don't require __getstate__ - note that this
+        implementation is somewhat experimental and may change if
+        Python's handling of __slots__ changes).  On the other
+        hand, new-style classes with slots cannot pass through
+        cPickle's dump/load cycle; they do fine with xml_pickle.
+
+      - Better (correct) handling of unicode vs. "regular"
+        (Python) strings
+
+      - Portability fixes in the test cases
+
+05/02: A few small fixes/improvements since 1.0:
+
+      - No longer calling eval() (dqm added gnosis.util.XtoY with
+        safe alternative aton())
+
+      - Sped up mutator switch with try_mutate()
+
+      - No longer wrapping numerics with safe_content()
+
+      - Sped up handling of object subclassed from builtins by
+        caching hasCoreData() results
+
+      - Small improvements to tests
+
+      - Fixed PARANOIA == 0 to (hopefully) match how regular pickle
+        dynamically creates classes (previously failed on threaded
+        apps)
+
+      - No longer using repr() for numerics; we now control the
+        formatting explicitly
+
+06/02 - Fixed bug in XtoY.aton() when parsing "0"
+
+06/03 - Added support for bools in Python 2.3. Allow Python < 2.3
+        to read these bools in backward compatible way.
+
+      - Changed functions/classes from family 'uniq' to 'lang'.
+        Added comments to explain family types for reference.
+
+08/03 - Update to PyObject.dtd
+
+02/04 - Corrections to floating point handling

@@ -1,0 +1,120 @@
+#! gmake
+
+#
+# Copyright (C) 2006 Laurent Bessard
+# 
+# This file is part of canfestival, a library implementing the canopen
+# stack
+# 
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+# 
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+# 
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# 
+
+CC = SUB_CC
+
+CFLAGS = SUB_OPT_CFLAGS
+PROG_CFLAGS = SUB_PROG_CFLAGS
+OS_NAME = SUB_OS_NAME
+ARCH_NAME = SUB_ARCH_NAME
+PREFIX = SUB_PREFIX
+BINUTILS_PREFIX = SUB_BINUTILS_PREFIX
+TARGET = SUB_TARGET
+
+
+INCLUDES = -I../../include -I../../include/hcs12
+MEMORY_X = ../../include/hcs12/board/arch
+
+OBJCOPY = $(BINUTILS_PREFIX)objcopy
+OBJCOPY_FLAGS = --only-section=.text --only-section=.rodata --only-section=.vectors --only-section=.data
+
+PROGDEFINES = -mnoshort -Wall -Wmissing-prototypes -fno-strict-aliasing 
+
+PGR=geneSYNC
+
+SYNC_OBJS = objdict.o appli.o vectors.o
+
+OBJS = ../../src/$(TARGET)_pdo.o\
+       ../../src/$(TARGET)_sdo.o\
+       ../../src/$(TARGET)_states.o\
+       ../../src/$(TARGET)_sync.o\
+       ../../src/$(TARGET)_objacces.o\
+       ../../src/$(TARGET)_lifegrd.o\
+       ../../src/$(TARGET)_timer.o\
+       ../../src/$(TARGET)_nmtSlave.o\
+       ../../drivers/$(TARGET)/canOpenDriver.o\
+       ../../drivers/$(TARGET)/ports.o\
+       ../../drivers/$(TARGET)/interrupt.o\
+       $(SYNC_OBJS)
+
+LDFLAGS= -Wl,-m,m68hc12elfb  -L$(MEMORY_X)
+
+all: $(PGR).elf $(PGR).s19 $(PGR).b $(PGR).s MSG
+
+%o: %c
+	@echo " "
+	@echo "*********************************************"
+	@echo "**Compiling $< -> $@"
+	@echo "*********************************************"
+	$(CC) $(CFLAGS) $(PROG_CFLAGS) ${PROGDEFINES} $(INCLUDES) -c -o $@ $<
+
+%o: %s
+	@echo " "
+	@echo "*********************************************"
+	@echo "**Compiling $< -> $@"
+	@echo "*********************************************"
+	$(CC)  -c -x assembler-with-cpp $(PROG_CFLAGS) -o  $@ $<
+
+$(PGR).elf: $(OBJS)
+	@echo " "
+	@echo "============================================="
+	@echo "**Linking :  $@"
+	@echo "============================================="
+	$(CC) $(CFLAGS) $(LDFLAGS) $(PROG_CFLAGS) ${PROGDEFINES} $(INCLUDES) -o $@ $(OBJS)
+
+$(PGR).s19: $(PGR).elf
+	@echo " "
+	@echo "============================================="
+	@echo "**Create s19 file :  $@"
+	@echo "============================================="
+	$(OBJCOPY) --output-target=srec $(OBJCOPY_FLAGS) $< $@
+
+$(PGR).b: $(PGR).elf
+	@echo " "
+	@echo "============================================="
+	@echo "**Create binary file :  $@"
+	@echo "============================================="
+	$(OBJCOPY) --output-target=binary --gap-fill=255 --only-section=.data $(OBJCOPY_FLAGS) $< $@
+
+$(PGR).s: $(PGR).elf
+	@echo " "
+	@echo "============================================="
+	@echo "**Create unassembled file : $@"
+	@echo "============================================="
+	$(BINUTILS_PREFIX)objdump -D $(PGR).elf > $(PGR).s
+
+MSG:
+	@echo " "
+	@echo "---------------------------------------------"
+	@echo "**Informations on elf file : $(PGR).elf "
+	@echo "---------------------------------------------"
+	$(BINUTILS_PREFIX)readelf -S $(PGR).elf
+	@echo
+	$(BINUTILS_PREFIX)size $(PGR).elf
+
+clean:
+	rm -f $(SYNC_OBJS)
+
+mrproper: clean
+	rm -f $(PGR).elf $(PGR).s19 $(PGR).b $(PGR).s
+

@@ -1,0 +1,49 @@
+
+# Debug and warning codes
+-------------------------
+
+Errors are managed by the macro 
+MSG_ERR(nbr, string, value)
+
+Warnings and Informations  are managed by the macro
+MSG_WAR(nbr, string, value)
+
+
+
+The format of nbr
+++++++++++++++++++++
+16 bits, writen in hexadecimal: 0xtfxx
+
+t   : 1    -> Error
+      2    -> Warning
+      3    -> Information
+
+f   : 0    -> In file sync.c, emcy.c
+      1    ->         lifegrd.c
+      2    ->         objacces.c
+      3    ->         timer.c
+      4    ->         nmtSlave.c
+      5    ->         nmtMaster.c
+      6    ->         canOpenDriver.c, interrupt.c, variahw.c (errors nb 20 .. 30)
+      7    ->         initObjdict.c
+      8    ->         Maps_module_utilisé.cpp
+      9    ->         pdo.c
+      A    ->         sdo.c
+      B    ->         objacces.c
+      D    ->         user's application
+      E    ->         user's application
+      F    ->         user's application
+
+xx  : a number
+
+
+The format of string
+++++++++++++++++++++
+A string, ended by a space, whithout a newline
+
+The format of value
+++++++++++++++++++++
+Unsigned 32 bits or less
+
+
+

@@ -1,0 +1,116 @@
+#! gmake
+
+#
+# Copyright (C) 2006 Laurent Bessard
+# 
+# This file is part of canfestival, a library implementing the canopen
+# stack
+# 
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+# 
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+# 
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# 
+
+#ifneq ($(KERNELRELEASE),)
+# Kbuild part of Makefile
+obj-m := libcanfestival_$(TARGET).o
+libcanfestival_$(TARGET)-objs := $(OBJS)
+
+#else
+# Normal Makefile
+CC = SUB_CC
+OPT_CFLAGS = -O2
+PROG_CFLAGS = SUB_PROG_CFLAGS
+OS_NAME = SUB_OS_NAME
+ARCH_NAME = SUB_ARCH_NAME
+PREFIX = SUB_PREFIX
+TARGET = SUB_TARGET
+CAN_DRIVER = SUB_CAN_DRIVER
+TIMERS_DRIVER = SUB_TIMERS_DRIVER
+ENABLE_DLL_DRIVERS = SUB_ENABLE_DLL_DRIVERS
+BINUTILS_PREFIX = SUB_BINUTILS_PREFIX
+
+INCLUDES = -I../../include -I../../include/$(TARGET) -I../../include/$(TIMERS_DRIVER)
+
+OBJS = $(TARGET).o
+
+# add timers driver if any
+ifneq ($(TIMERS_DRIVER),timers_)
+OBJS += ../$(TIMERS_DRIVER)/$(TIMERS_DRIVER).o
+endif
+
+SRC_HFILES = ../../include/$(TARGET)/applicfg.h ../../include/$(TARGET)/canfestival.h
+
+TARGET_HFILES = $(PREFIX)/include/$(TARGET)/applicfg.h $(PREFIX)/include/$(TARGET)/canfestival.h
+
+all: driver
+
+ifeq ($(TIMERS_DRIVER), timers_kernel)
+OBJS := $(shell echo $(OBJS) | sed "s:$(TARGET)_::g")
+EXTRA_CFLAGS := $(shell echo $(INCLUDES) | sed "s:-I:-I$(src)/:g")
+EXTRA_CFLAGS += $(PROG_CFLAGS)
+KERNELDIR := SUB_KERNELDIR
+export TARGET
+export OBJS
+export EXTRA_CFLAGS
+
+driver: libcanfestival_$(TARGET)
+
+libcanfestival_$(TARGET):
+	@echo Building [libcanfestival_$(TARGET).o]
+	$(MAKE) -C $(KERNELDIR) M=$(shell pwd) modules
+
+clean:
+	$(MAKE) -C $(KERNELDIR) M=$(shell pwd) clean
+	rm -f Module.symvers
+
+install:
+	
+
+else
+CFLAGS = SUB_OPT_CFLAGS
+
+driver: $(OBJS)
+
+%o: %c
+	$(CC) $(CFLAGS) $(PROG_CFLAGS) ${PROGDEFINES} $(INCLUDES) -o $@ -c $<
+
+#../$(TIMERS_DRIVER)/$(TIMERS_DRIVER).o:
+#	$(MAKE) -C ../$(TIMERS_DRIVER) driver
+
+#../$(CAN_DRIVER)/$(CAN_DRIVER).o:
+#	$(MAKE) -C ../$(CAN_DRIVER) driver
+
+libcanfestival_$(TARGET).a: $(OBJS)
+	@echo Building [libcanfestival_$(TARGET).a]
+	$(BINUTILS_PREFIX)ar rc $@ $(OBJS)
+	$(BINUTILS_PREFIX)ranlib $@
+
+install: libcanfestival_$(TARGET).a
+	mkdir -p $(PREFIX)/lib/
+	mkdir -p $(PREFIX)/include/canfestival
+	cp libcanfestival_$(TARGET).a $(PREFIX)/lib/
+	cp $(SRC_HFILES) $(PREFIX)/include/canfestival
+
+uninstall:
+	rm -f $(PREFIX)/lib/libcanfestival_$(TARGET).a
+	rm -f $(TARGET_HFILES)
+
+clean:
+	rm -f $(OBJS)
+	rm -f libcanfestival_$(TARGET).a
+
+endif
+mrproper: clean
+
+#endif

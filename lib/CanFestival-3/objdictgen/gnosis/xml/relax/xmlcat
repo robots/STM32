@@ -1,0 +1,34 @@
+#!/usr/bin/env python
+import sys
+from xml.sax import handler, make_parser
+from xml.sax.saxutils import escape
+
+class ContentGenerator(handler.ContentHandler):
+    def __init__(self, out=sys.stdout):
+        handler.ContentHandler.__init__(self)
+        self._out = out
+    def startDocument(self):
+        xml_decl = '<?xml version="1.0" encoding="iso-8859-1"?>\n'
+        self._out.write(xml_decl)
+    def endDocument(self):
+        self._out.write('\n')
+    def startElement(self, name, attrs):
+        self._out.write('<' + name)
+        name_val = attrs.items()
+        name_val.sort()                 # canonicalize attributes
+        for (name, value) in name_val:
+            self._out.write(' %s="%s"' % (name, escape(value)))
+        self._out.write('>')
+    def endElement(self, name):
+        self._out.write('</%s>' % name)
+    def characters(self, content):
+        self._out.write(escape(content))
+    def ignorableWhitespace(self, content):
+        self._out.write(content)
+    def processingInstruction(self, target, data):
+        self._out.write('<?%s %s?>' % (target, data))
+
+if __name__=='__main__':
+    parser = make_parser()
+    parser.setContentHandler(ContentGenerator())
+    parser.parse(sys.argv[1])

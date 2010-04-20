@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<!DOCTYPE Spam SYSTEM "spam.dtd" >
+<Spam>
+  <Eggs>Some text about eggs.</Eggs>
+  <MoreSpam>Ode to Spam</MoreSpam>
+</Spam>

@@ -1,0 +1,31 @@
+Kvaser driver for CANfestival, the open source CANopen stack.
+(C)2008 Giuseppe Massimo Bertani 
+
+
+This driver should work with any Kvaser product compatible with Kvaser's CANLIB4.
+I tested it with CAN Leaf Professional (USB-CAN adapter) on a Suse10.1 Linux box
+and CANLIB 4.72 Beta (Oct 1,2007). 
+
+In order to compile the driver, you should already be able to run the CANlib examples,
+and tools, to be sure that CANLIB is able to detect and drive your device. 
+ 
+-------------------------------------------------------------------------------------------------
+NOTES ABOUT CANLIB4
+
+Since the "Leaf" device was added recently to CANLIB, I had to download the latest linuxcan4
+library sources from http://www.kvaser.com instead of use the CD software shipped with the device.
+
+--------------------------------------------------------------------------------------------------
+NOTES ABOUT WINDOWS
+
+Sadly, Kvaser's Win32 CANLIB is not provided with sources, so CANLIB cannot be build with GNU
+tools. LIB files for MSVC and BCC are provided with the DLL but the DLL itself is stripped and
+I've tried an entire day to compile this driver under Cygwin without success, despite 
+Wu Yongwei's hints (http://www.geocities.com/yongweiwu/dllfaq.htm).
+
+This does not mean that it's an impossible task, but probably I left out something important. 
+Temporary KO.
+
+-------------------------------------------------------------------------------------------------
+
+GMB 23/1/08

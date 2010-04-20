@@ -1,0 +1,42 @@
+Several modules created by David Mertz (with generous contributions by
+numerous other programmers--see the various THANKS_TO and HISTORY
+strings) have been aggregated into the "gnosis" package.  This allows us
+to include various useful supplementary files (documentation, test
+cases, utilities, etc), as well as to break large modules into smaller
+components.
+
+Over time, additional modules will be included.  Please see the
+documentation in the various subpackages for details on usage, changes,
+etc.  Subpackage documentation may be viewed in several ways:
+
+    % less gnosis/xml/pickle/doc/HISTORY
+
+or,
+
+    >>> import gnosis.xml.pickle.doc
+    >>> print gnosis.xml.pickle.doc.HISTORY
+
+or,
+
+    % pydoc.py gnosis.xml.pickle.doc
+
+Similarly for other subpackages.
+
+---
+As a result of the package organization, the import of modules in older
+application will require a slight change to use the newer packaging.
+For example, an application might previously have had a line like, e.g.:
+
+    import xml_pickle
+
+Users of the new package can use the following instead, e.g.:
+
+    import gnosis.xml.pickle as xml_pickle
+
+Any remaining code that uses names in the "xml_pickle" namespace should
+continue to work with this one change.  Of course, newer applications
+might prefer to start using the package namespace descriptions directly.
+Other than the leading "gnosis", package names will generally simply
+replace underscores in the old-style names with dots in the new-style
+subpackages.
+

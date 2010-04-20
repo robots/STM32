@@ -1,0 +1,76 @@
+Note 0:
+
+    See http://gnosis.cx/publish/programming/xml_matters_2.txt
+    and http://gnosis.cx/publish/programming/xml_matters_11.txt
+    for a detailed discussion of this module.
+
+    Also check the HISTORY document for a number of details on
+    special features added over time (not necessary for main API).
+
+Note 1:
+
+    This version of [xml_objectify] should work with Python 2.0
+    and later (and with any newer PyXML package users might have
+    installed).  Sorry about the loss of Python 1.52
+    compatibility, but the XML support only really stabilized
+    with 2.0 anyway.  Older versions can be downloaded at:
+
+      http://gnosis.cx/download/xml_objectify/
+
+    Those older versions might lack certain features.
+
+Note 2:
+
+    This module is a companion to the [xml_pickle] module.
+    However, the focus of each is different.  [xml_pickle] starts
+    with an generic Python object, and produces a specialized XML
+    document (and reads back from that custom DTD).
+    [xml_objectify] starts with a generic XML document, and
+    produces a somewhat specialized Python object.  Depending on
+    the original and natural form of your data, one companion
+    module is preferable to the other.
+
+Usage:
+
+    # Create a "factory object"
+    xml_object = XML_Objectify('test.xml',parser=DOM)
+    # Create two different objects with recursively equal values
+    py_obj1 = xml_object.make_instance()
+    py_obj2 = xml_object.make_instance()
+
+    # Shortcut styles
+    from gnosis.xml.objectify import make_instance
+    py_obj3 = make_instance('filename.xml')
+    py_obj4 = make_instance('<foo><bar>X</bar><baz data="Y"/></foo>')
+    py_obj5 = make_instance(prebuilt_domobj, parser=DOM)
+    py_obj6 = make_instance(urlopen('http://somewhere.org/foo.xml'))
+
+Classes:
+
+    XML_Objectify
+    _XO_
+    ExpatFactory
+
+Functions:
+
+    keep_containers(yes_no)
+    config_nspace_sep(val=None)  # Enable namespace support
+    pyobj_from_dom(dom_node)     # Converts DOM to a "native"
+    py_name()                    # Mangled name
+    createPyObj(s)               # Return a new _XO_<s> object
+    pyobj_printer(py_obj)        # Pretty printer
+    _dir(obj)
+
+
+Convenience functions:
+
+    make_instance(x)   # Create an object from anything XML-ish
+    content(o)         # The (mixed) content of o
+    children(o)        # The child nodes (not PCDATA) of o
+    text(o)            # List of textual children
+    attributes(o)      # List of (XML) attributes of o
+    tagname(o)         # The element tag that o was generated from
+    dumps(o)           # The PCDATA in o (preserves whitespace)
+    normalize(s)       # Whitespace normalize string
+                       # Normally: o.PCDATA==normalize(dumps(o))
+

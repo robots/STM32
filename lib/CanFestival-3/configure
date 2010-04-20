@@ -1,0 +1,826 @@
+#!/bin/bash
+
+#
+# Copyright (C) 2004 Edouard TISSERRANT, Laurent BESSARD
+# Based on Gabriel Gerhardsson's cacheprobe configure script. 
+# 
+# This file is part of CanFestival, a library implementing CanOpen Stack. 
+# 
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+# 
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+# 
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# 
+
+###########################################################################
+#                       DEFAULT CANFESTIVAL DEFINES                       #
+###########################################################################
+
+# Number of can bus to use 
+MAX_CAN_BUS_ID=1
+
+# max bytes to transmit by SDO Put 4 if you only support expedited transfert.
+#For a normal transfert, (usually for a string), put the maximum string size to transfer.
+SDO_MAX_LENGTH_TRANSFERT=32
+
+# Number of SDO from differents nodes that the node can manage concurrently.   
+#for a slave node, usually put 1.
+SDO_MAX_SIMULTANEOUS_TRANSFERTS=4
+
+# Used for NMTable[bus][nodeId]	  
+# You can put less of 128 if on the netwo
+# are connected only smaller nodeId node.
+NMT_MAX_NODE_ID=128
+
+#Timeout in milliseconds for SDO.
+#    Comment the #define if not used (infinite wait for SDO response message)
+SDO_TIMEOUT_MS=3000
+
+MAX_NB_TIMER=32
+
+# Generic timers declaration defaults
+US_TO_TIMEVAL_FACTOR=
+TIMEVAL=
+TIMEVAL_MAX=
+
+# Default to little-endian
+CANOPEN_BIG_ENDIAN=
+
+# Max number of active errors managed in error_data structure.
+EMCY_MAX_ERRORS=8
+
+#Timeout in milliseconds for LSS.
+LSS_TIMEOUT_MS=1000
+#Timeout in milliseconds for LSS FastScan.
+LSS_FS_TIMEOUT_MS=100
+
+###########################################################################
+#                             DEFAULT BUILD OPTIONS                       #
+###########################################################################
+
+#default target
+SUB_TARGET=
+
+# First compiler option - we will check if it exists
+CC1=gcc
+# Second compiler option - we will check if it exists
+CC2=cc
+
+# Install prefix
+SUB_PREFIX=
+
+# Used for C compiler test/detection 
+CFLAGS=
+test=conftest
+rm -f $test $test.c
+
+if [ "$XENO_CONFIG" = "" ]; then
+	XENO_CONFIG=/usr/xenomai/bin/xeno-config
+fi
+
+if [ "$RTAI_CONFIG" = "" ]; then
+	RTAI_CONFIG=/usr/realtime/bin/rtai-config
+fi
+
+###########################################################################
+#                          ARGUMENTS PARSING                              #
+###########################################################################
+while [ $# -ge 1 ]; do
+	optarg=`expr "x$1" : 'x[^=]*=\(.*\)'`
+	
+	case $1 in
+	--cc=*)		CC=$optarg;;
+	--cxx=*)	CXX=$optarg;;
+	--ld=*)		LD=$optarg;;
+	--binutils=*)   BINUTILS_PREFIX=$optarg;;
+	--arch=*)	SUB_ARCH_NAME=$optarg;;
+	--os=*)		SUB_OS_NAME=$optarg;;
+	--kerneldir=*)	SUB_KERNELDIR=$optarg;;
+	--prefix=*)	SUB_PREFIX=$optarg;;
+	--target=*)	SUB_TARGET=$optarg;;
+	--can=*)	SUB_CAN_DRIVER=$optarg;;
+	--timers=*)	SUB_TIMERS_DRIVER=$optarg;;
+	--wx=*)		SUB_WX=$optarg;
+			echo "Forced wx detection to $optarg";;
+	--disable-Ox)	DISABLE_OPT=1;
+			echo "On user request: Won't optimize with \"-Ox\"";;
+	--disable-dll)	DISABLE_DLL=1;
+			echo "On user request: Won't create and link to dll";;
+	--enable-lss)	ENABLE_LSS=1;
+			echo "On user request: LSS services enabled";;
+	--enable-lss-fs)	ENABLE_LSS_FS=1;
+			echo "On user request: LSS FastScan service enabled";;
+	--debug=*)	DEBUG=$optarg;;
+	--MAX_CAN_BUS_ID=*)	MAX_CAN_BUS_ID=$optarg;;
+	--SDO_MAX_LENGTH_TRANSFERT=*)	SDO_MAX_LENGTH_TRANSFERT=$optarg;;
+	--SDO_MAX_SIMULTANEOUS_TRANSFERTS=*)	SDO_MAX_SIMULTANEOUS_TRANSFERTS=$optarg;;
+	--NMT_MAX_NODE_ID=*)	NMT_MAX_NODE_ID=$optarg;;
+	--SDO_TIMEOUT_MS=*)	SDO_TIMEOUT_MS=$optarg;;
+	--CANOPEN_BIG_ENDIAN=*)	CANOPEN_BIG_ENDIAN=$optarg;;
+	--MAX_NB_TIMER=*) MAX_NB_TIMER=$optarg;;
+	--EMCY_MAX_ERRORS=*) EMCY_MAX_ERRORS=$optarg;;
+	--LSS_TIMEOUT_MS=*)	LSS_TIMEOUT_MS=$optarg;;
+	--LSS_FS_TIMEOUT_MS=*)	LSS_FS_TIMEOUT_MS=$optarg;;
+	--help)
+		echo	"Usage: ./configure [options]"
+		echo	"Options:"
+		echo 	" --cc=foo      Use C compiler 'foo' instead of defaults ${CC1} or ${CC2}."
+		echo 	" --cxx=foo     Use C++ compiler 'foo' instead of defaults g++."
+		echo 	" --ld=foo      Use linker 'foo' instead of ld."
+		echo 	" --arch=foo    Use architecture 'foo' instead of trying to autodetect."
+		echo 	" --os=foo      Use operative system 'foo' instead of trying to autodetect."
+		echo 	" --kerneldir=foo   Use 'foo' as kernel source directory instead of default"
+		echo 	" --prefix=foo  Use prefix 'foo' instead of default ${SUB_PREFIX}."
+		echo 	" --target=foo  Use 'foo' as build target."
+		echo	"               \"unix\" for unix-like systems (Linux, Cygwin)"
+		echo	"               \"win32\" for win32 systems (native, mingw or VC++)"
+		echo	"               \"hcs12\" for HCS12 micro-controller"
+		echo 	" --can=foo	Use 'foo' as CAN driver"
+		echo	"               \"anagate_linux\" use AnaGate CAN(duo) driver for linux"	
+		echo	"               \"anagate_win32\" use AnaGate CAN(duo) driver for win32"				
+		echo	"               \"peak_linux\" use Linux build host installed Peak driver and library"
+		echo	"                 see http://www.peak-system.com/linux/"
+		echo	"               \"peak_win32\" use win32 PcanLight Peak driver and library with Cygwin" 
+		echo	"                 see http://www.peak-system.com/themen/download_gb.html"
+		echo	"               \"virtual\" use unix pipe based virtual can driver"
+		echo	"               \"virtual_kernel\" use kernel module virtual can driver"
+		echo	"               \"socket\" use socket-can  "
+		echo	"                 see http://developer.berlios.de/projects/socketcan/"
+		echo	"               \"lincan\" lincan driver"
+		echo	"                 see http://www.ocera.org/download/components/WP7/lincan-0.3.3.html"
+		echo	"               \"can4linux\" can4linux driver"
+		echo	"                 see http://www.port.de/engl/canprod/hw_can4linux.html"
+		echo 	" --timers=foo  Use 'foo' as TIMERS driver (can be 'unix', 'xeno', 'rtai' or 'kernel')"
+		echo 	" --wx=foo      Force result of WxWidgets detection (0 or 1)"
+		echo 	" --binutils=path   Override binutils path detection (as regards \$CC content)"
+		echo 	" --disable-dll Disable run-time dynamic linking of can, led and nvram drivers"
+		echo 	" --enable-lss  Enable the LSS services"
+		echo 	" --enable-lss-fs  Enable the LSS FastScan service"
+		echo	" --disable-Ox  Disable gcc \"-Ox\" optimizations."
+		echo	" --debug=foo,foo,..   Enable debug messages, ERR -> only errors, WAR)."
+		echo	"               \"PDO\" send errors and warnings through PDO messages"
+		echo	"               \"ERR\" print errors only, to stdout"
+		echo	"               \"WAR\" print errors and warnings, to stdout"
+		echo	"               \"MSG\" print messages content, to stdout"
+		echo
+		echo	"Stack compilation constants"
+		echo	" --MAX_CAN_BUS_ID [=1] Number of can bus to use"
+		echo	" --SDO_MAX_LENGTH_TRANSFERT [=32] max bytes to transmit by SDO"
+		echo	" --SDO_MAX_SIMULTANEOUS_TRANSFERTS [=4] Number of SDO that the node can manage concurrently"
+		echo	" --NMT_MAX_NODE_ID [=128] can be reduced to gain memory on small network"
+		echo	" --SDO_TIMEOUT_MS [=3000] Timeout in milliseconds for SDO (None to disable the feature)"
+		echo	" --EMCY_MAX_ERRORS [=8] Max number of active errors managed in error_data structure"
+		echo	" --LSS_TIMEOUT_MS [=1000] Timeout in milliseconds for LSS services."
+		echo	"                          LSS must be enabled with \"--enable-lss\""
+		echo	" --LSS_FS_TIMEOUT_MS [=100] Timeout in milliseconds for LSS FastScan service."
+		echo	"                            LSS FastScan must be enabled with \"--enable-lss-fs\""
+		exit 0;;
+	*)		echo "Unknown argument ${1}"; exit -1;;
+	esac
+
+	shift
+done
+
+###########################################################################
+#                              GUESS OS/ARCH                              #
+###########################################################################
+
+if [ "$SUB_OS_NAME" = "" ]; then
+	SUB_OS_NAME="`(uname -s | sed \"s/\//-/\" | sed \"s/_/-/\" \
+			| sed \"s/-.*//g\") 2>&1`"
+fi
+
+if [ "$SUB_ARCH_NAME" = "" ]; then
+	if [ "$CC" = "" ]; then
+		A_NAME="`(uname -m) 2>&1`"
+	else
+		A_NAME="`$CC -dumpmachine | sed 's:-.*::'`"
+	fi
+fi
+
+# x86
+if [ "$A_NAME" = "i386" -o "$A_NAME" = "i486" -o "$A_NAME" = "i586" -o "$A_NAME" = "i686" -o "$A_NAME" = "x86" ]; then
+	SUB_ARCH_NAME=x86
+fi
+
+# x86_64
+if [ "$A_NAME" = "x86_64" ]; then
+	SUB_ARCH_NAME=x86_64
+fi
+
+# ppc
+if [ "$A_NAME" = "powerpc" ]; then
+	SUB_ARCH_NAME=ppc
+fi
+
+# ppc64
+if [ "$A_NAME" = "powerpc64" ]; then
+	SUB_ARCH_NAME=ppc64
+fi
+
+# arm
+if [ "$A_NAME" = "arm" ]; then
+	SUB_ARCH_NAME=arm
+fi
+
+# mingw32
+if [ "$A_NAME" = "mingw32" ]; then
+	SUB_ARCH_NAME=mingw32
+fi
+
+if [ "$SUB_ARCH_NAME" = "" ]; then
+	echo "Error: could not detect what architecture this system is running!"
+	echo "Please supply manually instead with \"--arch=foo\""
+	exit -1
+fi
+
+echo "Host OS: ${SUB_OS_NAME}"
+echo "Host arch: ${SUB_ARCH_NAME}"
+
+if [ "$SUB_ARCH_NAME" = "ppc" -o "$SUB_ARCH_NAME" = "powerpc" ]; then
+	# PowerPC uses big endian format
+	CANOPEN_BIG_ENDIAN=1
+fi
+
+###########################################################################
+#                      DEFAULT TARGET/DRIVERS GUESSING                    #
+###########################################################################
+# If target not specified, try to guess one
+if [ "$SUB_TARGET" = "" ]; then
+	if [ "$SUB_OS_NAME" = "CYGWIN" ]; then
+		echo "Choosing unix (cygwin) target"
+		SUB_TARGET=unix
+	fi
+	if [ "$SUB_OS_NAME" = "Linux" ]; then
+		echo "Choosing unix target"
+		SUB_TARGET=unix
+	fi
+	if [ "$SUB_OS_NAME" = "MINGW32" ]; then
+		echo "Choosing windows target"
+		SUB_TARGET=win32
+	fi
+fi
+
+# Try to guess can
+if [ "$SUB_CAN_DRIVER" = "" ]; then
+	if [ "$SUB_TARGET" = "unix" ]; then
+		if [ -e /usr/lib/libpcan.so ]; then 
+			echo "Choosing installed Peak driver as CAN driver."
+			SUB_CAN_DRIVER=peak_linux
+		elif [ "$SUB_OS_NAME" = "CYGWIN" -a "PCAN_LIB" != "" ]; then
+			echo "Choosing installed Peak driver as CAN driver."
+			SUB_CAN_DRIVER=peak_win32		
+		elif [ -e /usr/lib/libcanlib.so ]; then 
+			echo "Choosing installed Kvaser driver as CAN driver. (unix)"
+			SUB_CAN_DRIVER=kvaser
+		elif [ -e /usr/local/lib/libAnaGateAPIDLL.so ]; then 
+			echo "Choosing installed AnaGate driver as CAN driver. (unix)"
+			SUB_CAN_DRIVER=anagate_linux
+		elif [ "$SUB_OS_NAME" = "CYGWIN" -a "$KVASER_DLL_PATH" != "" ]; then
+			echo "Choosing installed Kvaser driver as CAN driver. (cygwin)"
+			SUB_CAN_DRIVER=kvaser
+		else
+			echo "Choosing virtual CAN driver."
+			SUB_CAN_DRIVER=virtual
+		fi
+	fi
+fi
+
+# If target is unix, default timers also
+if [ "$SUB_TARGET" = "unix" -a "$SUB_TIMERS_DRIVER" = "" ]; then
+	echo "Choosing unix timers driver."
+	SUB_TIMERS_DRIVER=unix
+fi
+
+# If target is windows, default timers also
+if [ "$SUB_TARGET" = "win32" -a "$SUB_TIMERS_DRIVER" = "" ]; then
+	echo "Choosing windows timers driver."
+	SUB_TIMERS_DRIVER=win32
+fi
+
+# Warn for unstalled peak driver if choosen
+if [ "$SUB_CAN_DRIVER" = "peak" ]; then
+	if [ ! -e /usr/lib/libpcan.so ]; then 
+		echo "Peak driver hasn't been installed !"
+		exit -1
+	fi
+fi
+
+# Warn for unstalled peak driver if choosen
+if [ "$SUB_CAN_DRIVER" = "anagate_linux" ]; then
+	if [ ! -e /usr/local/lib/libAnaGateAPIDLL.so ]; then 
+		echo "AnaGateCAN driver hasn't been installed !"
+		exit -1
+	fi
+fi
+
+# Warn for unstalled kvaser driver if choosen
+if [ "$SUB_CAN_DRIVER" = "kvaser" ]; then
+	if [ "$SUB_OS_NAME" = "CYGWIN" ]; then
+        if [ ! -e "$KVASER_DLL_PATH/canlib32.dll" ]; then 
+            echo "Kvaser driver hasn't been installed (cygwin)"
+            exit -1
+        fi
+    elif  [ "$SUB_OS_NAME" = "LINUX" ]; then
+        if [ ! -e /usr/lib/libcanlib.so ]; then 
+            echo "Kvaser driver hasn't been installed (unix)"
+            exit -1
+        fi
+	fi
+fi
+
+###########################################################################
+#              TARGET/DRIVER SPECIFIC CFLAGS and OPTIONS                  #
+###########################################################################
+if [ "$SUB_TARGET" = "hcs12" ]; then
+	# Only if we want to compile for a C HCS12
+       # it is a big endian architecture.
+       CANOPEN_BIG_ENDIAN=1
+	# search for gcc hcs12 compiler m6811-elf-gcc or m68hc12-gcc ?
+	if [ "$CC" = "" ]; then
+		which m6811-elf-gcc >/dev/null 2>&1
+		if (( $? )); then 
+			which m68hc12-gcc >/dev/null 2>&1
+			if (( $? )); then 
+				echo "Please use --cc flag to specify compiler"
+				exit 0
+			else
+				CC=m68hc12-gcc 
+			fi
+		else
+			CC=m6811-elf-gcc
+			SUB_PROG_CFLAGS=-m68hc12
+		fi
+	fi
+fi	
+
+#### CAN_DRIVER ####
+
+if [ "$SUB_CAN_DRIVER" = "kvaser" ]; then
+	if [ "$SUB_TARGET" = "unix" ]; then
+        if  [ "$SUB_OS_NAME" = "LINUX" ]; then
+            SUB_CAN_DLL_CFLAGS=$SUB_CAN_DLL_CFLAGS\ -lcanlib
+		elif [ "$SUB_OS_NAME" = "CYGWIN" ]; then
+	        if [ "$KVASER_INCLUDE_PATH" = "" -o "$KVASER_DLL_PATH" = "" ]; then
+		        echo "!!! ERROR !!! Please set KVASER_DLL_PATH and KVASER_INCLUDE_PATH to appropriate paths ! "
+            else
+                SUB_CAN_DLL_CFLAGS=$SUB_CAN_DLL_CFLAGS\ -L$KVASER_DLL_PATH\ -lcanlib32
+                SUB_PROG_CFLAGS=$SUB_PROG_CFLAGS\ -I$KVASER_INCLUDE_PATH
+            fi
+        fi
+    fi        
+fi
+
+if [ "$SUB_CAN_DRIVER" = "peak_linux" ]; then
+    SUB_CAN_DLL_CFLAGS=$SUB_CAN_DLL_CFLAGS\ -lpcan
+fi
+
+if [ "$SUB_CAN_DRIVER" = "anagate_linux" ]; then
+    SUB_CAN_DLL_CFLAGS=$SUB_CAN_DLL_CFLAGS\ -lAnaGateAPIDLL
+    SUB_CAN_DLL_CFLAGS=$SUB_CAN_DLL_CFLAGS\ -lAnaCommon
+fi
+
+
+if [ "$SUB_CAN_DRIVER" = "vscom" ]; then
+    SUB_CAN_DLL_CFLAGS=$SUB_CAN_DLL_CFLAGS\ -lvs_can_api
+fi
+
+if [ "$SUB_CAN_DRIVER" = "anagate_win32" ]; then
+    SUB_CAN_DLL_CFLAGS=$SUB_CAN_DLL_CFLAGS\ -lAnaGateCan
+fi
+
+PW32DIR=drivers/can_peak_win32
+if [ "$SUB_CAN_DRIVER" = "peak_win32" ]; then
+	if [ "$PCAN_HEADER" = "" -o "$PCAN_LIB" = "" ]; then
+		echo "!!! ERROR !!! Please set PCAN_LIB PCAN_HEADER [PCAN_INCLUDE] to appropriate paths ! "
+	fi
+   	SUB_CAN_DLL_CFLAGS=$SUB_CAN_DLL_CFLAGS\ -liberty\ \'$PCAN_LIB\'
+	echo "Converting PcanLib header files for gcc -> $PW32DIR/cancfg.h"
+	cat $PW32DIR/cancfg.h.head $PCAN_INCLUDE/$PCAN_HEADER > $PW32DIR/cancfg.h
+	echo >> $PW32DIR/cancfg.h
+	# second port handling
+	if [ "$PCAN2_HEADER" != "" ]; then
+		echo "Stripping down second Pcan Light header "
+		echo >> $PW32DIR/cancfg.h
+		echo "// Stripped PcanLight header to prevent typedef conflicts ">> $PW32DIR/cancfg.h
+		echo >> $PW32DIR/cancfg.h
+		grep __stdcall $PCAN_INCLUDE/$PCAN2_HEADER >> $PW32DIR/cancfg.h
+		echo '#define PCAN2_HEADER_' >> $PW32DIR/cancfg.h
+	   	SUB_CAN_DLL_CFLAGS=$SUB_CAN_DLL_CFLAGS\ \'$PCAN2_LIB\'
+	fi
+	if grep -q CANHwType $PW32DIR/cancfg.h ; then
+		echo "Peak Init HwType, IO_Port and IRQ will be passed in environment :"
+		echo "	PCANHwType PCANIO_Port PCANInterupt"
+		echo '#define extra_PCAN_init_params' >> $PW32DIR/cancfg.h
+	fi
+	if ! grep -q CAN_Init $PW32DIR/cancfg.h ; then
+		echo "Pcan Light header/lib is for second port of device only"
+		echo "CAN_* calls redefined to CAN2_* "
+		echo '#define CAN_Init CAN2_Init' >> $PW32DIR/cancfg.h
+		echo '#define CAN_Read CAN2_Read' >> $PW32DIR/cancfg.h
+		echo '#define CAN_ReadEx CAN2_ReadEx' >> $PW32DIR/cancfg.h
+		echo '#define CAN_SetRcvEvent CAN2_SetRcvEvent' >> $PW32DIR/cancfg.h
+		echo '#define CAN_Write CAN2_Write' >> $PW32DIR/cancfg.h
+		echo '#define CAN_Close CAN2_Close' >> $PW32DIR/cancfg.h
+	fi
+	cat $PW32DIR/cancfg.h.tail >> $PW32DIR/cancfg.h
+fi
+
+if [ "$SUB_CAN_DRIVER" = "none" ]; then
+	SUB_CAN_DRIVER=
+fi
+
+#### TIMERS_DRIVER ####
+
+if [ "$SUB_TIMERS_DRIVER" = "unix" ]; then
+	if [ "$SUB_OS_NAME" != "CYGWIN" ]; then
+	   SUB_EXE_CFLAGS=$SUB_EXE_CFLAGS\ -lpthread\ -lrt
+	fi
+fi
+
+if [ "$SUB_TIMERS_DRIVER" = "xeno" ]; then
+	RT_LIB_DIR=`$XENO_CONFIG --library-dir`\ -Wl,-rpath\ `$XENO_CONFIG --library-dir`
+    SUB_EXE_CFLAGS=$SUB_EXE_CFLAGS\ `$XENO_CONFIG --xeno-ldflags`\ -L$RT_LIB_DIR\ -lnative\ -lrtdm
+	SUB_PROG_CFLAGS=$SUB_PROG_CFLAGS\ -DUSE_XENO\ `$XENO_CONFIG --xeno-cflags`
+    RTCAN_SOCKET=1
+fi
+
+if [ "$SUB_TIMERS_DRIVER" = "rtai" ]; then
+	RT_LIB_DIR=`$RTAI_CONFIG --library-dir`\ -Wl,-rpath\ `$RTAI_CONFIG --library-dir`
+    SUB_EXE_CFLAGS=$SUB_EXE_CFLAGS\ `$RTAI_CONFIG --lxrt-ldflags`\ -L$RT_LIB_DIR\ -llxrt\ -lrtdm
+	SUB_PROG_CFLAGS=$SUB_PROG_CFLAGS\ -DUSE_RTAI\ `$RTAI_CONFIG --lxrt-cflags`
+    RTCAN_SOCKET=1
+fi
+
+if [ "$SUB_TIMERS_DRIVER" = "kernel" ]; then
+	DISABLE_DLL=1
+	if [ "$SUB_KERNELDIR" = "" ]; then
+		# use directory of current kernel
+		SUB_KERNELDIR=/lib/modules/$(uname -r)/build
+	fi
+fi
+
+if [ "$SUB_TIMERS_DRIVER" = "none" ]; then
+	SUB_TIMERS_DRIVER=
+fi
+
+###########################################################################
+#                              GUESS TOOLCHAIN                            #
+###########################################################################
+# If CC is empty, the user wanted automatic detection
+if [ "$CC" = "" ]; then
+	# Check for second compiler, CC2
+	cat > $test.c <<EOF
+	int main() { return 0; }
+EOF
+	if test "`($CC2 -c $CFLAGS $test.c) 2>&1`" = ""; then
+		DETECTCC=$CC2
+		echo "Checking for ${CC2}... Yes."
+	else
+		echo "Checking for ${CC2}... No."
+	fi
+	rm -f $test.c $test.o
+	
+	# Check for first compiler, CC1
+	cat > $test.c <<EOF
+	int main() { return 0; }
+EOF
+	if test "`($CC1 -c $CFLAGS $test.c) 2>&1`" = ""; then
+		DETECTCC=$CC1
+		echo "Checking for ${CC1}... Yes."
+	else
+		echo "Checking for ${CC1}... No."
+	fi
+	rm -f $test.c $test.o
+	CC=$DETECTCC
+fi
+# Check if we decided on a compiler after all
+if [ "$CC" = "" ]; then
+	echo "Error: Could not find a C compiler"
+	echo "Please supply the wanted compiler"
+	exit -1
+fi
+
+echo "Using ${CC} as a C compiler"
+
+if [ "$SUB_ARCH_NAME" = "x86_64" -a "$CC" = "gcc" ]; then
+	# Only if we are on x86_64 and using gcc
+	# For shared library generation, it needs this
+	SUB_PROG_CFLAGS=-fPIC
+fi
+
+if [ "$BINUTILS_PREFIX" = "" ]; then
+	SUB_BINUTILS_PREFIX=`echo "$CC" | sed 's/gcc$//'`
+else
+	SUB_BINUTILS_PREFIX=$BINUTILS_PREFIX
+fi
+
+if [ "$CXX" = "" ]; then
+	CXX=${SUB_BINUTILS_PREFIX}g++
+fi
+
+echo "Using ${CXX} as a C++ compiler"
+
+if [ "$SUB_TARGET" = "win32" ]; then
+	# on cygwin/mingw, choose  g++ as a linker for native target
+	if [ "$LD" = "" ]; then
+		LD=$CXX
+	fi
+	if [ "$SUB_OS_NAME" = "CYGWIN" ]; then
+		SUB_PROG_CFLAGS="-mno-cygwin"
+	fi
+fi	
+
+if [ "$SUB_TARGET" = "unix" ]; then
+	if [ "$LD" = "" ]; then
+		LD=$CC
+	fi
+fi
+
+echo "Using ${LD} as a linker"
+
+# Guess prefix as regard cross compiling target machine
+if [ "$SUB_PREFIX" = "" ]; then
+	$CC -dumpspecs |grep -A 1 'cross_compile'|grep -q 1
+	if (( $? )); then 
+		SUB_PREFIX=/usr/local
+		echo "Not cross-compiling. Will install in $SUB_PREFIX";
+	else
+		SUB_PREFIX=/usr/`$CC -dumpmachine | tr -d '\r\n'`
+		echo "This is a cross-compiler. Will install in $SUB_PREFIX";			
+	fi
+fi
+
+echo "Using prefix: ${SUB_PREFIX}"
+
+###########################################################################
+#                           GUESS DEPENDENCIES                            #
+###########################################################################
+
+if [ "$SUB_WX" = "" ]; then
+	if which wx-config >/dev/null 2>&1; then
+		echo -n "Testing wxWidgets compiles ... "
+		cat > /tmp/wx_test.cpp <<EOF
+#include "wx/wx.h"
+class MyApp : public wxApp
+{
+};
+IMPLEMENT_APP(MyApp)
+EOF
+		if $CXX /tmp/wx_test.cpp `wx-config --cxxflags` `wx-config --libs` -o /tmp/wx_test >/dev/null 2>&1 ; then
+			SUB_WX=1
+			echo "Yes"
+		else
+			SUB_WX=0
+			echo "No"
+		fi
+		rm -f /tmp/wx_test*
+	else
+		SUB_WX=0
+		echo "No wxWidgets available"
+	fi
+fi
+###########################################################################
+#                   CANFESTIVAL DEFINES --> config.h                      #
+###########################################################################
+# Some CONSTANTS preparation
+
+# Create include/config.h with the relevant contents
+rm -f include/config.h
+echo "/* !!!!!!!!!! FILE GENERATED by configure. DO NOT EDIT !!!!!!!!!!*/" >>  include/config.h
+echo "" >>  include/config.h
+echo "/*"\ >>  include/config.h
+echo "This file is part of CanFestival, a library implementing CanOpen Stack." >> include/config.h
+echo "" >> include/config.h
+echo "Copyright (C): Edouard TISSERANT and Francis DUPIN" >> include/config.h
+echo "See COPYING file for copyrights details." >> include/config.h
+echo "" >> include/config.h
+echo "This library is free software; you can redistribute it and/or" >> include/config.h
+echo "modify it under the terms of the GNU Lesser General Public" >> include/config.h
+echo "License as published by the Free Software Foundation; either" >> include/config.h
+echo "version 2.1 of the License, or (at your option) any later version." >> include/config.h
+echo "" >> include/config.h
+echo "This library is distributed in the hope that it will be useful," >> include/config.h
+echo "but WITHOUT ANY WARRANTY; without even the implied warranty of" >> include/config.h
+echo "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU" >> include/config.h
+echo "Lesser General Public License for more details." >> include/config.h
+echo "" >> include/config.h
+echo "You should have received a copy of the GNU Lesser General Public" >> include/config.h
+echo "License along with this library; if not, write to the Free Software" >> include/config.h
+echo "Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA" >> include/config.h
+echo "*/" >> include/config.h
+echo "" >> include/config.h
+echo "#ifndef _CONFIG_H_" >> include/config.h
+echo "#define _CONFIG_H_" >> include/config.h
+echo "" >> include/config.h
+for i in \
+ MAX_CAN_BUS_ID\
+ SDO_MAX_LENGTH_TRANSFERT\
+ SDO_MAX_SIMULTANEOUS_TRANSFERTS\
+ NMT_MAX_NODE_ID\
+ SDO_TIMEOUT_MS\
+ MAX_NB_TIMER\
+ CANOPEN_BIG_ENDIAN\
+ US_TO_TIMEVAL_FACTOR\
+ TIMEVAL\
+ TIMEVAL_MAX\
+ RTCAN_SOCKET\
+ EMCY_MAX_ERRORS\
+ LSS_TIMEOUT_MS\
+ LSS_FS_TIMEOUT_MS; do
+if [ "${!i}" = "" ]; then
+echo "/* $i is not defined */" >> include/config.h
+else
+echo "#define $i ${!i}" >> include/config.h
+fi
+done	
+echo "" >> include/config.h
+
+for i in \
+ SDO_MAX_SIMULTANEOUS_TRANSFERTS\
+ NMT_MAX_NODE_ID\
+ EMCY_MAX_ERRORS; do
+	echo "#define REPEAT_"$i"_TIMES(repeat)\\">> include/config.h
+	times=${!i}
+	result=""
+	for (( j=0; j<times; j++ ));do
+		result="$result repeat"
+	done
+	echo $result >> include/config.h
+done
+
+echo "#endif /* _CONFIG_H_ */" >> include/config.h
+
+###########################################################################
+#                           DEBUG DEFINES/CFLAGS                          #
+###########################################################################
+
+save_ifs="$IFS"; IFS=','
+
+for DEBUG_METHOD in $DEBUG; 
+	do
+	    IFS="$save_ifs"
+	    case $DEBUG_METHOD in
+	    	ERR)ERR=1;;
+	    	WAR)WAR=1;ERR=1;;
+	    	MSG)MSG=1;;
+	    	PDO)PDO=1;WAR=1;ERR=1;;
+	    	*)echo ""
+	    	  echo "$DEBUG_METHOD is not a valid debug's method"
+	    	  echo "Possible Debug's methods are : \"ERR\", \"WAR\", \"MSG\", \"PDO\""
+	    	  exit -1
+	    	  ;;
+	esac	
+done
+
+if [ $WAR ]; then
+	SUB_PROG_CFLAGS=$SUB_PROG_CFLAGS\ -DDEBUG_WAR_CONSOLE_ON;
+fi
+
+if [ $ERR ]; then
+	SUB_PROG_CFLAGS=$SUB_PROG_CFLAGS\ -DDEBUG_ERR_CONSOLE_ON;
+fi
+
+if [ $MSG ]; then
+	SUB_PROG_CFLAGS=$SUB_PROG_CFLAGS\ -DDEBUG_MSG_CONSOLE_ON;
+fi
+
+if [ $PDO ]; then
+	SUB_PROG_CFLAGS=$SUB_PROG_CFLAGS\ -DDEBUG_PDO_CONSOLE_ON;
+fi
+
+if [ $DEBUG ]; then
+	SUB_PROG_CFLAGS=$SUB_PROG_CFLAGS\ -g
+fi
+
+IFS="$save_ifs"
+
+if [ "$DISABLE_OPT" = "1" ]; then
+	SUB_OPT_CFLAGS=
+else
+	SUB_OPT_CFLAGS=\$\(OPT_CFLAGS\)
+fi
+
+if [ "$DISABLE_DLL" = "1" ]; then
+	SUB_PROG_CFLAGS=$SUB_PROG_CFLAGS\ -DNOT_USE_DYNAMIC_LOADING
+	SUB_ENABLE_DLL_DRIVERS=0
+else
+	SUB_ENABLE_DLL_DRIVERS=1
+	if [ "$SUB_TARGET" = "win32" ]; then
+		SUB_EXE_CFLAGS=$SUB_EXE_CFLAGS
+	else
+		SUB_EXE_CFLAGS=$SUB_EXE_CFLAGS\ -ldl
+	fi
+	
+fi
+
+
+if [ "$DISABLE_DLL" = "1" ]; then
+	SUB_EXE_CFLAGS=$SUB_EXE_CFLAGS\ $SUB_CAN_DLL_CFLAGS
+fi
+
+if [ $ENABLE_LSS ]; then
+	SUB_PROG_CFLAGS=$SUB_PROG_CFLAGS\ -DCO_ENABLE_LSS;
+	SUB_ENABLE_LSS=1
+	if [ $ENABLE_LSS_FS ]; then
+		SUB_PROG_CFLAGS=$SUB_PROG_CFLAGS\ -DCO_ENABLE_LSS_FS;
+	fi
+else
+	SUB_ENABLE_LSS=0
+fi
+
+###########################################################################
+#                              CREATE MAKEFILES                           #
+###########################################################################
+# General Makefiles
+MAKEFILES=Makefile.in\
+\ src/Makefile.in\
+\ drivers/Makefile.in\
+\ objdictgen/Makefile.in\
+\ examples/Makefile.in\
+\ objdictgen/canfestival_config.py.in
+
+# Drivers dependent Makefiles
+if [ "$SUB_TIMERS_DRIVER" != "" ]; then
+	MAKEFILES=$MAKEFILES\
+\	drivers/timers_$SUB_TIMERS_DRIVER/Makefile.in
+fi
+
+if [ "$SUB_CAN_DRIVER" != "" ]; then
+	MAKEFILES=$MAKEFILES\
+\	drivers/can_$SUB_CAN_DRIVER/Makefile.in
+fi
+
+# Target dependent Makefiles
+if [ "$SUB_TARGET" != "none" ]; then
+    MAKEFILES=$MAKEFILES\ drivers/$SUB_TARGET/Makefile.in
+fi
+
+if [ "$SUB_TARGET" = "unix" -a "$SUB_TIMERS_DRIVER" = "kernel" ]; then
+	MAKEFILES=$MAKEFILES\
+\	examples/kerneltest/Makefile.in
+
+elif [ "$SUB_TARGET" = "unix" ]; then
+	MAKEFILES=$MAKEFILES\
+\	examples/CANOpenShell/Makefile.in\
+\	examples/TestMasterSlave/Makefile.in\
+\	examples/TestMasterSlaveLSS/Makefile.in\
+\	examples/SillySlave/Makefile.in\
+\	examples/TestMasterMicroMod/Makefile.in
+fi
+
+if [ "$SUB_TARGET" = "win32" ]; then
+	MAKEFILES=$MAKEFILES\
+\	examples/CANOpenShell/Makefile.in\
+\	examples/TestMasterSlave/Makefile.in\
+\	examples/TestMasterSlaveLSS/Makefile.in\
+\	examples/SillySlave/Makefile.in\
+\	examples/TestMasterMicroMod/Makefile.in
+fi
+
+if [ "$SUB_WX" = "1" ]; then
+	MAKEFILES=$MAKEFILES\
+\	examples/DS401_Master/Makefile.in\
+\	examples/DS401_Slave_Gui/Makefile.in
+fi
+
+if [ "$SUB_TARGET" = "hcs12" ]; then
+	MAKEFILES=$MAKEFILES\
+\	examples/gene_SYNC_HCS12/Makefile.in
+fi
+
+for makefile_in in $MAKEFILES; do
+	makefile=`echo $makefile_in | sed 's:.in$::'`
+	echo "Creating $makefile"
+	sed < $makefile_in "
+	s:SUB_CC:${CC}:
+	s:SUB_CXX:${CXX}:
+	s:SUB_LD:${LD}:
+	s:SUB_PROG_CFLAGS:${SUB_PROG_CFLAGS}:
+	s:SUB_EXE_CFLAGS:${SUB_EXE_CFLAGS}:
+	s:SUB_KERNELDIR:${SUB_KERNELDIR}:
+	s:SUB_PREFIX:${SUB_PREFIX}:
+	s:SUB_OS_NAME:${SUB_OS_NAME}:
+	s:SUB_ARCH_NAME:${SUB_ARCH_NAME}:
+	s:SUB_OPT_CFLAGS:${SUB_OPT_CFLAGS}:
+	s:SUB_TARGET:${SUB_TARGET}:
+	s:SUB_BINUTILS_PREFIX:${SUB_BINUTILS_PREFIX}:
+	s:SUB_TIMERS_DRIVER:timers_${SUB_TIMERS_DRIVER}:
+	s:SUB_CAN_DRIVER:can_${SUB_CAN_DRIVER}:
+	s:SUB_CAN_DLL_CFLAGS:${SUB_CAN_DLL_CFLAGS}:
+	s:SUB_ENABLE_DLL_DRIVERS:${SUB_ENABLE_DLL_DRIVERS}:
+	s:SUB_ENABLE_LSS:${SUB_ENABLE_LSS}:
+	s:SUB_WX:${SUB_WX}:
+	" > $makefile
+done
+
+echo "All done."

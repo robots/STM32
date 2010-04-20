@@ -1,0 +1,2 @@
+include "res08.rnc"
+foo.body = text

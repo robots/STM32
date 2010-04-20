@@ -1,0 +1,6 @@
+canfestival (3.0-%DATEVERSION%) unstable; urgency=low
+
+  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+
+ -- edouard <edouard.tisserant@gmail.com>  Fri, 16 Nov 2007 11:22:17 +0100
+

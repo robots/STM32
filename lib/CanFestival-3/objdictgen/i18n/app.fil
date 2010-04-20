@@ -1,0 +1,9 @@
+../commondialogs.py
+../eds_utils.py
+../gen_cfile.py
+../networkedit.py
+../nodelist.py
+../nodemanager.py
+../objdictedit.py
+../objdictgen.py
+../subindextable.py

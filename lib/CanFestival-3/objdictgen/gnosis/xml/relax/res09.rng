@@ -1,0 +1,14 @@
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+
+<start>
+<element name="foo">
+  <ref name="y"/>
+</element>
+</start>
+
+<define name="z">
+  <text/>
+</define>
+
+
+</grammar>

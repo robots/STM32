@@ -1,0 +1,16 @@
+Some things I saw in the Python 2.2(+.1c1) release notes ... need
+to check if these apply to us also:
+
+ - The "pseudo-sequences" returned by os.stat(), os.fstat(),
+   time.localtime() can now be pickled.
+
+ - pickle.py, cPickle:  allow pickling instances of new-style
+   classes with a custom metaclass.
+
+ - In pickle and cPickle, instead of masking errors in load() by
+   transforming them into SystemError, we let the original
+   exception propagate out.  Also, implement support for
+   __safe_for_unpickling__ in pickle, as it already was supported
+   in cPickle.
+
+

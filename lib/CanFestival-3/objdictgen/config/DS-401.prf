@@ -1,0 +1,277 @@
+global Mapping, AddMenuEntries
+
+"""
+MappingDictionary for DS-401
+"""
+
+Mapping = {
+
+    0x6000 : {"name" : "Read Inputs 8 Bit", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Input 8 bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Read Inputs 0x%X to 0x%X[(sub*8-7,sub*8)]", "type" : 0x05, "access" : 'ro', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6002 : {"name" : "Polarity Input 8 Bit", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Input 8 bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Polarity Input 0x%X to 0x%X[(sub*8-7,sub*8)]", "type" : 0x05, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6003 : {"name" : "Filter Constant Input 8 Bit", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Input 8 bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Filter Constant Input 0x%X to 0x%X[(sub*8-7,sub*8)]", "type" : 0x05, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+
+    0x6005 : {"name" : "Global Interrupt Enable Digital", "struct" : var, "need" : False, "values" :
+                [{"name" : "Global Interrupt Enable Digital", "type" : 0x01, "access" : 'rw', "pdo" : False}]},
+
+    0x6006 : {"name" : "Interrupt Mask Any Change 8 Bit", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Input 8 bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Interrupt Any Change 0x%X to 0x%X[(sub*8-7,sub*8)]", "type" : 0x05, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6007 : {"name" : "Interrupt Mask Low to High 8 Bit", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Input 8 bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Interrupt Low to High 0x%X to 0x%X[(sub*8-7,sub*8)]", "type" : 0x05, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6008 : {"name" : "Interrupt Mask High to Low 8 Bit", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Input 8 bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Interrupt High to Low 0x%X to 0x%X[(sub*8-7,sub*8)]", "type" : 0x05, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+
+
+    0x6020 : {"name" : "Read Input Bit 0x%X to 0x%X[(idx*128-127,idx*128)]", "struct" : plurirec, "incr" : 0x01, "need" : False, "nbmax" : 0x8, "values" :
+                [{"name" : "Number of Input 1 bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Read Single Input 0x%X[((idx-1)*128+sub)]", "type" : 0x01, "access" : 'rw', "pdo" : True, "nbmax" : 0x80}]},
+    0x6030 : {"name" : "Polarity Input Bit 0x%X to 0x%X[(idx*128-127,idx*128)]", "struct" : plurirec, "incr" : 0x01, "need" : False, "nbmax" : 0x8, "values" :
+                [{"name" : "Number of Input 1 bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Polarity Input bit 0x%X[((idx-1)*128+sub)]", "type" : 0x01, "access" : 'rw', "pdo" : True, "nbmax" : 0x80}]},
+    0x6038 : {"name" : "Filter Constant Input Bit 0x%X to 0x%X[(idx*128-127,idx*128)]", "struct" : plurirec, "incr" : 0x01, "need" : False, "nbmax" : 0x8, "values" :
+                [{"name" : "Number of Input 1 bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Filter Constant Input bit 0x%X[((idx-1)*128+sub)]", "type" : 0x01, "access" : 'rw', "pdo" : True, "nbmax" : 0x80}]},
+    0x6050 : {"name" : "Interrupt Mask Input Any Change Bit 0x%X to 0x%X[(idx*128-127,idx*128)]", "struct" : plurirec, "incr" : 0x01, "need" : False, "nbmax" : 0x8, "values" :
+                [{"name" : "Number of Input 1 bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Interrupt Mask Any Change Input bit 0x%X[((idx-1)*128+sub)]", "type" : 0x01, "access" : 'rw', "pdo" : True, "nbmax" : 0x80}]},
+    0x6060 : {"name" : "Interrupt Mask Input Low to High Bit 0x%X to 0x%X[(idx*128-127,idx*128)]", "struct" : plurirec, "incr" : 0x01, "need" : False, "nbmax" : 0x8, "values" :
+                [{"name" : "Number of Input 1 bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Interrupt Mask Any Change Input bit 0x%X[((idx-1)*128+sub)]", "type" : 0x01, "access" : 'rw', "pdo" : True, "nbmax" : 0x80}]},
+    0x6070 : {"name" : "Interrupt Mask Input High  to Low Bit 0x%X to 0x%X[(idx*128-127,idx*128)]", "struct" : plurirec, "incr" : 0x01, "need" : False, "nbmax" : 0x8, "values" :
+                [{"name" : "Number of Input 1 bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Interrupt Mask Any Change Input bit 0x%X[((idx-1)*128+sub)]", "type" : 0x01, "access" : 'rw', "pdo" : True, "nbmax" : 0x80}]},
+
+
+    0x6100 : {"name" : "Read Inputs 16 Bit", "struct" : rec,  "need" : False, "values" :
+                [{"name" : "Number of Input 16 bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Read Inputs 0x%X to 0x%X[(sub*16-15,sub*16)]", "type" : 0x06, "access" : 'ro', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6102 : {"name" : "Polarity Input 16 Bit", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Input 16 bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Polarity Input 0x%X to 0x%X[(sub*16-15,sub*16)]", "type" : 0x06, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6103 : {"name" : "Filter Constant Input 16 Bit", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Input 16 bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Filter Constant Input 0x%X to 0x%X[(sub*16-15,sub*16)]", "type" : 0x06, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6106 : {"name" : "Interrupt Mask Any Change 16 Bit", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Input 16 bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Interrupt Any Change 0x%X to 0x%X[(sub*16-15,sub*16)]", "type" : 0x06, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6107 : {"name" : "Interrupt Mask Low to High 16 Bit", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Input 16 bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Interrupt Low to High 0x%X to 0x%X[(sub*16-15,sub*16)]", "type" : 0x06, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6106 : {"name" : "Interrupt Mask High to Low 16 Bit", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Input 16 bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Interrupt High to Low 0x%X to 0x%X[(sub*16-15,sub*16)]", "type" : 0x06, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+
+
+    0x6120 : {"name" : "Read Input 4 Byte", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Input 32 bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Read Input 0x%X to 0x%X[(sub*32-31,sub*32)]", "type" : 0x07, "access" : 'rw', "pdo" : True, "nbmax" : 0x80}]},
+    0x6122 : {"name" : "Polarity Input 32 Bit", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Input 32 bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Polarity Input 0x%X to 0x%X[(sub*32-31,sub*32)]", "type" : 0x07, "access" : 'rw', "pdo" : False, "nbmax" : 0xFE}]},
+    0x6123 : {"name" : "Filter Constant Input 32 Bit", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Input 32 bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Polarity Input  0x%X to 0x%X[(sub*32-31,sub*32)]", "type" : 0x07, "access" : 'rw', "pdo" : False, "nbmax" : 0xFE}]},
+    0x6126 : {"name" : "Interrupt Mask Input Any Change 32 Bit", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Input 32 bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Interrupt Any Change Input 0x%X to 0x%X[(sub*32-31,sub*32)]", "type" : 0x07, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6127 : {"name" : "Interrupt Mask Input Low to High 32 Bit", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Input 32 bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Interrupt Low to High Input  0x%X to 0x%X[(sub*32-31,sub*32)]", "type" : 0x07, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6128 : {"name" : "Interrupt Mask Input High to Low 32 Bit", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Input 32 bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Interrupt High to Low Input 0x%X to 0x%X[(sub*32-31,sub*32)]", "type" : 0x07, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+
+
+    0x6200 : {"name" : "Write Outputs 8 Bit", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Output 8 Bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Write Outputs 0x%X to 0x%X[(sub*8-7,sub*8)]", "type" : 0x05, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6202 : {"name" : "Change Polarity Outputs 8 Bit", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Output 8 Bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Change Polarity Outputs 0x%X to 0x%X[(sub*8-7,sub*8)]", "type" : 0x05, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6206 : {"name" : "Error Mode Outputs 8 Bit", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Output 8 Bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Error Mode Outputs 0x%X to 0x%X[(sub*8-7,sub*8)]", "type" : 0x05, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6207 : {"name" : "Error Value Outputs 8 Bit", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Output 8 Bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Error Value Outputs 0x%X to 0x%X[(sub*8-7,sub*8)]", "type" : 0x05, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6208 : {"name" : "Filter Mask Outputs 8 Bit", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Output 8 Bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                {"name" : "Filter Mask Outputs 0x%X to 0x%X[(sub*8-7,sub*8)]", "type" : 0x05, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+
+
+    0x6220 : {"name" : "Write Outputs Bit %d to %d[(idx*128-127,idx*128)]", "struct" : plurirec, "incr" : 0x01,  "need" : False, "nbmax" : 0x08, "values" :
+                [{"name" : "Number of Output 1 Bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Write Outputs 0x%X[((idx-1)*128+sub)]", "type" : 0x01, "access" : 'rw', "pdo" : True, "nbmax" : 0x80}]},
+    0x6240 : {"name" : "Change Polarity Outputs Bit %d to %d[(idx*128-127,idx*128)]", "struct" : plurirec, "incr" : 0x01,  "need" : False, "nbmax" : 0x08, "values" :
+                [{"name" : "Number of Output 1 Bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Write Outputs 0x%X[((idx-1)*128+sub)]", "type" : 0x01, "access" : 'rw', "pdo" : True, "nbmax" : 0x80}]},
+    0x6250 : {"name" : "Error Mode Outputs Lines %d to %d[(idx*128-127,idx*128)]", "struct" : plurirec, "incr" : 0x01,  "need" : False, "nbmax" : 0x08, "values" :
+                [{"name" : "Number of Output 1 Bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Error Mode Outputs 0x%X[((idx-1)*128+sub)]", "type" : 0x01, "access" : 'rw', "pdo" : True, "nbmax" : 0x80}]},
+    0x6260 : {"name" : "Error Value Outputs Lines %d to %d[(idx*128-127,idx*128)]", "struct" : plurirec, "incr" : 0x01,  "need" : False, "nbmax" : 0x08, "values" :
+                [{"name" : "Number of Output 1 Bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Error Value Outputs 0x%X[((idx-1)*128+sub)]", "type" : 0x01, "access" : 'rw', "pdo" : True, "nbmax" : 0x80}]},
+    0x6270 : {"name" : "Filter Constant Outputs Lines %d to %d[(idx*128-127,idx*128)]", "struct" : plurirec, "incr" : 0x01,  "need" : False, "nbmax" : 0x08, "values" :
+                [{"name" : "Number of Output 1 Bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Filter Constant Outputs 0x%X[((idx-1)*128+sub)]", "type" : 0x01, "access" : 'rw', "pdo" : True, "nbmax" : 0x80}]},
+
+
+    0x6300 : {"name" : "Write Outputs 16 Bit", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Output 16 Bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Write Outputs 0x%X to 0x%X[(sub*16-15,sub*16)]", "type" : 0x06, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6302 : {"name" : "Change Polarity Outputs 16 Bit", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Output 16 Bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Change Polarity Outputs 0x%X to 0x%X[(sub*16-15,sub*16)]", "type" : 0x06, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6306 : {"name" : "Error Mode Outputs 16 Bit", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Output 16 Bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Error Mode Outputs 0x%X to 0x%X[(sub*16-15,sub*16)]", "type" : 0x06, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6307 : {"name" : "Error Value Outputs 16 Bit", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Output 16 Bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Error Value Outputs 0x%X to 0x%X[(sub*16-15,sub*16)]", "type" : 0x06, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6308 : {"name" : "Filter Mask Outputs 16 Bit", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Output 16 Bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Filter Mask Outputs 0x%X to 0x%X[(sub*16-15,sub*16)]", "type" : 0x06, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+
+    0x6320 : {"name" : "Write Output 32 Bit", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Output 32 Bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Write Outputs 0x%X to 0x%X[(sub*32-31,sub*32)]", "type" : 0x07, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6322 : {"name" : "Change Polarity Outputs 32 Bit", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Output 32 Bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Polarity Outputs 0x%X to 0x%X[(sub*32-31,sub*32)]", "type" : 0x07, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6326 : {"name" : "Error Mode Outputs 32 Bit", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Output 32 Bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Error Mode Outputs 0x%X to 0x%X[(sub*32-31,sub*32)]", "type" : 0x07, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6327 : {"name" : "Error Value Outputs 32 Bit", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Output 32 Bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Error Value Outputs 0x%X to 0x%X[(sub*32-31,sub*32)]", "type" : 0x07, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6328 : {"name" : "Filter Mask Outputs 32 Bit", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Output 32 Bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Filter Mask Outputs 0x%X to 0x%X[(sub*32-31,sub*32)]", "type" : 0x07, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+
+
+    0x6400 : {"name" : "Read Analogue Input 8 Bit", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Analogue Input 8 Bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Analogue Input %d[(sub)]", "type" : 0x02, "access" : 'ro', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6401 : {"name" : "Read Analogue Input 16 Bit", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Analogue Input 16 Bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Analogue Input %d[(sub)]", "type" : 0x03, "access" : 'ro', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6402 : {"name" : "Read Analogue Input 32 Bit", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Analogue Input 32 Bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Analogue Input %d[(sub)]", "type" : 0x04, "access" : 'ro', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6403 : {"name" : "Read Analogue Input Float", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Analogue Input Float", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Analogue Input %d[(sub)]", "type" : 0x08, "access" : 'ro', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6404 : {"name" : "Read Manufacturer specific Analogue Input", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Analogue Input", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Analogue Input %d[(sub)]", "type" : 0x11, "access" : 'ro', "pdo" : True, "nbmax" : 0xFE}]},
+
+
+    0x6410 : {"name" : "Write Analogue Output 8 Bit", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Analogue Input 8 Bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Analogue Input %d[(sub)]", "type" : 0x02, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6411 : {"name" : "Write Analogue Output 16 Bit", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Analogue Input 16 Bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Analogue Output %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6412 : {"name" : "Write Analogue Output 32 Bit", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Analogue Outputs 32 Bit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Analogue Output %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6413 : {"name" : "Write Analogue Output Float", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Analogue Outputs Float", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Analogue Output %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6414 : {"name" : "Write Manufacturer specific Analogue Output", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Analogue Outputs", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Analogue Output %d[(sub)]", "type" : 0x11, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+
+
+    0x6421 : {"name" : "Interrupt Trigger Selection", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Analogue Inputs", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Analog Inputs 0x%X[(sub)]", "type" : 0x05, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6422 : {"name" : "Analogue Input Interrupt Source", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Interrupt Source Bank", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Interrupt Source Bank 0x%X[(sub)]", "type" : 0x07, "access" : 'ro', "pdo" : True, "nbmax" : 0xFE}]},
+
+    0x6423 : {"name" : "Analogue Input Global Interrupt Enable", "struct" : var, "need" : False, "values" :
+                 [{"name" : "Analogue Input Global Interrupt Enable", "type" : 0x01, "access" : 'rw', "pdo" : True}]},
+
+    0x6424 : {"name" : "Analogue Input Interrupt Upper Limit Interger", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Analogue Inputs", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Analogue Input %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6425 : {"name" : "Analogue Input Interrupt Lower Limit Interger", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Analogue Inputs", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Analogue Input %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6426 : {"name" : "Analogue Input Interrupt Delta Unsigned", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Analogue Inputs", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Analogue Input %d[(sub)]", "type" : 0x07, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6427 : {"name" : "Analogue Input Interrupt Negative Delta Unsigned", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Analogue Inputs", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Analogue Input %d[(sub)]", "type" : 0x07, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6428 : {"name" : "Analogue Input Interrupt Positive Delta Unsigned", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Analogue Inputs", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Analogue Input %d[(sub)]", "type" : 0x07, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6429 : {"name" : "Analogue Input Interrupt Upper Limit Float", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Analogue Inputs", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Analogue Input %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x642A : {"name" : "Analogue Input Interrupt Lower Limit Float", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Analogue Inputs", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Analogue Input %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x642B : {"name" : "Analogue Input Interrupt Delta Float", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Analogue Inputs", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Analogue Input %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x642C : {"name" : "Analogue Input Interrupt Negative Delta Float", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Analogue Inputs", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Analogue Input %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x642D : {"name" : "Analogue Input Interrupt Positive Delta Float", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Analogue Inputs", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Analogue Input %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x642E : {"name" : "Analogue Input Offset Float", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Analogue Inputs", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Analogue Input %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x642F : {"name" : "Analogue Input Scaling Float", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Analogue Inputs", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Analogue Input %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6430 : {"name" : "Analogue Input SI unit", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Analogue Inputs", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Analogue Input %d[(sub)]", "type" : 0x07, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6431 : {"name" : "Analogue Input Offset Integer", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Analogue Inputs", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Analogue Input %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6432 : {"name" : "Analogue Input Scaling Integer", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Analogue Inputs", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Analogue Input %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+
+
+    0x6441 : {"name" : "Analogue Output Offset Float", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Analogue Outputs", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Analogue Output %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6442 : {"name" : "Analogue Output Scaling Float", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Analogue Outputs", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Analogue Output %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6443 : {"name" : "Analogue Output Error Mode", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Analogue Outputs", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Error Mode Analogue Output %d[(sub)]", "type" : 0x05, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6444 : {"name" : "Analogue Output Error Value Integer", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Analogue Outputs", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Analogue Output %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6445 : {"name" : "Analogue Output Error Value Float", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Analogue Outputs", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Analogue Output %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6446 : {"name" : "Analogue Output Offset Integer", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Analogue Outputs", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Analogue Output %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6447 : {"name" : "Analogue Output Scaling Integer", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Analogue Outputs", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Analogue Output %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]},
+    0x6450 : {"name" : "Analogue Output SI Unit", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Analogue Outputs", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Analogue Output %d[(sub)]", "type" : 0x07, "access" : 'rw', "pdo" : True, "nbmax" : 0xFE}]}
+}
+
+AddMenuEntries = [("Read Input Bit",[0x6020, 0x6030, 0x6038, 0x6050, 0x6060, 0x6070]), ("Write Output Bit",[0x6220, 0x6240, 0x6250, 0x6260, 0x6270])]

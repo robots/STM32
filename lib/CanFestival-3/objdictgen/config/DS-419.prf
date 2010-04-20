@@ -1,0 +1,31 @@
+global Mapping, AddMenuEntries
+
+"""
+MappingDictionary for DS-419
+"""
+
+Mapping = {
+    0x6000 : {"name" : "Battery status", "struct" : var, "need" : True, "values" :
+                [{"name" : "battery_status", "type" : 0x05, "access" : 'rw', "pdo" : True}]},
+
+    0x6001 : {"name" : "Charger status", "struct" : var, "need" : True, "values" :
+                [{"name" : "charger_status", "type" : 0x06, "access" : 'rw', "pdo" : True}]},
+
+    0x6052 : {"name" : "Ah returned during last charge", "struct" : var, "need" : False, "values" :
+                [{"name" : "ah_returned_during_last_charge", "type" : 0x06, "access" : 'ro', "pdo" : True}]},
+
+    0x6060 : {"name" : "Battery voltage", "struct" : var, "need" : False, "values" :
+                [{"name" : "battery_voltage", "type" : 0x07, "access" : 'rw', "pdo" : True}]},
+
+    0x6070 : {"name" : "Charge current requested", "struct" : var, "need" : False, "values" :
+                [{"name" : "charge_current_requested", "type" : 0x06, "access" : 'rw', "pdo" : True}]},
+
+    0x6080 : {"name" : "Charger state of charge", "struct" : var, "need" : False, "values" :
+                [{"name" : "charge_state_of_charge", "type" : 0x05, "access" : 'ro', "pdo" : True}]},
+
+    0x6081 : {"name" : "Battery state of charge", "struct" : var, "need" : False, "values" :
+                [{"name" : "battery_state_of_charge", "type" : 0x05, "access" : 'rw', "pdo" : True}]}
+
+}
+
+AddMenuEntries = []

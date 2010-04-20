@@ -1,0 +1,88 @@
+#! gmake
+
+#
+# Copyright (C) 2006 Laurent Bessard
+# 
+# This file is part of canfestival, a library implementing the canopen
+# stack
+# 
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+# 
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+# 
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# 
+
+#ifneq ($(KERNELRELEASE),)
+# Kbuild part of Makefile
+TARGET = SUB_TARGET
+CAN_DRIVER = SUB_CAN_DRIVER
+TIMERS_DRIVER = SUB_TIMERS_DRIVER
+
+EXTRA_CFLAGS := -I$(src)/../../include
+EXTRA_CFLAGS += -I$(src)/../../include/$(TARGET)
+EXTRA_CFLAGS += -I$(src)/../../include/$(CAN_DRIVER)
+EXTRA_CFLAGS += -I$(src)/../../include/$(TIMERS_DRIVER)
+EXTRA_CFLAGS += SUB_PROG_CFLAGS
+
+OBJS := kernel_module.o
+OBJS += TestSlave.o
+OBJS += TestMaster.o
+OBJS += Slave.o
+OBJS += Master.o
+OBJS += TestMasterSlave.o
+
+obj-m := canf_ktest.o
+canf_ktest-objs := $(OBJS)
+
+#else
+# Normal Makefile
+CC = SUB_CC
+PREFIX = SUB_PREFIX
+KERNELDIR := SUB_KERNELDIR
+
+all: canf_ktest
+
+canf_ktest: canf_ktest_console TestSlave.c TestMaster.c
+	cat ../../drivers/can_virtual_kernel/Module.symvers > Module.symvers
+	cat ../../src/Module.symvers >> Module.symvers
+	$(MAKE) -C $(KERNELDIR) M=$(shell pwd) modules
+
+clean:
+	$(MAKE) -C $(KERNELDIR) M=$(shell pwd) clean
+	rm -f Module.symvers
+	rm -f console/canf_ktest_console
+
+mrproper: clean
+	rm -f TestSlave.c
+	rm -f TestMaster.c
+
+install:
+	$(MAKE) -C $(KERNELDIR) M=$(shell pwd) modules_install
+	mkdir -p $(PREFIX)/bin/
+	cp console/canf_ktest_console $(PREFIX)/bin/
+	/bin/sh insert.sh
+
+uninstall:
+	rm -f $(PREFIX)/bin/canf_ktest_console
+
+canf_ktest_console: console/console.c console/console.h
+	$(CC) console/console.c -o console/canf_ktest_console
+
+TestSlave.c: TestSlave.od
+	$(MAKE) -C ../../objdictgen gnosis
+	python ../../objdictgen/objdictgen.py TestSlave.od TestSlave.c
+
+TestMaster.c: TestMaster.od
+	$(MAKE) -C ../../objdictgen gnosis
+	python ../../objdictgen/objdictgen.py TestMaster.od TestMaster.c
+	
+#endif

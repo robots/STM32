@@ -1,0 +1,31 @@
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+  <start>
+    <element name="bar">
+      <ref name="fivefoo"/>
+      <ref name="upto25foo"/>
+    </element>
+  </start>
+  <define name="fivefoo">
+    <element name="foo"><empty/></element>
+    <element name="foo"><empty/></element>
+    <element name="foo"><empty/></element>
+    <element name="foo"><empty/></element>
+    <element name="foo"><empty/></element>
+  </define>
+  <define name="maybefoo">
+    <optional>
+      <element name="foo"><empty/></element>
+    </optional>
+  </define>
+  <define name="upto25foo">
+    <optional><ref name="fivefoo"/></optional>
+    <optional><ref name="fivefoo"/></optional>    
+    <optional><ref name="fivefoo"/></optional>
+    <optional><ref name="fivefoo"/></optional>
+    <ref name="maybefoo"/>
+    <ref name="maybefoo"/>
+    <ref name="maybefoo"/>
+    <ref name="maybefoo"/>
+    <ref name="maybefoo"/>
+  </define>
+</grammar>

@@ -1,0 +1,43 @@
+; Réinitialisation
+SYS.d
+
+; Effacer l'écran
+WinCLEAR
+
+;Raffraichissement de trace32 toutes les 1 secondes
+setup.urate 1
+
+; Choix du microcontrôleur cible
+SYStem.CPU MCS12DP256 
+
+; Vitesse de commuication debugger / carte HCS12
+ SYStem.BdmClock 8.0MHZ
+
+; initialiser le uc en mode debug
+SYStem.UP 
+
+; Reset des registres
+r.reset
+
+; Charger le programme
+DATA.LOAD.ELF geneSYNC.elf /gnu /nocode /GHILLS
+
+; Positionner le compteur de programme
+r.set PC _start
+
+; Positionner le pointeur de pile
+r.set SP _stack
+
+; Afficher le code source
+data.list
+
+; Afficher les registres
+r
+
+; Afficher le contenu de la mémoire
+DATA.dump 140
+
+
+; Fin du programme de script
+ENDDO
+

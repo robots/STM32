@@ -1,0 +1,418 @@
+(c) WestTech, 2003 -- may be freely distributed if unaltered
+
+CHARMING PYTHON #B12: Multiple Dispatch
+Generalizing Polymorphism with Multimethods
+
+David Mertz, Ph.D.
+Essence Preceder, Gnosis Software, Inc.
+February, 2003
+
+    Object oriented programming gains much of its versatility
+    through polymorphism. Objects of different kinds can behave
+    in similar ways, given the right contexts. But most OOP
+    programming is -single dispatch-; that is, just one
+    designated object determines which code path is taken.
+    Conceptually, a more general technique is to allow -all- the
+    arguments to a function/method to determine its
+    specialization. This article presents an implementation of
+    -multiple dispatch- in Python, and shows examples where this
+    makes for better programs.
+
+WHAT IS POLYMORPHISM, REALLY?
+------------------------------------------------------------------------
+
+  Most programmers--in Python or other object oriented
+  programming languages--who utilize polymorphism, do so in a
+  rather practical and concrete way.  Perhaps the most common
+  application of polymorphism is in creating a family of object
+  that follow a common protocol.  In Python, this is usually
+  simply a matter of -ad hoc- polymorphism; in other languages,
+  formal interfaces are more often declared and/or these families
+  share a common ancestor.
+
+  For example, there are many functions that operate on "file-like"
+  objects, where file-like is defined simply by supporting a few
+  methods: '.read()', '.readlines()', and maybe '.seek()'.  A
+  function like 'read_app_data()' might take an argument
+  'src'--when we call the function, we might decide to pass it a
+  local file, a [urllib] object, a [cStringIO] object, or some
+  custom object that lets the function call 'src.read()'.  Each
+  object type is interchangeable from the point of view of how it
+  functions within 'read_app_data()'.
+
+  Let us step back a bit to think about what is really happening
+  here. At heart, what we are concerned about is choosing the right
+  code path to execute within a context; old-fashioned procedural
+  code can make equivalent decisions, OOP merely adds some
+  elegance. For example, a fragment of procedural (pseudo-)code
+  might look like:
+
+      #----- Procedural choice of code paths on object type ----#
+      ...bind 'src' in some manner...
+      if <<src is a file object>>:
+          read_from_file(src)
+      elif <<src is a urllib object>>:
+          read_from_url(src)
+      elif <<src is a stringio object>>:
+          read_from_stringio(src)
+      ...etc...
+
+  By arranging for objects of different types to implement common
+  methods, we move the -dispatch- decision into the objects, and
+  out of an explict conditional block.  A given 'src' object
+  knows what block of code it needs to call by looking through
+  its inheritance tree.  There is still an implicit switch going
+  on, but it is on the type of the object 'src'.
+
+  The object 'src' is privileged over any arguments passed to its
+  methods.  OOP syntax makes this privileging seem inevitable,
+  but it is not really.  Procedural switching is simply pushed
+  into the method bodies of classes in many cases.  For example
+  we might implement protocol-compatible classes 'Foo' and 'Bar'
+  as follows (in pseudo-Python):
+
+      #----- Foo and Bar implement the '.meth()' method --------#
+      class Foo:
+          def meth(self, arg):
+              if <<arg is a Foo>>:
+                  ...FooFoo code block...
+              elif <<arg is a Bar>>:
+                  ...FooBar code block...
+      class Bar:
+          def meth(self, arg):
+              if <<arg is a Foo>>:
+                  ...BarFoo code block...
+              elif <<arg is a Bar>>:
+                  ...BarBar code block...
+      # Function to utilize Foo/Bar single-dispatch polymorphism
+      def x_with_y(x, y):
+          if <<x is Foo or Bar>> and <<y is Foo or Bar>>:
+              x.meth(y)
+          else:
+              raise TypeError,"x, y must be either Foo's or Bar's"
+
+  There are five distinct code paths/blocks that might get
+  executed when 'x_with_y()' is called.  If the types of 'x' and
+  'y' are not suitable, an exception is raised (you could also do
+  somethig different, of course).  But assuming the types are OK,
+  the code path is chosen -first- by a polymorphic dispatch, and
+  -second- by procedural switch.  Moreover, the switches within
+  the definitions of 'Foo.meth()' and 'Bar.meth()' are largely
+  equivalent.  Polymorphism--of the single-dispatch
+  variety--only goes half way.
+
+COMPLETING POLYMORPHISM
+------------------------------------------------------------------------
+
+  In single-dispatch polymorphism, the object that "owns" a
+  method is singled out.  Syntactically, it is singled out in
+  Python by being named before the dot--everything following the
+  dot, method name, and left parenthesis is just an argument.
+  But semantically, the object is also special in utilizing an
+  inheritence tree for method resolution.
+
+  What if we did not treat just one object in a special fashion,
+  but allowed every object involved in a code block to help
+  choose the correct code path?  For example, we might express
+  our five-way switch in a more symmetric fashion:
+
+      #--------- Multiple dispatch on Foo and Bar --------------#
+      x_with_y = Dispatch([((object, object), <<exception block>>)])
+      x_with_y.add_rule((Foo,Foo), <<FooFoo block>>)
+      x_with_y.add_rule((Foo,Bar), <<FooBar block>>)
+      x_with_y.add_rule((Bar,Foo), <<BarFoo block>>)
+      x_with_y.add_rule((Bar,Bar), <<BarBar block>>)
+      #...call the function x_with_y() using some arguments...
+      x_with_y(something, otherthing)
+
+  I think this symmetry in polymorphic dispatch on multiple
+  arguments is much more elegant than is the prior style.
+  As well, the style helps document the equal role of the two
+  objects involved in determining the appropriate code path to
+  take.
+
+  Standard Python does not let you configure this type of
+  multiple dispatch; but fortunately, you can do so using the
+  module [multimethods] that I have written.  See Resources to
+  download the module by itself, or as part of Gnosis Utilities.
+  All you need to do once you have installed [multimethods] is
+  include the following line at the top of your application:
+
+      from multimethods import Dispatch
+
+  "Multimethods" is generally a synonym for multiple dispatch; but
+  the name multimethod suggests the concrete function/object
+  handling the more abstract concept of multiple dispatch.
+
+  An instance of 'Dispatch' is a callable object, and can be
+  configured with as many rules as you wish. The method
+  'Dispatch.remove_rule()' can be used to delete rules as well,
+  which makes multiple dispatch using [multimethods] a bit more
+  dynamic than is a static class hierarchy (but you can also do
+  some arcane things with Python classes at runtime). Note also
+  that a 'Dispatch' instance can accept a variable number of
+  arguments, matching is done first on number of arguments, then on
+  their types. If a 'Dispatch' instance is called with any
+  pattern that is not defined in a rule, a 'TypeError' is raised.
+  The initialization of 'x_with_y()' with a fallback
+  '(object,object)' pattern is not necessary if you simply want
+  undefined cases to raise an exception.
+
+  Each '(pattern,function)' tuple that is listed in the
+  initialization call to 'Dispatch' is simply passed on to the
+  '.add_rule()' method; it is solely a matter of programmer
+  convenience whether to establish rules on initialization or at
+  a later point (you can mix-and-match, as in the prior example).
+  When a function is called from the dispatcher, it is passed the
+  arguments used in the call to the dispatcher; you need to make
+  sure the function you use can accept the number of arguments it
+  is matched against.  For example, the following are equivalent:
+
+      #--------- Explicit and dispatched function call ---------#
+      # Define function, classes, objects
+      def func(a,b): print "The X is", a, "the Y is", b
+      class X(object): pass
+      class Y(object): pass
+      x, y = X(), Y()
+      # Explicit call to func with args
+      func(x,y)
+      # Dispatched call to func on args
+      from multimethods import Dispatch
+      dispatch = Dispatch()
+      dispatch.add_rule((X,Y), func)
+      dispatch(x,y)         # resolves to 'func(x,y)'
+
+  Obviously, if you alredy know the types of 'x' and 'y' at
+  design time, the machinery of setting up a dispatcher is just
+  overhead.  But then, the same limitation is true of
+  polymorphism--it is only helpful when you cannot constrain an
+  object to a single type for every execution path.
+
+IMPROVING INHERITANCE
+------------------------------------------------------------------------
+
+  Multiple dispatch does not merely generalize polymorphism, it
+  also provides a more flexible alternative to inheritence in
+  many contexts.  An example is illustrative here.  Suppose you
+  are programming a drawing or CAD program that deals with a
+  variety of shapes; in particular, you want to be able to
+  -combine- two shapes in a way that depends on both of the
+  shapes involved.  Moreover, the collection of shapes to
+  consider will be extended by derived applications or plugins.
+  Extending a collection of shape classes provides a clumsy
+  technique for enhancement, e.g.:
+
+      #---------- Inheritence for capability extension ---------#
+      # Base classes
+      class Circle(Shape):
+          def combine_with_circle(self, circle): ...
+          def combine_with_square(self, square): ...
+      class Square(Shape):
+          def combine_with_circle(self, circle): ...
+          def combine_with_square(self, square): ...
+      # Enhancing base with triangle shape
+      class Triangle(Shape):
+          def combine_with_circle(self, circle): ...
+          def combine_with_square(self, square): ...
+          def combine_with_triangle(self, triangle): ...
+      class NewCircle(Circle):
+          def combine_with_triangle(self, triangle): ...
+      class NewSquare(Square):
+          def combine_with_triangle(self, triangle): ...
+      # Can optionally use original class names in new context
+      Circle, Square = NewCircle, NewSquare
+      # Use the classes in application
+      c, t, s = Circle(...), Triangle(...), Square(...)
+      newshape1 = c.combine_with_triangle(t)
+      newshape2 = s.combine_with_circle(c)
+      # discover 'x' of unknown type, then combine with 't'
+      if isinstance(x, Triangle): new3 = t.combine_with_triangle(x)
+      elif isinstance(x, Square): new3 = t.combine_with_square(x)
+      elif isinstance(x, Circle): new3 = t.combine_with_circle(x)
+
+  In particular, each existing shape class has to add
+  capabilities in a descendent, which runs into combinatorial
+  complexities, and difficulties in maintenance.
+
+  In contrast, a multiple dispatch technique is more
+  straightforward:
+
+      #--------- Multimethods for capability extension ---------#
+      # Base rules (stipulate combination is order independent)
+      class Circle(Shape): pass
+      class Square(Shape): pass
+      def circle_with_square(circle, square): ...
+      def circle_with_circle(circle, circle): ...
+      def square_with_square(square, square): ...
+      combine = Dispatch()
+      combine.add_rule((Circle, Square), circle_with_square)
+      combine.add_rule((Circle, Circle), circle_with_circle)
+      combine.add_rule((Square, Square), square_with_square)
+      combine.add_rule((Square, Circle),
+                       lambda s,c: circle_with_square(c,s))
+      # Enhancing base with triangle shape
+      class Triangle(Shape): pass
+      def triangle_with_circle(triangle_with_circle): ...
+      def triangle_with_square(triangle_with_square): ...
+      combine.add_rule((Triangle,Circle), triangle_with_circle)
+      combine.add_rule((Triangle,Square), triangle_with_square)
+      combine.add_rule((Circle,Triangle),
+                       lambda c,t: triangle_with_circle(t,c))
+      combine.add_rule((Square,Triangle),
+                       lambda s,t: triangle_with_square(t,s))
+      # Use the rules in application
+      c, t, s = Circle(...), Triangle(...), Square(...)
+      newshape1 = combine(c, t)[0]
+      newshape2 = combine(s, c)[0]
+      # discover 'x' of unknown type, then combine with 't'
+      newshape3 = combine(t, x)[0]
+
+  The definition of new rules (and support functions/methods) is
+  largely equivalent.  But the huge advantage of the multiple
+  dispatch style is in the seamlessness with which you can
+  combine shapes of unknown types.  Rather than revert back to
+  explicit (and lengthy) conditional blocks, the rule definitions
+  take care of matters automatically.  Even better, all
+  combinining is done with a single 'combine()' callable, rather
+  than with a menagarie of distinct combinations methods.
+
+DISPATCH PROPAGATION
+------------------------------------------------------------------------
+
+  Without needing to think about dispatch further, the
+  'multimethods.Dispatch' class will select the "best fit" for a
+  given call to a dispatcher. However, it is sometimes worth
+  noticing that "best" is not "only." That is, a call to
+  'dispatch(foo,bar)' might be close fit with a defined rule
+  '(Foo,Bar)'--but it might also be a loose (rather than non-) fit
+  with '(FooParent,BarParent)'. Just as you sometimes want to call
+  on superclass methods in an inherited method, you also sometimes
+  want to call on less specific rules within a dispatcher.
+
+  The [multimethods] module gives you both a quick way of calling
+  less specific rules, and a more fine-tuned way.  At a rough
+  level, you usually just want to automatically call a less
+  specific rule at either the start or the end of execution of a
+  code block.  Likewise, you almost always call a superclass
+  method at either the start or end of a descendent method body.
+  For a generic start/end call to less specific methods, you can
+  just specify that as part of the rule. For example:
+
+        #----------- Automatic dispatch propagation ------------#
+        class General(object): pass
+        class Between(General): pass
+        class Specific(Between): pass
+        dispatch = Dispatch()
+        dispatch.add_rule((General,), lambda _:"Gen", AT_END)
+        dispatch.add_rule((Between,), lambda _:"Betw", AT_END)
+        dispatch.add_rule((Specific,), lambda _:"Specif", AT_END)
+        dispatch(General())  # Result: ['Gen']
+        dispatch(Specific()) # Result: ['Specif', 'Betw', 'Gen']
+
+  Of course, in some cases (like the '(General)' rule), there is
+  nothing less specific available in the defined rules. For
+  uniformity, however, every call to a dispatcher returns a list of
+  return values from all functions that control was propagated to.
+  If neither 'AT_END' nor 'AT_START' is specified in the rules, no
+  propagation occurs (and the returned list has length one). This
+  explains the '[0]' indexing that probably looked mysterious in
+  the shape example.
+
+  The fine-tuned way of propagating control is with the
+  '.next_method()' method of a dispatcher. In order to utilize
+  manual propagation, you should define rules using the
+  '.add_dispatchable()' method rather than the '.add_rule()'
+  method. As well, the dispatched functions themselves should
+  accept a 'dispatch' argument.  The call to the dispatcher
+  either needs a dispatch argument, or you can use the
+  '.with_dispatch()' convenience method.  For example:
+
+      #--------- Programming with manual propagation -----------#
+      def do_between(x, dispatch):
+        print "do some initial stuff"
+        val = dispatch.next_method() # return simple value of up-call
+        print "do some followup stuff"
+        return "My return value"
+      foo = Foo()
+      import multimethods
+      multi = multimethods.Dispatch()
+      multi.add_dispatchable((Foo,), do_between)
+      multi.with_dispatch(foo)
+      # Or: multi(foo, multi)
+
+  Manual propagation to less specific multimethods can get tricky
+  in many of the same ways that calls to superclass methods can get
+  tricky. To make things tractable, calls to '.next_method()'
+  always return the simple return value of the up-call--if you want
+  to assemble such return values into a list like the 'AT_END'
+  argument does, you will need to append and manipulate the values
+  as you think appropriate. The most common "use case," however, is
+  where a series of related initializations are peformed; in this
+  case, the return values are usually irrelevant.
+
+NOTE ON THREAD SAFETY
+------------------------------------------------------------------------
+
+  A quick interjection is worthwhile lest readers run into a
+  problem. Because of the stateful way propagation tracks which
+  (successively less specific) rules have been called, a dispatcher
+  is not thread safe. If you wish to use a dispatcher in multiple
+  threads, you should "clone" it for each thread. Doing so is
+  inexpensive in memory and CPU resources, so there is no
+  significant penalty for cloning dispatchers. For example, suppose
+  a function might be called across thread; you can write:
+
+      def threadable_dispatch(dispatcher, other, arguments)
+          dispatcher = dispatcher.clone()
+          #...do setup activities...
+          dispatcher(some, rule, pattern)
+          #...do other stuff...
+
+  If no new threads are spawned within 'threadable_dispatch()', all
+  is well.
+
+RESOURCES
+------------------------------------------------------------------------
+
+  You may obtain [multimethods] either as a standalone module or
+  as part of the Gnosis Utilities package.  By itself, download
+  from:
+
+    http://gnosis.cx/download/gnosis/magic/multimethods.py
+
+  Gnosis Utilities as a whole comes as a Python [distutils]
+  package.  You may obtain it from:
+
+    http://gnosis.cx/download/Gnosis_Utils-current.tar.gz
+
+  Other languages have implemented multiple dispatch, either
+  within the language itself, or in libraries.  For example,
+  MultiJava is a superset of Java that implements multiple
+  dispatch:
+
+    http://www.cs.washington.edu/homes/todd/research/oopsla00.html
+
+  CLOS and Dylan both use multiple dispatch as the basic
+  foundation of their OOP systems.  A discussion of Dylan's
+  mechanism is at:
+
+    http://www.gwydiondylan.org/gdref/tutorial/multiple-dispatch.html
+
+  Perl has a module called [Class::Multimethods] to implement
+  multiple dispatch (and apparently Perl 6 is slated to build the
+  concept more deeply into the language).  Damian Conway
+  discusses his module at:
+
+    http://search.cpan.org/src/DCONWAY/Class-Multimethods-1.70/tutorial.html
+
+
+ABOUT THE AUTHOR
+------------------------------------------------------------------------
+
+  {Picture of Author: http://gnosis.cx/cgi-bin/img_dqm.cgi}
+  David Mertz feels that programmers with multiple personality
+  syndrome will want all of their functions to be generic. David
+  may be reached at mertz@gnosis.cx; his life pored over at
+  http://gnosis.cx/publish/. Suggestions and recommendations on
+  this, past, or future, columns are welcomed.
+

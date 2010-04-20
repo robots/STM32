@@ -1,0 +1,10 @@
+<foo>
+  <bar>this</bar>
+  <bar>that</bar>
+  <baz a1="fie" a2="fee">
+    stuff <bar>fo</bar>
+    <bar a1="fiddle">fum</bar>
+    and <bam><bar>fizzle</bar></bam>
+    more stuff
+  </baz>
+</foo>

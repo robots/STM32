@@ -1,0 +1,94 @@
+------------------------------------------------------------------------
+THINGS TO WATCH OUT FOR:
+------------------------------------------------------------------------
+The transition from the 1.0.x series of Gnosis Utilities to the 1.1.x
+series saw significant improvements to gnosis.xml.objectify.  See
+HISTORY and HOWTO for details; but in short, we now maintain all the
+structural information about nested children and mixed content.
+
+However, the improvements in 1.1.x introduce some incompatibilities in
+edge cases.
+
+ 1. In 1.0.x, only nodes with PCDATA content have a .PCDATA attribute.
+    This is changed in 1.1.x so that all nodes have the attribute, but
+    it is either None or an empty string if there is no textual content.
+
+    If you had code that was something like:
+
+      if hasattr(o,'PCDATA'): #...do something...
+
+    You should instead use:
+
+      if o.PCDATA: #...do something...
+
+    Or if you want to be more explicit, you could check:
+
+      if o.PCDATA is not None: #...do something...
+
+    There is a subtle bit of extra semantic information in there.  If a
+    node contains no content AT ALL, its .PCDATA attribute is None.  But
+    if the node contains children, its .PCDATA is an empty string.  You
+    can still do a boolean test on o.PCDATA either way, but you can also
+    distinguish these cases if you wish, e.g.:
+
+      >>> from gnosis.xml.objectify import make_instance
+      >>> xml = '<foo><bar><baz/></bar><bar/></foo>'
+      >>> o = make_instance(xml)
+      >>> o.PCDATA, o.bar[0].PCDATA, o.bar[1].PCDATA, o.bar[0].baz.PCDATA
+      ('', '', None, None)
+
+    If you must maintain compatibility with both 1.0.x and 1.1.x
+    versions of the library, you may use:
+
+      if hasattr(o,'PCDATA') and o.PCDATA: #...do something...
+
+ 2. In 1.0.x, the .PCDATA attribute kinda-sorta normalized whitespace,
+    rather than preserving it exactly.  But the normalization was
+    erratic, for example treating CDATA sections differently than
+    regular content.
+
+    Now you have the option of either a completely normalized content
+    using o.PCDATA, or a completely whitespace-preserving content
+    using the dumps() convenience function
+
+      >>> xml = """<foo>
+      ...     <bar><![CDATA[
+      ...             First Line
+      ...                     Second Line [indented]
+      ...             Third Line
+      ...     ]]></bar>
+      ... </foo>"""
+      >>> o = make_instance(xml)
+      >>> from gnosis.xml.objectify import dumps
+      >>> print o.bar.PCDATA
+      First Line Second Line [indented] Third Line
+      >>> print dumps(o.bar)
+
+                  First Line
+                          Second Line [indented]
+                  Third Line
+
+      >>>
+
+ 3. You probably never should have relied on the ._root attribute used
+    by the DOM parser.  But now that EXPAT is the default parser, you
+    definitely should not count on it.
+
+    There is now, in 1.1.x, a convenience function called tagname():
+
+      >>> from gnosis.xml.objectify import tagname
+      >>> o
+      <foo id="239ecc">
+      >>> tagname(o)
+      'foo'
+
+    This is a good way to find the root element, as well as to get the
+    plain name of any node (rather than see the mangled name, like
+    'gnosis.xml.objecitfy._XO_foo').
+
+ 4. Call gnosis.xml.objectify.config_nspace_sep() to enable namespaced
+    XML document processing.  Maybe that should be the default, but
+    I think there's a slight speed gain to the way it is.
+
+------------------------------------------------------------------------
+

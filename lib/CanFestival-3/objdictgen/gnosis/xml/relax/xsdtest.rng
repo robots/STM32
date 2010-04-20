@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <start>
+    <element name="xsdtest">
+      <zeroOrMore>
+        <element name="datatype">
+          <attribute name="name">
+            <data type="NCName"/>
+          </attribute>
+          <choice>
+            <group>
+              <zeroOrMore>
+                <ref name="param"/>
+              </zeroOrMore>
+              <zeroOrMore>
+                <choice>
+                  <ref name="valid"/>
+                  <ref name="invalid"/>
+                </choice>
+              </zeroOrMore>
+            </group>
+            <zeroOrMore>
+              <choice>
+                <ref name="valid"/>
+                <ref name="invalid"/>
+                <ref name="equiv"/>
+                <ref name="length"/>
+                <ref name="lessThan"/>
+                <ref name="incomparable"/>
+              </choice>
+            </zeroOrMore>
+          </choice>
+        </element>
+      </zeroOrMore>
+    </element>
+  </start>
+  <define name="param">
+    <element name="param">
+      <attribute name="name">
+        <data type="NCName"/>
+      </attribute>
+      <data type="string" datatypeLibrary=""/>
+    </element>
+  </define>
+  <define name="valid">
+    <element name="valid">
+      <optional>
+        <ref name="internalSubset"/>
+      </optional>
+      <data type="string" datatypeLibrary=""/>
+    </element>
+  </define>
+  <define name="invalid">
+    <element name="invalid">
+      <optional>
+        <ref name="internalSubset"/>
+      </optional>
+      <data type="string" datatypeLibrary=""/>
+    </element>
+  </define>
+  <define name="equiv">
+    <element name="equiv">
+      <oneOrMore>
+        <element name="class">
+          <oneOrMore>
+            <ref name="value"/>
+          </oneOrMore>
+        </element>
+      </oneOrMore>
+    </element>
+  </define>
+  <define name="value">
+    <element name="value">
+      <optional>
+        <ref name="internalSubset"/>
+      </optional>
+      <data type="string" datatypeLibrary=""/>
+    </element>
+  </define>
+  <define name="length">
+    <element name="length">
+      <attribute name="value">
+        <data type="integer"/>
+      </attribute>
+      <optional>
+        <ref name="internalSubset"/>
+      </optional>
+      <data type="string" datatypeLibrary=""/>
+    </element>
+  </define>
+  <define name="lessThan">
+    <element name="lessThan">
+      <ref name="value"/>
+      <ref name="value"/>
+    </element>
+  </define>
+  <define name="incomparable">
+    <element name="incomparable">
+      <ref name="value"/>
+      <ref name="value"/>
+    </element>
+  </define>
+  <define name="internalSubset">
+    <attribute name="internalSubset">
+      <data type="string" datatypeLibrary=""/>
+    </attribute>
+  </define>
+</grammar>

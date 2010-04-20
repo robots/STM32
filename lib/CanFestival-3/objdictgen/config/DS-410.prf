@@ -1,0 +1,77 @@
+global Mapping, AddMenuEntries
+
+"""
+MappingDictionary for DS-410
+Device profile for inclinometer
+"""
+
+Mapping = {
+    0x6000 : {"name" : "resolution", "struct" : var, "need" : True, "values" :
+                [{"name" : "resolution", "type" : 0x06, "access" : 'rw', "pdo" : True}]},
+
+    0x6010 : {"name" : "Slope_Long16", "struct" : var, "need" : True, "values" :
+                [{"name" : "Slope_Long16", "type" : 0x06, "access" : 'ro', "pdo" : True}]},
+
+    0x6011 : {"name" : "Slope_Long16_Operating_Parameter", "struct" : var, "need" : True, "values" :
+                [{"name" : "Slope_Long16_Operating_Parameter", "type" : 0x05, "access" : 'rw', "pdo" : False}]},
+
+    0x6012 : {"name" : "Slope_Long16_preset_value", "struct" : var, "need" : True, "values" :
+                [{"name" : "Slope_Long16_preset_value", "type" : 0x03, "access" : 'rw', "pdo" : False}]},
+
+    0x6013 : {"name" : "Slope_Long16_Offset", "struct" : var, "need" : True, "values" :
+                [{"name" : "Slope_Long16_Offset", "type" : 0x03, "access" : 'rw', "pdo" : False}]},
+
+    0x6014 : {"name" : "Differential_Slope_Long16_Offset", "struct" : var, "need" : True, "values" :
+                [{"name" : "Differential_Slope_Long16_Offset", "type" : 0x03, "access" : 'rw', "pdo" : False}]},
+
+    0x6020 : {"name" : "Slope_Lateral16", "struct" : var, "need" : False, "values" :
+                [{"name" : "Slope_Lateral16_Offset", "type" : 0x03, "access" : 'ro', "pdo" : True}]},
+
+    0x6021 : {"name" : "Slope_Lateral16_Operating_Parameter", "struct" : var, "need" : False, "values" :
+                [{"name" : "Slope_Lateral16_Operating_Parameter", "type" : 0x05, "access" : 'rw', "pdo" : False}]},
+
+    0x6022 : {"name" : "Slope_Lateral16_preset_value", "struct" : var, "need" : False, "values" :
+                [{"name" : "Slope_Lateral16_preset_value", "type" : 0x03, "access" : 'rw', "pdo" : False}]},
+
+    0x6023 : {"name" : "Slope_Lateral16_Offset", "struct" : var, "need" : False, "values" :
+                [{"name" : "Slope_Lateral16_Offset", "type" : 0x03, "access" : 'rw', "pdo" : False}]},
+
+    0x6024 : {"name" : "Differential_Slope_Lateral16_Offset", "struct" : var, "need" : False, "values" :
+                [{"name" : "Differential_Slope_Lateral16_Offset", "type" : 0x03, "access" : 'rw', "pdo" : False}]},
+
+    0x6110 : {"name" : "Slope_Long32", "struct" : var, "need" : False, "values" :
+                [{"name" : "Slope_Long32", "type" : 0x04, "access" : 'ro', "pdo" : True}]},
+
+    0x6111 : {"name" : "Slope_Long32_Operating_Parameter", "struct" : var, "need" : False, "values" :
+                [{"name" : "Slope_Long32_Operating_Parameter", "type" : 0x05, "access" : 'rw', "pdo" : False}]},
+
+    0x6112 : {"name" : "Slope_Long32_preset_value", "struct" : var, "need" : False, "values" :
+                [{"name" : "Slope_Long32_preset_value", "type" : 0x04, "access" : 'rw', "pdo" : False}]},
+
+    0x6113 : {"name" : "Slope_Long32_Offset", "struct" : var, "need" : False, "values" :
+                [{"name" : "Slope_Long32_Offset", "type" : 0x04, "access" : 'rw', "pdo" : False}]},
+
+    0x6114 : {"name" : "Differential_Slope_Long32_Offset", "struct" : var, "need" : False, "values" :
+                [{"name" : "Differential_Slope_Long32_Offset", "type" : 0x04, "access" : 'rw', "pdo" : False}]},
+
+    0x6120 : {"name" : "Slope_Lateral32", "struct" : var, "need" : False, "values" :
+                [{"name" : "Slope_Lateral32_Offset", "type" : 0x04, "access" : 'ro', "pdo" : True}]},
+
+    0x6121 : {"name" : "Slope_Lateral32_Operating_Parameter", "struct" : var, "need" : False, "values" :
+                [{"name" : "Slope_Lateral32_Operating_Parameter", "type" : 0x05, "access" : 'rw', "pdo" : False}]},
+
+    0x6122 : {"name" : "Slope_Lateral32_preset_value", "struct" : var, "need" : False, "values" :
+                [{"name" : "Slope_Lateral32_preset_value", "type" : 0x04, "access" : 'rw', "pdo" : False}]},
+
+    0x6123 : {"name" : "Slope_Lateral32_Offset", "struct" : var, "need" : False, "values" :
+                [{"name" : "Slope_Lateral32_Offset", "type" : 0x04, "access" : 'rw', "pdo" : False}]},
+
+    0x6124 : {"name" : "Differential_Slope_Lateral32_Offset", "struct" : var, "need" : False, "values" :
+                [{"name" : "Differential_Slope_Lateral32_Offset", "type" : 0x04, "access" : 'rw', "pdo" : False}]},
+
+    0x67FF : {"name" : "Device type", "struct" : var, "need" : False, "values" :
+                [{"name" : "Device type", "type" : 0x07, "access" : 'ro', "pdo" : False}]}
+
+}
+
+AddMenuEntries = []

@@ -1,0 +1,7 @@
+LIBRARY	can_peak_win32
+	
+EXPORTS
+   canReceive_driver
+   canSend_driver
+   canOpen_driver
+   canClose_driver

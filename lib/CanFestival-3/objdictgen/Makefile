@@ -1,0 +1,58 @@
+#! gmake
+
+#
+# Copyright (C) 2006 Laurent Bessard
+# 
+# This file is part of canfestival, a library implementing the canopen
+# stack
+# 
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+# 
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+# 
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# 
+
+PREFIX = /usr/local
+
+all: gnosis
+
+gnosis: gnosis/version.py
+
+gnosis/version.py:
+	#wget http://gnosis.cx/download/Gnosis_Utils-current.tar.gz
+	mkdir -p gnosis_extract
+	tar xzof Gnosis_Utils-current.tar.gz -C gnosis_extract
+	mv gnosis_extract/Gnosis_Utils-*/gnosis .
+	rm -rf gnosis_extract
+
+install: gnosis
+	mkdir -p $(PREFIX)/objdictgen
+	cp -r *.py* config doc doc_index locale examples gnosis $(PREFIX)/objdictgen
+	chmod -R a+r $(PREFIX)/objdictgen
+	mkdir -p $(PREFIX)/bin
+	ln -sf $(PREFIX)/objdictgen/objdictedit.py $(PREFIX)/bin/objdictedit
+	chmod 755 $(PREFIX)/objdictgen/objdictedit.py
+	ln -sf $(PREFIX)/objdictgen/objdictgen.py $(PREFIX)/bin/objdictgen
+	chmod 755 $(PREFIX)/objdictgen/objdictgen.py
+
+uninstall:
+	rm -rf $(PREFIX)/objdictgen
+	rm -f $(PREFIX)/bin/objdictedit
+	rm -f $(PREFIX)/bin/objdictgen
+
+clean:
+
+mrproper: clean
+	rm -f Gnosis_Utils-current.tar.gz
+	rm -rf gnosis
+
+

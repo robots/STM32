@@ -1,0 +1,382 @@
+(c) Tenco Media, 2001 -- may be freely distributed if unaltered
+
+XML MATTERS #11: Revisiting [xml_pickle] and [xml_objectify]
+Lessons in Open Source and Common Sense
+
+David Mertz, Ph.D.
+Revisionist, Gnosis Software, Inc.
+May 2001
+
+    Since the author introduced his handy utilities for
+    high-level Python handling of XML documents, users and
+    readers have contributed a number of extremely useful
+    enhancements and suggestions.  This column presents some of
+    the changes to David's module suite, as well as some tips on
+    advanced aspects of using and customizing the modules.
+
+
+INTRODUCTION
+------------------------------------------------------------------------
+
+  My IBM columns, tutorials, and articles have had a dual--or
+  maybe triple--purpose for your humble author.  In the first
+  instance, I cherish the opportunity afforded me to share what
+  knowledge I have with other programmers/developers, and maybe
+  make a few people's tasks easier therein.  It is also awfully
+  nice that I get paid money for writing these things.
+
+  Another purpose is also contained in a number of my columns.  I
+  have had the opportunity to release to the public domain
+  programming code that I have written in the course of these
+  columns.  In writing this code, I have had the goal of
+  illustrating general programming concepts--and have tailored
+  the code around that.  But at the same time, I have wanted to
+  give the programming community code that individual developers
+  can utilize directly for their own purposes.
+
+  A result of releasing the code that I have, is that I have
+  received back from users of these modules a number of valuable
+  suggestions and enhancement patches.  Most of the improvements
+  users have come up with are ones I would never have imagined on
+  my own; and a few are almost shocking in their insightfulness.
+  I'd like to use this column to present some uses of
+  [xml_pickle] and [xml_objectify] that were not possible when I
+  wrote the columns that initially discussed these modules:  _XML
+  Matters #1_ and _XML Matters #2_.
+
+
+ENHANCEMENTS TO [xml_objectify]
+------------------------------------------------------------------------
+
+  One change, in particular, has been an ongoing struggle.  My
+  timing was probably slightly unlucky.  Within a short time
+  after I first created [xml_objectify] and [xml_pickle] (in
+  August 2000), the PyXML distribution went through several
+  incompatible versions; and not much later than that Python 2.0
+  came out with its own not-quite-compatible XML support.  Users
+  contributed several patches to match then current Python XML
+  support along the way, but in their current state
+  [xml_objectify] and [xml_pickle] both require Python 2.0+, and
+  its included PyXML package.  Given the effective requirement
+  for Python 2.0 in terms of the XML packages, I also allowed in
+  a few other changes with Python 2 syntax.  The backwards
+  incompatibility with Python 1.5 is unfortunate, but it would be
+  too unweildy to maintain it in this case.
+
+  One of the features of [xml_objectify] introduced in _XML
+  Matters #2_ was the special '_XML' attribute that kept complete
+  element contents (including subelement markup of character
+  data).  The default behavior is still to create an '_XML'
+  attribute of a nested object -only- when it contains
+  character-level markup.  But you now have a choice about
+  changing this behavior, using the function 'keep_containers()'
+  and the values 'ALWAYS', 'MAYBE' and 'NEVER'.  For example:
+
+      #-------- Default py_obj._XML attribute creation --------#
+      >>> xml_str = '''<doc><p>Spam and eggs <b>are</b> tasty</p>
+      ...                   <p>The Spanish Inquisition</p>
+      ...                   <foot>Our weapon is fear</foot></doc>'''
+      >>> open('test.xml','w').write(xml_str)
+      >>> from xml_objectify import *
+      >>> py_obj = XML_Objectify('test.xml').make_instance()
+      >>> py_obj.p[0].PCDATA
+      u'Spam and eggs  tasty'
+      >>> py_obj.p[0]._XML              # first <p> has <b> markup
+      u'Spam and eggs <b>are</b> tasty'
+      >>> py_obj.p[1].PCDATA
+      u'The Spanish Inquisition'
+      >>> py_obj.p[1]._XML              # second <p> has no markup
+      Traceback (most recent call last):
+        File "<stdin>", line 1, in ?
+      AttributeError: '_XO_p' instance has no attribute '_XML'
+-
+      #------- Changing py_obj._XML attribute creation --------#
+      >>> _=keep_containers(ALWAYS)
+      >>> py_obj = XML_Objectify('test.xml').make_instance()
+      >>> py_obj.p[1]._XML
+      u'The Spanish Inquisition'
+      >>> _=keep_containers(NEVER)
+      >>> py_obj = XML_Objectify('test.xml').make_instance()
+      >>> py_obj.p[0]._XML
+      Traceback (most recent call last):
+        File "<stdin>", line 1, in ?
+      AttributeError: '_XO_p' instance has no attribute '_XML'
+
+  Probably the most powerful feature of [xml_objectify] is also a
+  subtle one.  Many users have probably never needed, or even
+  noticed class magic behavior.  What is possible, however, is to
+  have special classes on hand that will determine the behaviors
+  of "objectified" XML nodes.  The original article mentioned
+  this, but it is worth seeing in action.
+
+  Before the examples, a few details should be pointed out.  In
+  order to avoid a sloppy conflict in the first module version,
+  [xml_objectify] now "mangles" the names of the class templates
+  for XML nodes.  The "abstract" node class is called '_XO_', and
+  it has a few "magic" behaviors in itself.  When concrete node
+  classes are created--by a programmer or dynamically--they have
+  the form '_XO_tagname' (where '<tagname>' is a tag that occurs
+  in the objectified XML document).
+
+  The "magic" that '_XO_' itself provides are the '__getitem__()'
+  and '__len__()' methods.  What these let you do is to treat
+  each node attribute as if it was a list in those contexts where
+  it would be nice for the attribute to behave like a list; but
+  at the same time, we can refer to an "only child" node without
+  having to subscript.  For example:
+
+      #---- Node attributes as objects and lists of objects ---#
+      >>> print type(py_obj.p), type(py_obj.foot)
+      <type 'list'> <type 'instance'>
+      >>> print py_obj.p[1].PCDATA, '...', py_obj.foot.PCDATA
+      The Spanish Inquisition ... Our weapon is fear
+      >>> for line in py_obj.p: print line.PCDATA,
+      ...
+      Spam and eggs  tasty The Spanish Inquisition
+      >>> for line in py_obj.foot: print line.PCDATA,
+      ...
+      Our weapon is fear
+      >>> map(lambda line: len(line.PCDATA), py_obj.foot)
+      [18]
+      >>> map(lambda line: len(line.PCDATA), py_obj.p)
+      [20, 23]
+
+  Still more magic is possible if you want to create your very
+  own node classes within a program.  Basically, you can make a
+  attribute node behave in -any- way you might wish.
+
+      #------ Creating magic node behaviors for py_obj's ------#
+      >>> import xml_objectify
+      >>> xml_str = '''<buffet>
+      ... <plate><food>Steak</food><food>Potatos</food></plate>
+      ... <plate><food>Corn</food><food>Broccoli</food></plate>
+      ... <buffet>'''
+      >>> open('buffet.xml','w').write(xml_str)
+      >>> class plate(xml_objectify._XO_):
+      ...     def eat(self):
+      ...         for food in self.food:
+      ...             if food.PCDATA == 'Broccoli':
+      ...                 return "If I liked Broccoli, I might have to eat it!"
+      ...         return "Yum!"
+      ...
+      >>> xml_objectify._XO_plate = plate
+      >>> py_obj = XML_Objectify('buffet.xml').make_instance()
+      >>> print py_obj.plate[1].eat()
+      If I liked Broccoli, I might have to eat it!
+      >>> print py_obj.plate[0].eat()
+      Yum!
+
+  Notice that the trick with the 'xml_objectify._XO_plate'
+  assignment is important.  To get the proper magic behavior, the
+  right magic and mangled class needs to live in that namespace.
+
+  In my opinion, it is fabulously cool to be able to grab a bunch
+  of data from an XML file, then have a perfectly natural Python
+  object act on that data as its own attributes, using its own
+  methods
+
+  For working with large XML documents, Costas Malamas has
+  contributed an invaluable enhancement.  Until recently, the
+  only way [xml_objectified] worked was to create a DOM tree,
+  then recurse through that tree to generate the "Pythonic"
+  objects.  That worked fine for small XML documents, but for
+  around 50k-100k files, it starts to become absurdly slow.
+  There appears to be a complexity order effect going on that
+  renders [xml_objectify] unusable for large documents.
+
+  Fortunately, Malamas provided an alternative method for parsing
+  an XML document, based on the Python [expat] bindings ('expat'
+  is a high-performance XML library written in C).  While there
+  are still a few wrinkles to be ironed out in the 'ExpatFactory'
+  class (failure for some documents with processing
+  instructions), for most cases, the new technique provides
+  speedy handling of even huge XML documents.  Using the expat
+  technique imposes a couple limitations by design, also:  You
+  obviously lose the the '_dom' attribute of your 'xml_obj' (if
+  you kept 'xml_obj' in the first place); and you also do not
+  have an '_XML' attribute to play with anymore.  The latter
+  limitations might be lifted later, however.
+
+  Choosing which parsing technique to use is straightforward:
+
+      #------------- Choosing a parsing method ----------------#
+      >>> xml_obj = XML_Objectify('buffet.xml',EXPAT)
+      >>> xml_obj = XML_Objectify('buffet.xml',parser=DOM)
+
+  If no option is specified, the default is the legacy DOM
+  technique.  But future code should specify explicitly, in case
+  the default changes.  'EXPAT' and 'DOM' are constants within
+  [xml_objectify] that simply contain matching string values.
+
+
+ENHANCEMENTS TO [xml_pickle]
+------------------------------------------------------------------------
+
+  In analogy with [xml_objectify], you will need to populate the
+  [xml_pickle] namespace when you want to retain the instance
+  methods of unpickled objects.  That sounds confusing, but some
+  code makes it simple:
+
+      #---- Making sure unpickled Python objects are lively ---#
+      >>> import xml_pickle
+      >>> class MyClass:
+      ...     def DoIt(self):
+      ...         print "Done!"
+      ...
+      >>> o1 = MyClass()
+      >>> o1.attr1 = 'spam'
+      >>> xml_str = xml_pickle.XML_Pickler(o1).dumps()
+      >>> o2 = xml_pickle.XML_Pickler().loads(xml_str)
+      >>> o2.DoIt()
+      Traceback (most recent call last):
+        File "<stdin>", line 1, in ?
+      AttributeError: 'MyClass' instance has no attribute 'DoIt'
+      >>> xml_pickle.MyClass = MyClass
+      >>> o2 = xml_pickle.XML_Pickler().loads(xml_str)
+      >>> o2.DoIt()
+      Done!
+
+  Basically, if you put the classes you want to pickle into the
+  'xml_pickle' namespace before you start all the
+  pickling/unpickling, you can restore all your object behavior.
+  But notice that as with [pickle] and [cPickle], the methods are
+  not themselves pickled (just the attributes are); you use the
+  class that is present at runtime for the methods (which might
+  have been updates since last pickling).
+
+  A limitation of [xml_pickle] that was pointed out in the
+  original article has been lifted by Joshua Macy (with some help
+  from Joe Kraska)..  In early versions, [xml_pickle] made no
+  efforts to check for cyclical references in pickled objects.
+  Furthermore--and for the same reason--every attribute was
+  pickled as a deep copy of its actual Python object.  If you
+  have a Python object with many substructures containing
+  references to the same objects, the pickled size can get big
+  quickly.  Moreover, unpickled objects will contain multiple
+  objects that, while possibly equal (i.e.  'a == a'), are not
+  identical (i.e. 'a is a') as were the pre-pickled originals.
+
+  However, despite the gains in Macy's approach, it is desirable
+  to introduce a DEEPCOPY option back into the module.  The main
+  issue with the (quite elegant) 'refid'/'id' scheme used is that
+  it is likely to be much harder for a generic tool to utilize.
+  Maybe users of languages other than Python want to be able to
+  easily use [xml_pickle]'d objects (maybe more as hierarchical
+  data stores than as full dynamic objects, but that is fine).
+  Or maybe XSLT transformations of pickled objects would be
+  useful for certain purposes.  A pickled excerpt shows the
+  difficulty:
+
+      #-------------- Pickled Python object as XML ------------#
+      <?xml version="1.0"?>
+      <!DOCTYPE PyObject SYSTEM "PyObjects.dtd">
+      <PyObject class="XML_Pickler" id="1383532">
+      <attr name="lst" type="list" id="1391340">
+        <item type="numeric" value="1" />
+        <item type="numeric" value="3.5" />
+        <item type="numeric" value="2" />
+        <item type="numeric" value="(4+7j)" />
+      </attr>
+      <attr name="lst2" type="ref" refid="1391340" />
+      <attr name="num" type="numeric" value="37" />
+      ...
+      </PyObject>
+
+  You can see that the attribute 'lst2' would be a bit of work to
+  figure out in a generic way (such as with developer eyeballs).
+  One has to pull aff the 'refid', then search back for the
+  corresponding 'id'.  Actually, the use of the 'type="ref"' XML
+  attribute may have been badly chosen.  Given that it -has- a
+  'refid' XML attribute, things might be made clearer by simply
+  still recording 'type="list"', as with the 'lst2' referent
+  'lst'.  But of course, once something is done, it is harder to
+  improve it without breaking backwards compatibility.
+
+  A small caveat on references might appeal to subtle-minded
+  hackers.  'id'/'refid' values are invented out of the Python
+  'id()' of the relevant objects.  The values do not mean
+  anything inherently, but have the nice property of being unique
+  at any given moment of runtime.  [xml_pickle] gives no
+  assurance that pickling the "same" object in different runs
+  will produce entirely identical XML files (the 'id' values will
+  almost certainly change).  In general, the ad hoc 'id' values
+  will not matter to a program, but if things like cryptographic
+  hashes or CRCs are used as part of a process, this could be a
+  gotcha.
+
+  Not too much need be described about the enhancement, but in
+  response to user requests, [Numeric] arrays have been added to
+  the set of picklable types.  For scientific and mathematical
+  Python users, these types may make up important attributes of
+  their objects.  [xml_pickle] makes an intelligent effort to
+  make sure that [Numeric] is present when supporting it; if not,
+  it falls back to the [array] module.
+
+
+CONCLUSION
+------------------------------------------------------------------------
+
+  One lesson I have learned in developing--or maybe just
+  shepherding the development of--these modules is the the value
+  of a Python truism:  First get it right, then make it fast!
+
+  The latter part has now been fairly well reached.  Some
+  optimizations to [xml_pickle] have brought its behavior from
+  O(N^2) to a manageable O(N), relative to pickled object size.
+  The trick there is that 'str = str + "more stuff"' can be
+  shockingly inefficient if peformed often enough.  With the
+  expat techniques, [xml_objectify] is similarly swift.  I do not
+  think I would have got something to the world quickly, nor
+  received the amount of valuable contributions, had I worried
+  too much about optimization early.
+
+  I look forward to learning more about the practical social
+  dynamics of open source software development as I am able to
+  create more tools and libraries like the ones discussed in this
+  column.  It has been an interesting path, and I wonder where it
+  will lead.
+
+
+RESOURCES
+------------------------------------------------------------------------
+
+  The current home of David's XML modules is:
+
+    http://gnosis.cx/download/xml_objectify.py
+
+  And:
+
+    http://gnosis.cx/download/xml_pickle.py
+
+  For those interested in older--or pre-release--version numbers
+  of the modules, browse through the directory:
+
+    http://gnosis.cx/download/
+
+  A variety of versions, named with version numbers, live here.
+  The module that drops a version number is generally the most
+  recent "stable" version.  Plus you can find lots of other
+  goodies in this directory (all public domain).
+
+  The initial articles on [xml_pickle] and [xml_objectify] can be
+  found at:
+
+    http://gnosis.cx/publish/programming/xml_matters_1.html
+
+  and:
+
+    http://gnosis.cx/publish/programming/xml_matters_2.html
+
+
+ABOUT THE AUTHOR
+------------------------------------------------------------------------
+
+  {Picture of Author:  http://gnosis.cx/cgi-bin/img_dqm.cgi}
+  David Mertz is blessed with the virtues of laziness, and
+  impatience, and in his wisdom wishes to warn the world that
+  hubris should not be confused with chutzpah or machismo.  David
+  may be reached at mertz@gnosis.cx; his life pored over at
+  http://gnosis.cx/publish/.  Suggestions and recommendations on
+  this, past, or future, columns are welcomed.
+
+

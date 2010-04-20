@@ -1,0 +1,493 @@
+(c) WestTech, 2001 -- may be freely distributed if unaltered
+
+XML MATTERS #16:  XML-RPC as Object Model
+A Data Bundle for the Hoi Polloi?
+
+David Mertz, Ph.D.
+Attributor, Gnosis Software, Inc.
+November 2001
+
+    This article discusses XML-RPC as a way of modelling object
+    data.  General background on what XML-RPC does is given.  We
+    compare, specifically, XML-RPC as a means of representing
+    Python objects--and objects in other languages--with the
+    [xml_pickle] module discussed in earlier columns.
+
+
+Preface: What is XML-RPC?
+------------------------------------------------------------------------
+
+  XML-RPC is a remote function invocation protocol that has the
+  great virtue of being worse than all its competitors.  Compared
+  to Java RMI, or CORBA, or COM, XML-RPC is impoverished in the
+  data it can transmit and obese in message size.  XML-RPC abuses
+  the HTTP protocol to circumvent firewalls that exist for good
+  reasons, and as a consequence transmits messages lacking
+  statefullness and incurs a channel bottleneck.  Compared to
+  SOAP, XML-RPC lacks both important security mechanisms and a
+  robust object model.  Just as a data representation, XML-RPC is
+  slow, cumbersome, and incomplete compared to native programming
+  language mechanisms like Java's 'serialize', Python's 'pickle',
+  Perl's 'Data::Dumper', or similar modules for Ruby, Lisp, PHP,
+  and many other languages.
+
+  In other words, XML-RPC is the perfect embodiment Richard
+  Gabriel's motto "worse is better."  I can hardly write more
+  glowingly about XML-RPC than the prior paragraph, and I think
+  the protocol is a perfect match for a huge variety of tasks.
+  To understand why, I think it is worth quoting Gabriel
+  characterizing the "worse-is-better philosophy":
+
+    * Simplicity:  the design must be simple, both in
+      implementation and interface.  It is more important for the
+      implementation to be simple than the interface.  Simplicity
+      is the most important consideration in a design.
+
+    * Correctness:  the design must be correct in all observable
+      aspects.  It is slightly better to be simple than correct.
+
+    * Consistency:  the design must not be overly inconsistent.
+      Consistency can be sacrificed for simplicity in some cases,
+      but it is better to drop those parts of the design that
+      deal with less common circumstances than to introduce
+      either implementational complexity or inconsistency.
+
+    * Completeness:  the design must cover as many important
+      situations as is practical.  All reasonably expected cases
+      should be covered.  Completeness can be sacrificed in favor
+      of any other quality.  In fact, completeness must
+      sacrificed whenever implementation simplicity is
+      jeopardized.  Consistency can be sacrificed to achieve
+      completeness if simplicity is retained; especially
+      worthless is consistency of interface.
+
+  Writing years before the specific technology existed, Gabriel
+  identifies the virtues of XML-RPC perfectly.
+
+
+Introduction
+------------------------------------------------------------------------
+
+  I have written a moderately popular module for Python called
+  [xml_pickle].  The purpose of that module (discussed previously
+  in this column) is to serialize Python objects, using an
+  interface mostly the same as the standard [cPickle] and
+  [pickle] modules.  The only difference is that the
+  representation is in XML.  My intention all along with that
+  module was to create a very lightweight format that could also
+  be read from other programming languages (and across Python
+  versions).  A DTD accompanies the module for users wanting to
+  validate "XML pickles", but feedback from users suggest that
+  formal validation is rarely bothered with.
+
+  A recurrent question I have received from users of [xml_pickle]
+  is whether XML-RPC would be a better choice, given its more
+  widespread use and existing implementations in many programming
+  languages.  While the answer to the narrow question probably
+  favors [xml_pickle], the comparison is worthwhile--and it
+  raises some points about data-type richness.
+
+  On the face of things, XML-RPC would seem to do something
+  different than [xml_pickle].  XML-RPC calls remote procedures,
+  and gets results back.  This below typical usage example
+  appears at the XML-RPC website and in the _Programming Web
+  Services with XML-RPC_ book:
+
+      #--------- Python shell example of XML-RPC usage --------#
+      >>> import xmlrpclib
+      >>> betty = xmlrpclib.Server("http://betty.userland.com")
+      >>> print betty.examples.getStateName(41)
+      South Dakota
+
+  By contrast, [xml_pickle] creates string representations of
+  local in-memory objects.  Those do not seem the same.  But in
+  fact, most of what XML-RPC needs to do to call a remote
+  procedure is first to convert its arguments to suitable XML
+  representations--in other words, pickle/serialize the
+  parameters.  A return value from an XML-RPC call can similarly
+  contain a nested data structure.  Moreover the '.dumps()'
+  method of the [xmlrpclib] is both named identically to an
+  [xml_pickle] module (both inspired by several standard
+  modules), and does the same thing--write the XML serialization
+  without peforming any actual call.
+
+  At a first level of examination, [xml_pickle] and [xmlrpclib]
+  are functionally interchangeable--at least if one only cares
+  about the serialization aspect.  As we will see, a closer look
+  finds some differences.
+
+
+Representing Objects
+------------------------------------------------------------------------
+
+  Let us create an object, then serialize it by two means.  Some
+  contrasts will come to the fore:
+
+      #----- Python shell example of XML-RPC serialization ----#
+      >>> import xmlrpclib
+      >>> class C: pass
+      ...
+      >>> c = C()
+      >>> c.bool, c.int, c.tup = (xmlrpclib.True, 37, (11.2, 'spam') )
+      >>> print xmlrpclib.dumps((c,),'PyObject')
+      <?xml version='1.0'?>
+      <methodCall>
+      <methodName>PyObject</methodName>
+      <params>
+      <param>
+      <value><struct>
+      <member>
+      <name>tup</name>
+      <value><array><data>
+      <value><double>11.2</double></value>
+      <value><string>spam</string></value>
+      </data></array></value>
+      </member>
+      <member>
+      <name>bool</name>
+      <value><boolean>1</boolean></value>
+      </member>
+      <member>
+      <name>int</name>
+      <value><int>37</int></value>
+      </member>
+      </struct></value>
+      </param>
+      </params>
+      </methodCall>
+
+  A few things should be noted already.  First is that the whole
+  XML document has a root '<methodCall>' element which is
+  irrelevant for our current purposes.  Other than a few bytes
+  extra, however, it makes no difference.  Likewise, the
+  '<methodName>' is superfluous, but the example gives a name
+  that indicates the role of the document.  Moreover, a call to
+  'xmlrpclib.dumps()' accepts a tuple of objects, but we are only
+  interested in "pickling" one--if there were others, they would
+  have their own '<param>' element.  But other than some
+  wrapping, the attributes of our object are well contained in
+  the '<struct>' element's '<member>' elements.
+
+  Now let us look at what [xml_pickle] does (the object is the
+  same as above):
+
+      #----- Python shell example of XML-RPC serialization ----#
+      >>> from xml_pickle import XML_Pickler
+      >>> print XML_Pickler(c).dumps()
+      <?xml version="1.0"?>
+      <!DOCTYPE PyObject SYSTEM "PyObjects.dtd">
+      <PyObject class="C" id="1840428">
+      <attr name="bool" type="PyObject" class="Boolean" id="1320396">
+        <attr name="value" type="numeric" value="1" />
+      </attr>
+      <attr name="int" type="numeric" value="37" />
+      <attr name="tup" type="tuple" id="1130924">
+        <item type="numeric" value="11.199999999999999" />
+        <item type="string" value="spam" />
+      </attr>
+      </PyObject>
+
+  There is both less and more to the [xml_pickle] version (the
+  actual size is similar between the two).  Notice that even
+  though Python does not have a builtin boolean type, when a
+  class is used to represent a new type, [xml_pickle] adjusts
+  with aplomb (albeit more verbosely).  XML-RPC, by contrast, is
+  limited to serializing its 8 data types, and nothing else.  Of
+  course, two of those types--'<array>' and '<struct>'--are
+  themselves collections, and can be compound.  There is also the
+  little matter that [xml_pickle] can point multiple collection
+  members to the same underlying object; but that is absent by
+  design from XML-RPC (and introduced in later versions of
+  [xml_pickle] also).  As a small matter, [xml_pickle] contains
+  only a single 'numeric' type attribute, but the actual pattern
+  of the 'value' attribute allows decoding to integer, float,
+  complex, etc.  No real generality is lost or gained by these
+  strategies, although the XML-RPC style will appeal
+  aesthetically to programmers in statically-typed languages.
+
+
+Weaknesses of XML-RPC
+------------------------------------------------------------------------
+
+  The problem with XML-RPC as an object serialization format is
+  that it just plain does not have enough types to handle the
+  objects in most high-level programming languages.  The most
+  obvious demonstration of this fact is below:
+
+      #------ Python shell example of XML-RPC overloading -----#
+      >>> c = C()
+      >>> c.foo = 'bar'
+      >>> d = {'foo':'bar'}
+      >>> print xmlrpclib.dumps((c,d),'PyObjects')
+      <?xml version='1.0'?>
+      <methodCall>
+      <methodName>PyObjects</methodName>
+      <params>
+      <param>
+      <value><struct>
+      <member>
+      <name>foo</name>
+      <value><string>bar</string></value>
+      </member>
+      </struct></value>
+      </param>
+      <param>
+      <value><struct>
+      <member>
+      <name>foo</name>
+      <value><string>bar</string></value>
+      </member>
+      </struct></value>
+      </param>
+      </params>
+      </methodCall>
+
+  Two things were serialized--an object instance and a
+  dictionary.  While it is fair enough to say that Python objects
+  are particularly "dictionary-like", there is a lot of
+  information lost by representing a dictionary and an object in
+  -exactly- the same way.  Moreover, the excessively generic
+  meaning for '<struct>' in XML-RPC affects pretty much any OOP
+  language, or at least any language that has native
+  hash/dictionary constructs; it is not a Python quirk here.  On
+  the other hand, failing to distinguish Python tuples and lists
+  within the '<array>' type of XML-RPC is a fairly
+  Python-specific limitation.
+
+  [xml_pickle] handles all the Python types much better
+  (including data types defined by user classes, as we saw).
+  There is actually no direct pickling of dictionaries in
+  [xml_pickle], basically because no one has asked for that (it
+  would be easy to add).  But dictionaries that are object
+  attributes get pickled:
+
+      #------ Python shell example of [xml_pickle] dicts ------#
+      >>> c, c2 = C(), C()
+      >>> c2.foo = 'bar'
+      >>> d = {'foo':'bar'}
+      >>> c.c, c.d = c2, d
+      >>> print XML_Pickler(c).dumps()
+      <?xml version="1.0"?>
+      <!DOCTYPE PyObject SYSTEM "PyObjects.dtd">
+      <PyObject class="C" id="1917836">
+      <attr name="c" type="PyObject" class="C" id="1981484">
+        <attr name="foo" type="string" value="bar" />
+      </attr>
+      <attr name="d" type="dict" id="1917900">
+        <entry>
+          <key type="string" value="foo" />
+          <val type="string" value="bar" />
+        </entry>
+      </attr>
+      </PyObject>
+
+  Another virtue of the [xml_pickle] approach that is implied in
+  the example is that dictionary keys need not be strings, as
+  they must be in XML-RPC '<struct>' elements.  However, Perl,
+  PHP and most langauges are closer to the XML-RPC model in this.
+
+
+Weaknesses of [xml_pickle]
+------------------------------------------------------------------------
+
+  Unfortunately, [xml_pickle] lacks some types that many
+  programming languages have.  If our goal is not simply to save
+  and restore -Python- objects, but to exchange objects across
+  languages, [xml_pickle] is not currently quite adequate.  The
+  issue of floats and integers is not really important in
+  principle; but designing an "unpickler" for, say, Java would be
+  made easier by having the XML parser be able to determine the
+  type needed, rather than defer that until the format of the
+  'value' attribute is analyzed.
+
+  Of more serious concern for cross-language pickling are the
+  '<boolean>' and '<dateTime.iso8601>' tags that XML-RPC has, but
+  Python lacks as a built-in type.  Even though I claimed that
+  [xml_pickle] handled user classes that define custom data
+  types easily and well, that is not quite as true when it comes
+  to the cross-language case.  For example, the below fragment of
+  an [xml_pickle] representation describes an iso8601 Date/Time:
+
+      #----- [xml_pickle] version of an iso8601 Date/Time -----#
+      <attr name="dte" type="PyObject" class="DateTime" id="1984076">
+        <attr name="value" type="string" value="20011122T17:28:55" />
+      </attr>
+
+  There are two issues that make it difficult to utilize this
+  data in, say, Perl or REBOL or PHP.  One matter is
+  the namespace the restored class.  In Python, the namespace of
+  the restored 'xmlrpclib.DateTime' becomes, by default,
+  'xml_pickle.DateTime' (but the namespaces can be manually
+  manipulated prior to unpickling).  The way Python's
+  instantiation and namespaces work, little rests on this
+  fact--or at least not if our interest is in the instance
+  attributes rather than its methods.  But various languages
+  handle scoping matters in very different ways.
+
+  More important, by far, is the fact that this custom class
+  cannot be easily recognized as a native type in languages where
+  it is one.  Perl and PHP do not have a native DateTime type
+  anyway, so nothing is really lost as long as unpicklers in
+  those languages restore the 'value' instance attribute.  But
+  something like REBOL has many more native data types.  Not just
+  dates, but also exotic types like email addresses and URLs.
+  Those are lost in the [xml_pickle] process.  Of course, XML-RPC
+  also loses those data types.  Either way, we are left with
+  plain string type to represent something more specific (or
+  '<base64>' in XML-RPC, which [xml_pickle] handles by escaping
+  highbit values--e.g.  "\xff").
+
+
+Conclusion: Where to Go From Here?
+------------------------------------------------------------------------
+
+  Neither XML-RPC nor [xml_pickle] are entirely satisfactory as
+  means of representing the object instances of popular
+  programming languages.  But both of them come pretty close.
+  Let me some suggest some approaches to patching up the short
+  gap between these protocols and a general object serialization
+  format.
+
+  "Fixing" [xml_pickle] is actually amazingly simple.  Just add
+  more types to the format.  For example, since [xml_pickle] was
+  first developed, the 'UnicodeType' has been added to Python.
+  Adding complete support for it took exactly four lines of new
+  code (although that was simplified slightly by the fact XML is
+  natively Unicode).  Or again, at the requirement of users, the
+  [numeric] module's 'ArrayType' was added with little more work.
+  Even if a type is not present in Python, a custom class could
+  be defined within [xml_pickle] to add the behavior of that
+  type--e.g. maybe REBOL's "email address" type will be supported
+  with a fragment like:
+
+      <attr name="my_address" type="email" value="mertz@gnosis.cx" />
+
+  Once unpickled, [xml_pickle] could either just treat "email" as
+  a synonym for "string", or we could implement an 'EmailAddress'
+  class with some useful behaviors.  One such behavior, if we
+  took the latter route would be pickling into the above
+  [xml_pickle] fragment.
+
+  "Fixing" XML-RPC is more difficult.  It would be easy to
+  suggest just adding a bunch of new data types.  And purely
+  technically there would be no particular problem with this.
+  But as a social matter, XML-RPC's success makes it difficult to
+  introduce incompatible changes.  A hypothetical "data-enhanced"
+  XML-RPC would not play nice with all the existing
+  implementations and installations.  Actually, some implementors
+  have felt sufficiently bothered by the lack of a "nil" type
+  that they have added a non-standard (or at best semi-standard)
+  type to correspond to Java 'null', Python 'None', Perl 'undef',
+  SQL 'NONE' and the like.  But a bunch more types that only some
+  programming languages use is not going to fly.
+
+  One approach to enhancing XML-RPC as an object serializer is to
+  coopt the '<struct>' element to do double-duty.  Everything
+  that is incompletely typed by standard XML-RPC could be wrapped
+  in a '<struct>' with single '<member>', where the '<name>'
+  indicates the special type.  While existing XML-RPC libraries
+  do not do this, the XML-RPC protocol and DTD are so simple that
+  adding this behavior is fairly trivial (but requires modifying
+  the libraries, not just wrapping them, in most cases).
+
+  For example, XML-RPC cannot naively describe the difference
+  between Python lists and tuples.  So the below fragment is
+  incomplete as a description of a Python object:
+
+      #------ XML-RPC fragment for EITHER list OR tuple -------#
+      <array>
+        <data>
+          <value>
+            <double>11.2</double>
+          </value>
+          <value>
+            <string>spam</string>
+          </value>
+        </data>
+      </array>
+
+  One could substitue the following representation, which is
+  valid XML-RPC, and a suitable implementation could restore to
+  a specific Python object:
+
+      #------------ XML-RPC fragment for a tuple --------------#
+      <struct>
+        <member>
+          <name>NEWTYPE:tuple</name>
+          <value>
+            <array>
+              <data>
+                <value>
+                  <double>11.2</double>
+                </value>
+                <value>
+                  <string>spam</string>
+                </value>
+              </data>
+            </array>
+          </value>
+        </member>
+      </struct>
+
+   Representing a true '<struct>' could happen two (or more)
+   ways.  (1) every '<struct>' could be wrapped in another
+   '<struct>' (maybe with the '<name>' "OLDTYPE:struct" or the
+   like).  For Python, this is probably best anyway, since
+   dictionaries and object instances are both "NEWTYPE"s.  (2)
+   The namespace-like prefix "NEWTYPE:" could be reserved for
+   this special usage (accidental collision seems unlikely).
+
+
+Resources
+------------------------------------------------------------------------
+
+  Userland's XML-RPC homepage is, naturally, the place to start
+  investigating XML-RPC.  Many useful resources can be found
+  there:
+
+    http://xmlrpc.com/
+
+  While at the XML-RPC homepage, it is particularly worthwhile to
+  investigate the tutorials and articles they provide links for:
+
+    http://www.xmlrpc.com/directory/1568/tutorialspress
+
+  Kate Rhodes has written a nice comparison called "XML-RPC vs.
+  SOAP."  In it, she points to a number of details that belie
+  SOAP's description as a "lightweight" protocol:
+
+    http://weblog.masukomi.org/writings/xml-rpc_vs_soap.htm
+
+  Richard P. Gabriel's rather famous paper "Lisp:  Good News, Bad
+  News, How to Win Big" can be found in full at the below URL.
+  What everyone reads and refers to is the section called "The
+  Rise of 'Worse is Better'":
+
+    http://www.ai.mit.edu/docs/articles//good-news/good-news.html
+
+  The O'Reilly title _Programming Web Services with XML-RPC_, by
+  Simon St. Laurent, Joe Johnston & Edd Dumbill, is quite
+  excellent.  It's spirit matches that of XML-RPC itself.
+
+  [xml_pickle] can be found at:
+
+    http://gnosis.cx/download/xml_pickle.py
+
+  The associated DTD lives at:
+
+    http://gnosis.cx/download/PyObjects.dtd
+
+  Secret Lab's [xmlrpc] Python module can be found at:
+
+    http://www.pythonware.com/products/xmlrpc/index.htm
+
+
+About the Author
+------------------------------------------------------------------------
+
+  {Picture of Author:  http://gnosis.cx/cgi-bin/img_dqm.cgi}
+  David Mertz puts the "lite" in "lightweight".  David may be
+  reached at mertz@gnosis.cx; his life pored over at
+  http://gnosis.cx/publish/.  Suggestions and recommendations on
+  this, past, or future, columns are welcomed.
+

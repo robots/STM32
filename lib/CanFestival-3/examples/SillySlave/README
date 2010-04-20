@@ -1,0 +1,16 @@
+SillySlave example for CANfestival
+
+Its purpose is only to check if the selected
+driver works at least a minimum. The PC running this demo
+must be connected through CAN bus to a working master that 
+recognizes the slave nodeId. The slave should be configured
+by the master, then switched to operative. After that, when
+the master sends a SYNC, the slave answers with PDO1, 
+containing an integer that increments each time it is sent.
+
+Please have a look to main.h to tune the master and slave node IDs
+
+It's all. Enjoy it.
+GMB
+jan 17,2008
+

@@ -1,0 +1,94 @@
+; Programmation de la mémoire flash
+
+
+; Réinitialisation
+SYS.d
+
+; Effacer l'écran
+WinCLEAR
+
+; Vitesse de transmission : 
+SYStem.BdmClock 8.0MHZ
+
+; Choix du microcontrôleur cible
+SYStem.CPU MCS12DP256
+
+; Flash page 0X3E accessible entre 0X4000 et 0X7FFF
+; cf Motorola, registre MISC
+
+system.option ROMHM ON
+
+
+; Enlever tous les points d'arrêt
+b.res
+
+; Utiliser les points d'arrêts onchip
+map.bonchip
+
+; Connexion à la carte CS12
+system.up
+
+flash.reset
+
+
+; Effacement de la flash
+PRINT "Effacement de la flash"
+FLASH.Erase all
+
+; Passage en mode programmation de la flash
+print "Programmation de la flash non paginée (48KO) 1 "
+FLASH.Program 0x4000--0x7FFF
+
+;print "Chargement du programme en flash 1"
+DATA.LOAD.ELF geneSYNC.elf 0x4000--0x7FFF
+
+
+FLASH.Program off
+print "Flash programmée 1"
+
+
+; Passage en mode programmation de la flash
+print "Programmation de la flash non paginée (48KO) 2"
+FLASH.Program 0x308000--0x30BFFF
+
+;print "Chargement du programme en flash 2"
+DATA.LOAD.ELF geneSYNC.elf 0x8000--0xBFFF
+
+
+FLASH.Program off
+print "Flash programmée 2"
+
+; Passage en mode programmation de la flash
+print "Programmation de la flash non paginée (48KO) 3"
+FLASH.Program 0xC000--0xFFFF
+
+;print "Chargement du programme en flash 3"
+DATA.LOAD.ELF geneSYNC.elf 0xC000--0xFFFF
+
+
+FLASH.Program off
+print "Flash programmée 3"
+
+
+;Reset du HCS12
+system.up
+
+;Reset de trace32
+SYS.d
+
+
+ENDDO
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,390 @@
+(c) Tenco Media, 2000 -- may be freely distributed if unaltered
+
+XML MATTERS #2
+On the Pythonic Treatment of XML Documents As Objects (II)
+
+David Mertz, Ph.D.
+Transformer, Gnosis Software, Inc.
+August 2000
+
+
+WHAT IS XML? WHAT IS PYTHON?
+------------------------------------------------------------------------
+
+  XML is a simplified dialect of the Standard Generalized Markup
+  Language (SGML).  Many readers will be most familiar with SGML
+  via one particular document type, HTML.  XML documents are
+  similar to HTML in being composed of text interspersed with and
+  structured by markup tags in angle-brackets.  But XML
+  encompasses many systems of tags that allow XML documents to be
+  used for many purposes:  magazine articles and user
+  documentation, files of structured data (like CSV or EDI
+  files), messages for interprocess communication between
+  programs, architectural diagrams (like CAD formats), and many
+  other purposes.  A set of tags can be created to capture any
+  sort of structured information one might want to represent,
+  which is why XML is growing in popularity as a common standard
+  for representing diverse information.
+
+  Python is a freely available, very-high-level, interpreted
+  language developed by Guido van Rossum.  It combines a clear
+  syntax with powerful (but optional) object-oriented semantics.
+  Python is available for almost every computer platform you
+  might find yourself working on, and has strong portability
+  between platforms.
+
+
+INTRODUCTION: THE PROJECT
+-------------------------------------------------------------------
+
+  _XML Matters #1_ introduced the author's project for
+  creating more seamless and natural integration between XML and
+  Python.  Modules and packages such as [xmllib], [xml.sax],
+  [pyxie], and [xml.dom] provide ways of handling XML documents
+  that are common in the XML community.  Tools such as these are
+  extremely similar to corresponding modules and libraries for
+  other programming languages.  In fact, the organization of many
+  such modules is a direct result of standards created by
+  (language-neutral) XML standards bodies.  Consequently, one
+  thing all the abovementioned modules have in common is that
+  they implement very XML-oriented ways of thinking about
+  documents and objects; in many cases this conceptual framework
+  feels like it is tacked on to Python, rather than an integral
+  part of it.
+
+  Using Python implementations of general XML protocols has many
+  uses.  Standards like DOM are easily portable between
+  programming languages; and programmers of one language can
+  easily pick up and work with DOM-oriented code written in
+  another language.  However, there are also times when a
+  -Python- programmer prefers to code in ways that feel much more
+  like "normal" Python.  The Project discussed in these columns
+  is simply to provide a set of "Pythonic" modules for working
+  with XML documents.
+
+  As a result of those asymmetries that exist between XML and
+  Python, the Project--at least initially--contains two separate
+  modules: one for representing arbitrary Python objects in XML
+  ([xml_pickle]); a second one ([xml_objectify]) for "native"
+  representation of XML documents as Python objects.  This
+  article will address the latter module.
+
+    ---- SIDEBAR: ----------------------------------------------
+
+    The XML-SIG distribution is changed fairly frequently while
+    it is in beta versions.  The changes in turn are extremely
+    likely to affect the functioning of [xml_objectify].
+    Therefore, an XML-SIG version known to be compatible with
+    [xml_objectify] may be found at:
+
+      http://gnosis.cx/download/py_xml_04-21-00.exe
+      http://gnosis.cx/download/py_xml_04-21-00.zip
+
+    The first URL is the Windows self-installer, the latter is
+    simply an archive of those files to be unpacked under
+    $PYTHONPATH/xml.
+
+    Whenever the XML-SIG distribution reaches a release version
+    and/or when the XML package is a part of an official Python
+    release, the current [xml_objectify] should be updated to
+    work with the official release.  The most current
+    [xml_objectify] should always be available at:
+
+      http://gnosis.cx/download/xml_objectify.py
+
+    ------------------------------------------------------------
+
+
+JUMPING AHEAD: HOW TO USE [xml_objectify]
+-------------------------------------------------------------------
+
+  The usage of [xml_objectify] is extremely simple, and is well
+  documented in module docstring comments.  Let us take a quick
+  look:
+
+      #------ Create a Python object from an XML document -----#
+      from xml_objectify import XML_Objectify
+      xml_obj = XML_Objectify('address.xml')
+      py_obj = xml_obj.make_instance()
+
+  There are two steps involved in creating a "native" Python
+  object from a generic XML document (use [xml_pickle] for
+  handling of special 'PyObjects.DTD' format documents).  First
+  you want to create an intermediate DOM-like factory object.
+  Second, you may generate (one or more) Python object instances
+  from the 'XML_Objectify' instance.  There is no reason you
+  could not do both steps on the same line, as:
+
+      #-------- Inline creation of XML/Python object ----------#
+      py_obj = XML_Objectify('address.xml').make_instance()
+
+  Of course, in this latter case, the factory object does not
+  stay around to produce more "native" objects, and
+  correspondingly its '._dom' data member (which contains a full
+  DOM instance) is cleared.
+
+  For comparison, -creation- of a DOM object need be no more
+  difficult in Python:
+
+      #------ Create a DOM object from an XML document --------#
+      from xml.dom.utils import FileReader
+      dom_obj = FileReader().readXml(open('address.xml'))
+
+  'FileReader().readXml()' requires an actual file object, while
+  'XML_Objectify()' may accept either a file object or a plain
+  filename, but in either case, the object creation is a two line
+  action.
+
+  The difference between using the [xml_objectify] module and the
+  [xml.dom] package is in the type of object one winds up with.
+  A Python DOM object *is* a genuine Python object, but its
+  attributes and methods do not correspond to the data and
+  structure of the original XML document in as straightforward a
+  way as with the 'XML_Objectify' object.  For example, to access
+  the same XML attribute in the sample document, you have a
+  choice between:
+
+      #---- [xml.dom] versus [xml_objectify] Python objects ---#
+      print py_obj.person[1].address.city
+      print dom_obj.get_childNodes()[1].get_childNodes()[3].\
+            get_childNodes()[3].get_attributes()['city'].value
+      print dom_obj._node.children[1].children[3].children[3].\
+            attributes['city'].children[0].value
+
+  The basic organization of a DOM tree is a strict ordered tree
+  of nodes.  It is not hard to enumerate over these nodes, but it
+  is quite cumbersome to refer to specific ones.  Making matters
+  worse is that some nodes are whitespace text nodes and
+  processing instruction nodes--which you rarely care about--and
+  finding the subtags in the node list is mostly trial-and-error.
+  In the above example both access to the "native" attributes
+  (e.g. '.children') and the DOM-style methods (e.g.
+  '.get_childNodes()') are used in different 'print' statements.
+  Either way, it is not easy to see what datum in the XML
+  document is being referenced.
+
+  On the other hand, the first 'print' statement above pretty
+  much documents itself.  Python's zero-based list indexing must
+  be noted, as usual.  Beyond that minor caveat, the line just
+  says: "Print the city of the address of the second person in
+  the addressbook" ("New York" is what is printed by each
+  statement).  To help you out further, 'py_obj.__class__' is
+  "addressbook", corresponding to the root element of the XML
+  document (and every attribute that might contain more than
+  simple text is an instance of a class named according to the
+  XML tag defining it).
+
+
+DESIGN ISSUES
+-------------------------------------------------------------------
+
+  --WHY NOT JUST USE [xml.dom]?--
+  [xml_objectify] makes wide use of DOM internally.  In fact,
+  every 'XML_Objectify' instance contains a '._dom' attribute
+  that is a DOM tree for the XML document opened (but the
+  instance created by '.make_instance' does not contain any DOM,
+  and is the class type of the root tag).  The problem with DOM
+  is that it is just to hard to use, and the syntax is too
+  obscure.  The above examples illustrate this.  Python "native"
+  objects are much easier to program with.
+
+  --INTROSPECTIVE EXPECTATIONS--
+  With [xml_objectify], you can take advantage of all your
+  existing generic functions.  The function 'pyobj_printer()'
+  included in the module is a sample generic function.  This
+  function produces a "pretty" recursive representation of
+  -any- Python object.  By representing your XML documents as
+  "native" Python documents, you can get a lot of reuse out of
+  existing functions that deal with Python objects in abstract
+  ways.  Of course, a DOM object still is a Python object of
+  sorts, but as in the above usage example, its attributes are
+  mostly a bunch of nested '.children' lists; and these are not
+  all that helpful semantically (try printing a DOM object with
+  the provided generic function).
+
+  --TRICKS WITH CLASS BEHAVIOR--
+  A subtle trick done by [xml_objectify] is that it will only
+  dynamically define a class for an attribute value if that class
+  has not already been defined.  What this accomplishes is that
+  it lets you define classes with complex behavior and attributes
+  in which to pour specific XML document contents.  For example,
+  if the class 'person' is pre-defined with various methods
+  (including an '.__init__()' method if needed), each "person" in
+  the XML addressbook imported in the above sample code will have
+  whatever behaviors it has been given, including methods that
+  operate on the data poured into the instance.  Of course, if a
+  class is not pre-defined prior to 'XML_Objectify()'ing a
+  document, the class is just a container for the attributes
+  defined in the actual XML.
+
+
+LIMITATIONS AND SPECIAL BEHAVIORS
+-------------------------------------------------------------------
+
+  --CHARACTER MARKUP--
+  Some XML tags are block-level, but some are character-level.
+  The most natural Python representation--at least to the
+  author's mind--is different in the two cases.  Block-level tags
+  are the norm; each block-level subtag is easily represented by
+  an attribute of the parent tag that is named after the subtag,
+  and the value of the subtag-attribute is a new Python object
+  also of a type named after the subtag.  For example, a
+  '<person>' might -have- an '<address>' and '<misc-info>'.  It
+  is nice to Pythonically refer to these as 'person.address' and
+  'person.misc_info'.
+
+  However, when the -contents- of a tag are a mixture of some
+  text data and some markup of that data (often typographic in
+  nature), the subtags really are not something the parent tag
+  -has-.  For example, a 'misc_info' object does not really
+  -have- 'ital' attributes in the above hierarchical way.  So how
+  should we represent some XML like?
+
+      <misc-info>One of the <ital>most</ital> talented actresses on TV.</misc-info>
+
+  The approach of [xml_objectify] is to add a special attribute
+  called '._XML' to objects/tags that seem to contain marked-up
+  character data.  This attribute contains the literal XML inside
+  a tag, if the programmer wants it.  The 'pyobj_printer()'
+  function, for example, will display this literal XML instead of
+  recursive attributes if the '._XML' attribute exists for a
+  given nested object.  However, the standard recursive
+  subtag-object creation is still performed, so the programming
+  requirement can look at whatever attributes and structures are
+  most relevant.
+
+  --NATIVE PYTHON OBJECTS CONTAIN ROOT DOCUMENT ONLY--
+  Many XML documents contain processing instructions and/or
+  comments in addition to their tags and character data contents.
+  However, the Python "native" object created by the
+  '.make_instance()' method of an 'XML_Objectify' object contains
+  only the contents of the document root tag.  Furthermore, XML
+  comments are ignored; only tag attributes and character data is
+  represented.
+
+  If you keep around the original 'XML_Objectify' object
+  ('xml_obj' in the first example above), you can access its
+  '.processing_instruction' attribute, or even its '._dom'
+  attribute to look at what was left out of the "native" Python
+  object.
+
+  --ATTRIBUTE TYPE SIMPLIFICATION--
+  All XML attributes are converted to Python object attributes of
+  string type.  No effort is currently made to represent XML
+  enumerated types, or even to represent numeric types for
+  attributes.  Such capabilities might be added to later
+  versions, but these would generally require the presence of a
+  DTD, which [xml_objectify] does not assume.
+
+  --SUBTAGS ATTRIBUTES ARE EITHER LISTS OR INSTANCES--
+  XML subtags are represented by -either- Python attributes of
+  object type -or- by lists of such objects (depending on whether
+  there are one or several such subtags of the same type).  The
+  decision whether to use a list of objects as an attribute value
+  is decided simply by whether a -particular- tag contains
+  multiple subtags of the same type.  For example, in the
+  provided 'address.xml' sample, some person's contact-info
+  includes one home-phone, some includes zero, and some includes
+  several.  Corresponding to this, some 'contact_info' objects
+  will have no '.home_phone' attribute at all, some will have a
+  '.home_phone' attribute containing a 'home_phone' object, and
+  some will have a '.home_phone' attribute containing a list of
+  'home_phone' objects.  It would be possible to impose more
+  order if a DTD was used, but the author believes this kind of
+  dynamism is appropriate to most types of Python programming.
+
+  --PYTHON NAMESPACE RESTRICTIONS--
+  The Python namespace is smaller than the XML namespace.
+  Therefore, sometimes XML names (of either tags or attributes)
+  have to be modified.  The specific transformation made is
+  changing dashes, colons, and the pound/hash mark, into
+  underscores.  Further namespace collision is not avoided.  For
+  example, if your XML document has tags, '<spam-eggs>',
+  '<spam_eggs>', '<spam:eggs>' and <spam#eggs>, [xml_objectify]
+  will create Python objects that do not correctly represent your
+  XML document.  Or maybe the module will outright crash, or
+  maybe it will break your data and fry your machine.  Probably
+  not the latter problems, but the current version of
+  [xml_objectify] simply does not take this namespace collision
+  into account.  In real-life, it will rarely create any
+  problems, since you probably do not have XML documents with
+  those conflicting tags.
+
+  --NO EXPORT BACK TO XML--
+  Initially, the author considered including a capability for
+  converting Python "native" objects back to XML documents with
+  the same structure as those read-in.  That goal was not
+  included in the current version because there are many
+  implementation issues that are not easy to resolve.  Basically,
+  [xml_objectify] deliberately throws out some information in XML
+  documents in order to produce far friendlier Python objects.
+  However, once information is gone, the best you can do is guess
+  at what it was.  One principle type of information that is lost
+  is about order.  Python attributes do not have any
+  predetermined order among them, but XML tags and attributes
+  might be required to occur in specific sequence.  Or even where
+  XML tags are not -required- to occur in specific order, the
+  order might be semantically important (in the case of repeated
+  common subtags, Python lists maintain order).  In order to
+  convert back to XML, we would either need to choose arbitrary
+  orders, or somehow tuck away order information within the
+  "native" Python object (which might make it feel less
+  "native").
+
+  One option that would make it possible to go much of the way
+  towards reconstructing dropped information in the Python
+  objects produced by '.make_instance()' would be to enforce a
+  DTD in writing back to XML.  Even if this additional work was
+  performed, questions would still exist about how to handle
+  attributes added, deleted, or modified at Python runtime
+  (modifying a Python object could produce something that was not
+  conformant to the DTD of the original XML document).  However,
+  any capability added will be added to later version of
+  [xml_objectify] (and probably only if a specific need arises
+  for users).
+
+
+
+RESOURCES
+------------------------------------------------------------------------
+
+  Charming Python #1: An Introduction to XML Tools for Python
+
+    http://gnosis.cx/publish/programming/charming_python_1.html
+
+  Charming Python #2: A Closer Look at Python's [xml.dom] Module
+
+    http://gnosis.cx/publish/programming/charming_python_2.html
+
+  _XML Matters #1_: About [xml_pickle]
+
+    http://gnosis.cx/publish/programming/xml_matters_1.html
+
+  The Python Special Interest Group on XML:
+
+    http://www.python.org/sigs/xml-sig/
+
+  The World Wide Web Consortium's DOM page.
+
+    http://www.w3.org/DOM/
+
+  The DOM Level 1 Recommendation.
+
+    http://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/
+
+  Files used and mentioned in this article:
+
+    http://gnosis.cx/download/xml_matters_2.zip
+
+
+ABOUT THE AUTHOR
+------------------------------------------------------------------------
+
+  {Picture of Author:  http://gnosis.cx/cgi-bin/img_dqm.cgi}
+  David Mertz cannot fool all of the people all of the time, but
+  sometimes he wishes he could.  David may be reached at
+  mertz@gnosis.cx; his life pored over at http://gnosis.cx/publish/.
+  Suggestions and recommendations on this, past, or future, columns
+  are welcomed.
+
+

@@ -1,0 +1,74 @@
+TXT2HTML TODO LIST
+Please Suggest More Improvements
+
+Notes by David Mertz
+mertz@gnosis.cx
+Tue 05-16-2000
+
+
+PROGRAM STRUCTURE IMPROVEMENTS
+------------------------------------------------------------------------
+
+ - Should the whole source present one or a few classes with
+   methods?  It might be better to eliminate cfg_dict and other
+   global-ish variables, and make them instance data?  But is
+   there a real gain in such a change?
+
+ - How might the elements that change be better encapsulated:
+   regexes for new types, case blocks for handling of types,
+   options in proxy form, type inference?
+
+ - Is it worth going to several module files? A package?
+
+
+DOCUMENTATION IMPROVEMENTS
+------------------------------------------------------------------------
+
+ - Write a HOWTO document for adding new functionality?
+
+
+OUTPUT IMPROVEMENTS
+------------------------------------------------------------------------
+
+ - Syntax highlighting for other languages.  Are there other
+   tools that would be useful to call for various languages?  GNU
+   enscript, maybe (but seems to rely on many installation
+   assumptions). Is it worth wrapping a non-Python tool?
+
+ - FAQ TYPE conversion basically *sucks*.  It works pretty well
+   for the comp.compression FAQ that served as an example; but it
+   looks terrible on every other example encountered.  Is there
+   any consistent pattern in FAQ documents?
+
+ - An "EMAIL" TYPE? What would it do, exactly?
+
+ - A "Project Gutenburg" type.
+
+ - What about the dependency on the external 'eye.gif' icon in
+   the proxy navigation box?  How might that degrade more
+   gracefully if icon is missing? (PIL!?)
+
+
+USAGE IMPROVEMENTS
+------------------------------------------------------------------------
+
+ - Some sort of mechanism for "bookmarking" URL's that are
+   actually improved by being proxied.  Crude fixed list
+   'nicelinks.txt' has been done for the concept.  What interface
+   to store bookmarks?  How to handle users, permissions, etc.
+   (or do not bother)?  Should 'nicelinks' get its own TYPE while
+   we are at it?
+
+ - Some links should never be proxied, such as .zip archives, or
+   fancy types that use plug-ins.  Basically, anything that isn't
+   more-or-less ASCII to start with won't be handled right.  How
+   to assure this?  Can we enumerate all the types on either side
+   (probably not)?
+
+SECURITY ISSUES
+------------------------------------------------------------------------
+
+ - Are there any weaknesses in use of CGI proxy?  Attacks on my
+   host?  Spoofing of HTTP_REFERRER for some bad purpose?
+   Something else?
+

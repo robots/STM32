@@ -1,0 +1,1082 @@
+global Mapping, AddMenuEntries
+
+"""
+MappingDictionary for DS-404
+"""
+
+Mapping = {
+    0x6000 : {"name" : "DI Read state 8 Input Lines", "struct" : rec , "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "DI Read state 8 Inputs Lines %d[(sub)]", "type" : 0x05, "access" : 'ro', "pdo" : True, "nbmax" : 0xC7}]},
+
+    0x6002 : {"name" : "DI Polarity 8 Input Lines", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'rw', "pdo" : False},
+                 {"name" : "DI Polarity 8 Input Lines %d[(sub)]", "type" : 0x05, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x6020 : {"name" : "DI Read state 1 Input Lines", "struct" : rec , "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "DI Read state 1 Inputs Lines %d[(sub)]", "type" : 0x01, "access" : 'ro', "pdo" : True, "nbmax" : 0xC7}]},
+    0x6030 : {"name" : "DI Polarity 1 Input Lines", "struct" : rec , "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "DI Polarity 1 Inputs Lines %d[(sub)]", "type" : 0x01, "access" : 'ro', "pdo" : False, "nbmax" : 0xC7}]},
+
+
+    0x6100 : {"name" : "AI Input FV", "struct" : rec , "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Input FV %d[(sub)]", "type" : 0x08, "access" : 'ro', "pdo" : True, "nbmax" : 0xC7}]},
+    0x7100 : {"name" : "AI Input FV", "struct" : rec  , "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Input FV %d[(sub)]", "type" : 0x03, "access" : 'ro', "pdo" : True, "nbmax" : 0xC7}]},
+    0x8100 : {"name" : "AI Input FV",  "struct" : rec , "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Input FV %d[(sub)]", "type" : 0x10, "access" : 'ro', "pdo" : True, "nbmax" : 0xC7}]},
+    0x9100 : {"name" : "AI Input FV",  "struct" : rec , "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Input FV %d[(sub)]", "type" : 0x04, "access" : 'ro', "pdo" : True, "nbmax" : 0xC7}]},
+
+    0x6103 : {"name" : "AI Interrupt delta input FV", "struct" : rec , "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Interrupt delta input FV %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x7103 : {"name" : "AI Interrupt delta input FV","struct" : rec , "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Interrupt delta input FV %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x8103 : {"name" : "AI Interrupt delta input FV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Interrupt delta input FV %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x9103 : {"name" : "AI Interrupt delta input FV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Interrupt delta input FV %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+
+    0x6110 : {"name" : "AI Sensor Type", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Sensor Type %d[(sub)]", "type" : 0x06, "access" : 'rw', "pdo" : True, "nbmax" : 0xC7}]},
+    0x6111 : {"name" : "AI Autocalibration", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Autocalibration %d[(sub)]", "type" : 0x07, "access" : 'wo', "pdo" : False, "nbmax" : 0xC7}]},
+    0x6112 : {"name" : "AI Operating Mode",  "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Operating Mode %d[(sub)]", "type" : 0x05, "access" : 'rw', "pdo" : True, "nbmax" : 0xC7}]},
+    0x6114 : {"name" : "AI ADC Sample Rate", "struct" : rec , "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Sample Rate %d[(sub)]", "type" : 0x07, "access" : 'ro', "pdo" : True, "nbmax" : 0xC7}]},
+
+    0x6120 : {"name" : "AI Input Scaling 1 FV", "struct" : rec , "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Input Scaling 1 FV %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x7120 : {"name" : "AI Input Scaling 1 FV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Input Scaling 1 FV %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x8120 : {"name" : "AI Input Scaling 1 FV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Input Scaling 1 FV %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x9120 : {"name" : "AI Input Scaling 1 FV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Input Scaling 1 FV %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6121 : {"name" : "AI Input Scaling 1 PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Input Scaling 1 PV %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x7121 : {"name" : "AI Input Scaling 1 PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Input Scaling 1 PV %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x8121 : {"name" : "AI Input Scaling 1 PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Input Scaling 1 PV %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x9121 : {"name" : "AI Input Scaling 1 PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Input Scaling 1 PV %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+
+
+    0x6122 : {"name" : "AI Input Scaling 2 FV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Input Scaling 2 FV %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x7122 : {"name" : "AI Input Scaling 2 FV",  "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Input Scaling 2 FV %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x8122 : {"name" : "AI Input Scaling 2 FV", "struct" : rec , "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Input Scaling 2 FV %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x9122 : {"name" : "AI Input Scaling 2 FV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Input Scaling 2 FV %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6123 : {"name" : "AI Input Scaling 2 PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Input Scaling 2 PV %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x7123 : {"name" : "AI Input Scaling 2 PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Input Scaling 2 PV %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x8123 : {"name" : "AI Input Scaling 2 PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Input Scaling 2 PV %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x9123 : {"name" : "AI Input Scaling 2 PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Input Scaling 2 PV %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6124 : {"name" : "AI Input Offset", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Input Offset %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x7124 : {"name" : "AI Input Offset", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Input Offset %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x8124 : {"name" : "AI Input Offset", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Input Offset %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x9124 : {"name" : "AI Input Offset", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Input Offset %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6125 : {"name" : "AI Autozero", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Autozero %d[(sub)]", "type" : 0x07, "access" : 'wo', "pdo" : False, "nbmax" : 0xC7}]},
+    0x6126 : {"name" : "AI Scaling Factor", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Scaling Factor %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x6127 : {"name" : "AI Scaling Offset", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Scaling Offset %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : True, "nbmax" : 0xC7}]},
+
+    0x6130 : {"name" : "AI Input PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Input PV %d[(sub)]", "type" : 0x08, "access" : 'ro', "pdo" : True, "nbmax" : 0xC7}]},
+    0x7130 : {"name" : "AI Input PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Input PV %d[(sub)]", "type" : 0x03, "access" : 'ro', "pdo" : True, "nbmax" : 0xC7}]},
+    0x8130 : {"name" : "AI Input PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Input PV %d[(sub)]", "type" : 0x10, "access" : 'ro', "pdo" : True, "nbmax" : 0xC7}]},
+    0x9130 : {"name" : "AI Input PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Input PV %d[(sub)]", "type" : 0x04, "access" : 'ro', "pdo" : True, "nbmax" : 0xC7}]},
+
+
+    0x6131 : {"name" : "AI Physical Unit PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Physical Unit PV %d[(sub)]", "type" : 0x07, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x6132 : {"name" : "AI Decimal digits PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Decimal digits PV %d[(sub)]", "type" : 0x05, "access" : 'rw', "pdo" : True, "nbmax" : 0xC7}]},
+
+
+    0x6133 : {"name" : "AI Interrupt delta input PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Interrupt delta input PV %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x7133 : {"name" : "AI Interrupt delta input PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Interrupt delta input PV %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x8133 : {"name" : "AI Interrupt delta input PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Interrupt delta input PV %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x9133 : {"name" : "AI Interrupt delta input PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Interrupt delta input PV %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6134 : {"name" : "AI Interrupt lower input PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Interrupt lower input PV %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x7134 : {"name" : "AI Interrupt lower input PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Interrupt lower input PV %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x8134 : {"name" : "AI Interrupt lower input PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Interrupt lower input PV %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x9134 : {"name" : "AI Interrupt lower input PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Interrupt lower input PV %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+
+    0x6135 : {"name" : "AI Interrupt upper input PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Interrupt upper input PV %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x7135 : {"name" : "AI Interrupt upper input PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Interrupt upper input PV %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x8135 : {"name" : "AI Interrupt upper input PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Interrupt upper input PV %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x9135 : {"name" : "AI Interrupt upper input PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Interrupt upper input PV %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6138 : {"name" : "AI Tare zero", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Tare zero %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x7138 : {"name" : "AI Tare zero", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Tare zero %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x8138 : {"name" : "AI Tare zero", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Tare zero %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x9138 : {"name" : "AI Tare zero", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Tare zero %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+
+    0x6139 : {"name" : "AI Autotare", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Autotare %d[(sub)]", "type" : 0x07, "access" : 'wo', "pdo" : True, "nbmax" : 0xC7}]},
+
+
+    0x6140 : {"name" : "AI Net PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Net PV %d[(sub)]", "type" : 0x08, "access" : 'ro', "pdo" : True, "nbmax" : 0xC7}]},
+    0x7140 : {"name" : "AI Net PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Net PV %d[(sub)]", "type" : 0x03, "access" : 'ro', "pdo" : True, "nbmax" : 0xC7}]},
+    0x8140 : {"name" : "AI Net PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Net PV %d[(sub)]", "type" : 0x10, "access" : 'ro', "pdo" : True, "nbmax" : 0xC7}]},
+    0x9140 : {"name" : "AI Net PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Net PV %d[(sub)]", "type" : 0x04, "access" : 'ro', "pdo" : True, "nbmax" : 0xC7}]},
+
+
+    0x6143 : {"name" : "AI Interrupt delta net PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Interrupt delta net PV %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x7143 : {"name" : "AI Interrupt delta net PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Interrupt delta net PV %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x8143 : {"name" : "AI Interrupt delta net PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Interrupt delta net PV %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x9143 : {"name" : "AI Interrupt delta net PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Interrupt delta net PV %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+
+
+    0x6144 : {"name" : "AI Interrupt lower limit net PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Interrupt lower limit net PV %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x7144 : {"name" : "AI Interrupt lower limit net PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Interrupt lower limit net PV %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x8144 : {"name" : "AI Interrupt lower limit net PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Interrupt lower limit net PV %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x9144 : {"name" : "AI Interrupt lower limit net PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Interrupt lower limit net PV %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+
+
+    0x6145 : {"name" : "AI Interrupt upper limit net PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Interrupt upper limit net PV %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x7145 : {"name" : "AI Interrupt upper limit net PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Interrupt upper limit net PV %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x8145 : {"name" : "AI Interrupt upper limit net PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Interrupt upper limit net PV %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x9145 : {"name" : "AI Interrupt upper limit net PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Interrupt upper limit net PV %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+
+    0x6148 : {"name" : "AI Span start", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Span start %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x7148 : {"name" : "AI Span start", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Span start %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x8148 : {"name" : "AI Span start", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Span start %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x9148 : {"name" : "AI Span start", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Span start %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+
+
+    0x6149 : {"name" : "AI Span end", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Span end %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x7149 : {"name" : "AI Span end", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Span end %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x8149 : {"name" : "AI Span end", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Span end %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x9149 : {"name" : "AI Span end", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Span end %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+
+
+    0x6150 : {"name" : "AI Status", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Status %d[(sub)]", "type" : 0x05, "access" : 'ro', "pdo" : True, "nbmax" : 0xC7}]},
+
+    0x6160 : {"name" : "AI Control Byte", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Control Byte %d[(sub)]", "type" : 0x05, "access" : 'wo', "pdo" : True, "nbmax" : 0xC7}]},
+
+    0x6161 : {"name" : "AI Control Byte Enable", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Control Byte Enable %d[(sub)]", "type" : 0x05, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x61A0 : {"name" : "AI Filter Type", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Filter Type %d[(sub)]", "type" : 0x05, "access" : 'ro', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x61A1 : {"name" : "AI Filter Constant", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AI Filter Constant %d[(sub)]", "type" : 0x05, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+
+
+    0x6200 : {"name" : "DO Write state 8 output lines", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "DO Write state 8 output lines %d[(sub)]", "type" : 0x05, "access" : 'rw', "pdo" : True, "nbmax" : 0xC7}]},
+
+    0x6202 : {"name" : "DO Polarity 8 output lines", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "DO Polarity 8 output lines %d[(sub)]", "type" : 0x05, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6206 : {"name" : "DO Fault mode 8 output lines", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "DO Fault mode 8 output lines %d[(sub)]", "type" : 0x05, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6207 : {"name" : "DO Fault state 8 output lines", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "DO Fault state 8 output lines %d[(sub)]", "type" : 0x05, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6210 : {"name" : "DO Link object 8 output lines", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "DO Link Object 8 output lines %d[(sub)]", "type" : 0x07, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6220 : {"name" : "DO Write state 1 output lines", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "DO Write state 1 output lines %d[(sub)]", "type" : 0x01, "access" : 'rw', "pdo" : True, "nbmax" : 0xC7}]},
+
+    0x6240 : {"name" : "DO Polarity 1 output lines", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "DO Polarity 1 output lines %d[(sub)]", "type" : 0x01, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6250 : {"name" : "DO Fault mode 1 output lines", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "DO Failt mode 1 output lines %d[(sub)]", "type" : 0x01, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6260 : {"name" : "DO Fault state 1 output lines", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "DO Fault state 1 output lines %d[(sub)]", "type" : 0x01, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6280 : {"name" : "DO Link object 1 output lines", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "DO Link object 1 output lines %d[(sub)]", "type" : 0x07, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+
+    0x6300 : {"name" : "AO Output PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AO Output PV %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : True, "nbmax" : 0xC7}]},
+    0x7300 : {"name" : "AO Output PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AO Output PV %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : True, "nbmax" : 0xC7}]},
+    0x8300 : {"name" : "AO Output PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AO Output PV %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : True, "nbmax" : 0xC7}]},
+    0x9300 : {"name" : "AO Output PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AO Output PV %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : True, "nbmax" : 0xC7}]},
+
+
+
+    0x6301 : {"name" : "AO Physical Unit PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AO Physical Unit PV %d[(sub)]", "type" : 0x07, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6302 : {"name" : "AO Decimal digits PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AO Decimal digits PV %d[(sub)]", "type" : 0x05, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6303 : {"name" : "AO Link output PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AO Link output PV %d[(sub)]", "type" : 0x07, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6310 : {"name" : "AO Output type", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AO Output type %d[(sub)]", "type" : 0x06, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+
+    0x6320 : {"name" : "AO Output Scaling 1 PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AO Output Scaling 1 PV %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x7320 : {"name" : "AO Output Scaling 1 PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AO Output Scaling 1 PV %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x8320 : {"name" : "AO Output Scaling 1 PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AO Output Scaling 1 PV %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x9320 : {"name" : "AO Output Scaling 1 PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AO Output Scaling 1 PV %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+
+    0x6321 : {"name" : "AO Output Scaling 1 FV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AO Output Scaling 1 FV %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x7321 : {"name" : "AO Output Scaling 1 FV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AO Output Scaling 1 FV %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x8321 : {"name" : "AO Output Scaling 1 FV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AO Output Scaling 1 FV %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x9321 : {"name" : "AO Output Scaling 1 FV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AO Output Scaling 1 FV %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+
+    0x6322 : {"name" : "AO Output Scaling 2 PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AO Output Scaling 2 PV %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x7322 : {"name" : "AO Output Scaling 2 PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AO Output Scaling 2 PV %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x8322 : {"name" : "AO Output Scaling 2 PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AO Output Scaling 2 PV %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x9322 : {"name" : "AO Output Scaling 2 PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AO Output Scaling 2 PV %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+
+    0x6323 : {"name" : "AO Output Scaling 2 FV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AO Output Scaling 2 FV %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x7323 : {"name" : "AO Output Scaling 2 FV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AO Output Scaling 2 FV %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x8323 : {"name" : "AO Output Scaling 2 FV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AO Output Scaling 2 FV %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x9323 : {"name" : "AO Output Scaling 2 FV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AO Output Scaling 2 FV %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+
+    0x6330 : {"name" : "AO Output FV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AO Output FV %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x7330 : {"name" : "AO Output FV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AO Output FV %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x8330 : {"name" : "AO Output FV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AO Output FV %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x9330 : {"name" : "AO Output FV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AO Output FV %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    
+    0x6331 : {"name" : "AO Physical Unit FV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AO Physical Unit FV %d[(sub)]", "type" : 0x07, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6332 : {"name" : "AO Decimal digits FV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AO Decimal digits FV %d[(sub)]", "type" : 0x05, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6340 : {"name" : "AO Fault mode", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AO Fault mode %d[(sub)]", "type" : 0x05, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+
+
+    0x6341 : {"name" : "AO Fault FV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AO Fault FV %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x7341 : {"name" : "AO Fault FV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AO Fault FV %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x8341 : {"name" : "AO Fault FV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AO Fault FV %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x9341 : {"name" : "AO Fault FV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AO Fault FV %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+
+
+    0x6400 : {"name" : "CO Effective Current Value Xeff", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Effective Current Value Xeff %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : True, "nbmax" : 0xC7}]},
+    0x7400 : {"name" : "CO Effective Current Value Xeff", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Effective Current Value Xeff %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : True, "nbmax" : 0xC7}]},
+    0x8400 : {"name" : "CO Effective Current Value Xeff", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Effective Current Value Xeff %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : True, "nbmax" : 0xC7}]},
+    0x9400 : {"name" : "CO Effective Current Value Xeff", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Effective Current Value Xeff %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : True, "nbmax" : 0xC7}]},
+
+
+
+    0x6401 : {"name" : "CO Effective Set Point Weff", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Effective Set Point %d[(sub)]", "type" : 0x08, "access" : 'ro', "pdo" : True, "nbmax" : 0xC7}]},
+    0x7401 : {"name" : "CO Effective Set Point Weff", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Effective Set Point %d[(sub)]", "type" : 0x03, "access" : 'ro', "pdo" : True, "nbmax" : 0xC7}]},
+    0x8401 : {"name" : "CO Effective Set Point Weff", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Effective Set Point %d[(sub)]", "type" : 0x10, "access" : 'ro', "pdo" : True, "nbmax" : 0xC7}]},
+    0x9401 : {"name" : "CO Effective Set Point Weff", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Effective Set Point %d[(sub)]", "type" : 0x04, "access" : 'ro', "pdo" : True, "nbmax" : 0xC7}]},
+
+
+
+
+    0x6402 : {"name" : "CO Set Point W", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Set Point W %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : True, "nbmax" : 0xC7}]},
+    0x7402 : {"name" : "CO Set Point W", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Set Point W %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : True, "nbmax" : 0xC7}]},
+    0x8402 : {"name" : "CO Set Point W", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Set Point W %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : True, "nbmax" : 0xC7}]},
+    0x9402 : {"name" : "CO Set Point W", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Set Point W %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : True, "nbmax" : 0xC7}]},
+
+
+
+    0x6403 : {"name" : "CO 2nd Set Point W2", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO 2nd Set Point %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : True, "nbmax" : 0xC7}]},
+    0x7403 : {"name" : "CO 2nd Set Point W2", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO 2nd Set Point %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : True, "nbmax" : 0xC7}]},
+    0x8403 : {"name" : "CO 2nd Set Point W2", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO 2nd Set Point %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : True, "nbmax" : 0xC7}]},
+    0x9403 : {"name" : "CO 2nd Set Point W2", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO 2nd Set Point %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : True, "nbmax" : 0xC7}]},
+
+
+
+    0x6404 : {"name" : "CO Lower Set Point Limit W0", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Lower Set Point Limit %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x7404 : {"name" : "CO Lower Set Point Limit W0", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Lower Set Point Limit %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x8404 : {"name" : "CO Lower Set Point Limit W0", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Lower Set Point Limit %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x9404 : {"name" : "CO Lower Set Point Limit W0", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Lower Set Point Limit %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+
+
+    0x6405 : {"name" : "CO upper Set Point Limit W100", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO 2nd Set Point Limit%d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x7405 : {"name" : "CO upper Set Point Limit W100", "struct" : rec , "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO 2nd Set Point Limit %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x8405 : {"name" : "CO upper Set Point Limit W100", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO 2nd Set Point Limit %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x9405 : {"name" : "CO upper Set Point Limit W100", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO 2nd Set Point Limit %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+
+
+    0x6406 : {"name" : "CO Physical Unit XW", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Physical unit XW %d[(sub)]", "type" : 0x07, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6407 : {"name" : "CO Decimal Digits XW", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Decimal Digits XW %d[(sub)]", "type" : 0x05, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6410 : {"name" : "CO Effective Controller Output Y", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Effective Controller Output %d[(sub)]", "type" : 0x06, "access" : 'ro', "pdo" : True, "nbmax" : 0xC7}]},
+
+    0x6411 : {"name" : "CO Differential Controller Output Ydiff", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Differential Controller Output %d[(sub)]", "type" : 0x06, "access" : 'ro', "pdo" : True, "nbmax" : 0xC7}]},
+
+    0x6412 : {"name" : "CO Manual Controller Output", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Manual Controller Output %d[(sub)]", "type" : 0x06, "access" : 'rw', "pdo" : True, "nbmax" : 0xC7}]},
+
+    0x6413 : {"name" : "CO Lower Controller Output Limit Ymin", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Lower Controller Output Limit %d[(sub)]", "type" : 0x06, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6414 : {"name" : "CO Upper Controller Output Limit Ymax", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Upper Controller Output Limit %d[(sub)]", "type" : 0x06, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6415 : {"name" : "CO Physical Unit Controller Output", "struct" : rec, "need" : True, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Physical Unit Controller Output %d[(sub)]", "type" : 0x07, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6420 : {"name" : "CO Set point switch W-W2", "struct" : rec, "need" : True, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Set Point Switch %d[(sub)]", "type" : 0x01, "access" : 'rw', "pdo" : True, "nbmax" : 0xC7}]},
+
+    0x6421 : {"name" : "CO Automatic-Manual Mode A-M", "struct" : rec, "need" : True, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Automatic-Manual Mode %d[(sub)]", "type" : 0x01, "access" : 'rw', "pdo" : True, "nbmax" : 0xC7}]},
+
+    0x6422 : {"name" : "CO Controller On-Off", "struct" : rec, "need" : True, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Controller On-Off %d[(sub)]", "type" : 0x01, "access" : 'rw', "pdo" : True, "nbmax" : 0xC7}]},
+
+    0x6423 : {"name" : "CO Controller Mode", "struct" : rec, "need" : True, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Controller Mode %d[(sub)]", "type" : 0x05, "access" : 'rw', "pdo" : True, "nbmax" : 0xC7}]},
+
+    0x6424 : {"name" : "CO Self Optimization On-Off", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Self optimization on - off %d[(sub)]", "type" : 0x01, "access" : 'rw', "pdo" : True, "nbmax" : 0xC7}]},
+
+    0x6425 : {"name" : "CO Control Byte", "struct" : rec, "need" : True, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Control Byte %d[(sub)]", "type" : 0x05, "access" : 'rw', "pdo" : True, "nbmax" : 0xC7}]},
+
+    0x6426 : {"name" : "CO Control Byte Enable", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Control Byte Enable %d[(sub)]", "type" : 0x05, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6427 : {"name" : "CO Status Word", "struct" : rec, "need" : True, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Status Word %d[(sub)]", "type" : 0x06, "access" : 'ro', "pdo" : True, "nbmax" : 0xC7}]},
+
+
+    0x6430 : {"name" : "CO Minimum Pulse Time Tmin1", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Minimum Pulse Time Tmin1 %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x7430 : {"name" : "CO Minimum Pulse Time Tmin1", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Minimum Pulse Time Tmin1 %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x8430 : {"name" : "CO Minimum Pulse Time Tmin1", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Minimum Pulse Time Tmin1 %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x9430 : {"name" : "CO Minimum Pulse Time Tmin1", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Minimum Pulse Time Tmin1 %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6431 : {"name" : "CO Minimum Pulse Time Tmin2", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Minimum Pulse Time Tmin2 %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x7431 : {"name" : "CO Minimum Pulse Time Tmin2", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Minimum Pulse Time Tmin2 %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x8431 : {"name" : "CO Minimum Pulse Time Tmin2", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Minimum Pulse Time Tmin2 %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x9431 : {"name" : "CO Minimum Pulse Time Tmin2", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Minimum Pulse Time Tmin2 %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6432 : {"name" : "CO Motor Response Time Tm", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Motor Response Time Tm %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x7432 : {"name" : "CO Motor Response Time Tm", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Motor Response Time Tm %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x8432 : {"name" : "CO Motor Response Time Tm", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Motor Response Time Tm %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x9432 : {"name" : "CO Motor Response Time Tm", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Motor Response Time Tm %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6433 : {"name" : "CO Min Pulse Length Tpuls", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Min. Pulse Length %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x7433 : {"name" : "CO Min Pulse Length Tpuls", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Min Pulse Length %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x8433 : {"name" : "CO Min Pulse Length Tpuls", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Min Pulse Length %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x9433 : {"name" : "CO Min Pulse Length Tpuls", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Min Pulse Length %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6434 : {"name" : "CO Physical Unit Pulse Timing", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Physical Unit Pulse Timing %d[(sub)]", "type" : 0x07, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6435 : {"name" : "CO Decimal Digits PT", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Decimal Digits PT %d[(sub)]", "type" : 0x05, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6440 : {"name" : "Neutral Zone 3point Xsh1", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Neutral Zone 3point Xsh1 %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x7440 : {"name" : "Neutral Zone 3point Xsh1","struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Neutral Zone 3point Xsh1 %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x8440 : {"name" : "Neutral Zone 3point Xsh1", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Neutral Zone 3point Xsh1 %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x9440 : {"name" : "Neutral Zone 3point Xsh1", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Neutral Zone 3point Xsh1 %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6441 : {"name" : "Neutral Zone 3point Xsh2", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Neutral Zone 3point Xsh2 %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x7441 : {"name" : "Neutral Zone 3point Xsh1","struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Neutral Zone 3point Xsh2 %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x8441 : {"name" : "Neutral Zone 3point Xsh1", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Neutral Zone 3point Xsh2 %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x9441 : {"name" : "Neutral Zone 3point Xsh1", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Neutral Zone 3point Xsh2 %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6442 : {"name" : "CO Neutral Zone 3point Stepping Xsh", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Neutral Zone 3point Stepping %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x7442 : {"name" : "CO Neutral Zone 3point Stepping Xsh", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Neutral Zone 3point Stepping %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x8442 : {"name" : "CO Neutral Zone 3point Stepping Xsh", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Neutral Zone 3point Stepping %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x9442 : {"name" : "CO Neutral Zone 3point Stepping Xsh", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Neutral Zone 3point Stepping %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+
+    0x6443 : {"name" : "CO Switching Difference of Signaller Xsd1", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Switching Difference of Signaller Xsd1 %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x7443 : {"name" : "CO Switching Difference of Signaller Xsd1", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Switching Difference of Signaller Xsd1 %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x8443 : {"name" : "CO Switching Difference of Signaller Xsd1", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Switching Difference of Signaller Xsd1 %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x9443 : {"name" : "CO Switching Difference of Signaller Xsd1", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Switching Difference of Signaller Xsd1 %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+
+    0x6444 : {"name" : "CO Switching Difference of Additional Contact Xsd2", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Switching Difference of Additional Contact Xsd2 %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x7444 : {"name" : "CO Switching Difference of Additional Contact Xsd2", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Switching Difference of Additional Contact Xsd2 %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x8444 : {"name" : "CO Switching Difference of Additional Contact Xsd2", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Switching Difference of Additional Contact Xsd2 %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x9444 : {"name" : "CO Switching Difference of Additional Contact Xsd2", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Switching Difference of Additional Contact Xsd2 %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+
+    0x6445 : {"name" : "CO Trigger Point Separation of Additional Contact LW", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Trigger Point Separation of Additional Contact LW %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x7445 : {"name" : "CO Trigger Point Separation of Additional Contact LW", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Trigger Point Separation of Additional Contact LW %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x8445 : {"name" : "CO Trigger Point Separation of Additional Contact LW", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Trigger Point Separation of Additional Contact LW %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x9445 : {"name" : "CO Trigger Point Separation of Additional Contact LW", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Trigger Point Separation of Additional Contact LW %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+
+    0x6450 : {"name" : "CO Proportional Band Xp1", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Proportional Band Xp1 %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x7450 : {"name" : "CO Proportional Band Xp1", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Proportional Band Xp1 %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x8450 : {"name" : "CO Proportional Band Xp1", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Proportional Band Xp1 %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x9450 : {"name" : "CO Proportional Band Xp1", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Proportional Band Xp1 %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+
+    0x6451 : {"name" : "CO Proportional Band Xp2", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Proportional Band Xp2 %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x7451 : {"name" : "CO Proportional Band Xp2", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Proportional Band Xp2 %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x8451 : {"name" : "CO Proportional Band Xp2", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Proportional Band Xp2 %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x9451 : {"name" : "CO Proportional Band Xp2", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Proportional Band Xp2 %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+
+    0x6452 : {"name" : "CO Integral Action Time Tn1", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Integral Action Time Tn1 %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x7452 : {"name" : "CO Integral Action Time Tn1", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Integral Action Time Tn1 %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x8452 : {"name" : "CO Integral Action Time Tn1", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Integral Action Time Tn1 %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x9452 : {"name" : "CO Integral Action Time Tn1", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Integral Action Time Tn1 %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6453 : {"name" : "CO Integral Action Time Tn2", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Integral Action Time Tn2 %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x7453 : {"name" : "CO Integral Action Time Tn2", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Integral Action Time Tn2 %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x8453 : {"name" : "CO Integral Action Time Tn2", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Integral Action Time Tn2 %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x9453 : {"name" : "CO Integral Action Time Tn2", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Integral Action Time Tn2 %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6454 : {"name" : "CO Derivate Action Time Tv1", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Derivate Action Time Tv1 %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x7454 : {"name" : "CO Derivate Action Time Tv1", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Derivate Action Time Tv1 %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x8454 : {"name" : "CO Derivate Action Time Tv1", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Derivate Action Time Tv1 %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x9454 : {"name" : "CO Derivate Action Time Tv1", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Derivate Action Time Tv1 %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6455 : {"name" : "CO Derivate Action Time Tv2", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Derivate Action Time Tv2 %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x7455 : {"name" : "CO Derivate Action Time Tv2", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Derivate Action Time Tv2 %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x8455 : {"name" : "CO Derivate Action Time Tv2", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Derivate Action Time Tv2 %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x9455 : {"name" : "CO Derivate Action Time Tv2",  "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Derivate Action Time Tv2 %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6456 : {"name" : "CO Cycle Time T1", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Cycle Time T1 %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x7456 : {"name" : "CO Cycle Time T1", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Cycle Time T1 %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x8456 : {"name" : "CO Cycle Time T1", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Cycle Time T1 %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x9456 : {"name" : "CO Cycle Time T1", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Cycle Time T1 %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6457 : {"name" : "CO Cycle Time T2", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Cycle Time T2 %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x7457 : {"name" : "CO Cycle Time T2", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Cycle Time T2 %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x8457 : {"name" : "CO Cycle Time T2", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Cycle Time T2 %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x9457 : {"name" : "CO Cycle Time T2", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Cycle Time T2 %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6458 : {"name" : "CO Physical Unit PID", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Physical unit PID %d[(sub)]", "type" : 0x07, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6459 : {"name" : "CO Decimal Digits PID", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "CO Decimal digits PID %d[(sub)]", "type" : 0x05, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6500 : {"name" : "AL %d Input Value[(idx)]", "struct" : plurirec, "incr" : 0x10,  "need" : False, "nbmax" : 16, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AL %d Input Value %d[(idx,sub)]", "type" : 0x08, "access" : 'rw', "pdo" : True, "nbmax" : 0xC7}]},
+    0x7500 : {"name" : "AL %d Input Value[(idx)]", "struct" : plurirec, "incr" : 0x10,  "need" : False, "nbmax" : 16, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AL %d Input Value %d[(idx,sub)]", "type" : 0x03, "access" : 'rw', "pdo" : True, "nbmax" : 0xC7}]},
+    0x8500 : {"name" : "AL %d Input Value[(idx)]", "struct" : plurirec, "incr" : 0x10, "need" : False, "nbmax" : 16,  "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AL %d Input Value %d[(idx,sub)]", "type" : 0x10, "access" : 'rw', "pdo" : True, "nbmax" : 0xC7}]},
+    0x9500 : {"name" : "AL %d Input Value[(idx)]", "struct" : plurirec, "incr" : 0x10,  "need" : False, "nbmax" : 16,  "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AL %d Input Value %d[(idx,sub)]", "type" : 0x04, "access" : 'rw', "pdo" : True, "nbmax" : 0xC7}]},
+
+    0x6503 : {"name" : "AL %d Link Input[(idx)]", "struct" : plurirec, "incr" : 0x10,  "need" : False, "nbmax" : 16,  "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AL %d Link Input %d[(idx,sub)]", "type" : 0x07, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6504 : {"name" : "AL %d Alternate Input Value[(idx)]", "struct" : plurirec, "incr" : 0x10,  "need" : False, "nbmax" : 16,  "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AL %d Alternate Input Value %d[(idx,sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x7504 : {"name" : "AL %d Alternate Input Value[(idx)]", "struct" :  plurirec, "incr" : 0x10,  "need" : False, "nbmax" : 16,  "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AL %d Alternate Input Value %d[(idx,sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x8504 : {"name" : "AL %d Alternate Input Value[(idx)]", "struct" :   plurirec, "incr" : 0x10, "need" : False, "nbmax" : 16, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AL %d Alternate Input Value %d[(idx,sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x9504 : {"name" : "AL %d Alternate Input Value[(idx)]", "struct" :  plurirec, "incr" : 0x10, "need" : False, "nbmax" : 16, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AL %d Alternate Input Value %d[(idx,sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6505 : {"name" : "AL %d Link Alternate Input[(idx)]", "struct" : plurirec,  "incr" : 0x10, "need" : False, "nbmax" : 16,  "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AL %d Link Alternate Input %d[(idx,sub)]", "type" : 0x05, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6506 : {"name" : "AL %d Fault Mode[(idx)]", "struct" : plurirec, "incr" : 0x10, "need" : False, "nbmax" : 16,  "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AL %d Fault Mode %d[(idx,sub)]", "type" : 0x05, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6507 : {"name" : "AL %d Fault State[(idx)]", "struct" : plurirec, "incr" : 0x10, "need" : False, "nbmax" : 16,  "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AL %d Fault State %d[(idx,sub)]", "type" : 0x01, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6508 : {"name" : "AL %d Type[(idx)]", "struct" : plurirec, "incr" : 0x10,  "need" : False, "nbmax" : 16,  "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AL %d Type %d[(idx,sub)]", "type" : 0x05, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6509 : {"name" : "AL %d Action[(idx)]", "struct" : pluriarray, "incr" : 0x10, "need" : False, "nbmax" : 16,  "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AL %d Action %d[(idx,sub)]", "type" : 0x05, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x650A : {"name" : "AL %d Level[(idx)]", "struct" : plurirec, "incr" : 0x10, "need" : False, "nbmax" : 16, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AL %d Level %d[(idx,sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x750A : {"name" : "AL %d Level[(idx)]", "struct" : plurirec, "incr" : 0x10, "need" : False, "nbmax" : 16, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AL %d Level %d[(idx,sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x850A : {"name" : "AL %d Level[(idx)]", "struct" : plurirec, "incr" : 0x10,  "need" : False, "nbmax" : 16, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AL %d Level %d[(idx,sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x950A : {"name" : "AL %d Level[(idx)]", "struct" : plurirec, "incr" : 0x10,  "need" : False, "nbmax" : 16, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AL %d Level %d[(idx,sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+
+    0x650B : {"name" : "AL %d Hysteresis[(idx)]", "struct" : plurirec, "incr" : 0x10, "need" : False, "nbmax" : 16,  "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AL %d Hysteresis %d[(idx,sub)]", "type" : 0x08, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x750B : {"name" : "AL %d Hysteresis[(idx)]", "struct" : plurirec, "incr" : 0x10, "need" : False, "nbmax" : 16,  "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AL %d Hysteresis %d[(idx,sub)]", "type" : 0x03, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x850B : {"name" : "AL %d Hysteresis[(idx)]", "struct" : plurirec, "incr" : 0x10,  "need" : False, "nbmax" : 16,  "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AL %d Hysteresis %d[(idx,sub)]", "type" : 0x10, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+    0x950B : {"name" : "AL %d Hysteresis[(idx)]", "struct" : plurirec, "incr" : 0x10,  "need" : False, "nbmax" : 16, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AL %d Hysteresis %d[(idx,sub)]", "type" : 0x04, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+
+    0x650C : {"name" : "AL %d Group[(idx)]", "struct" : plurirec, "incr" : 0x10,  "need" : False, "nbmax" : 16,  "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AL %d Group %d[(idx,sub)]", "type" : 0x05, "access" : 'rw', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x650D : {"name" : "AL %d State[(idx)]", "struct" : plurirec, "incr" : 0x10,  "need" : False, "nbmax" : 16,  "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AL %d State %d[(idx,sub)]", "type" : 0x01, "access" : 'ro', "pdo" : True, "nbmax" : 0xC7}]},
+
+    0x650E : {"name" : "AL %d Reset[(idx)]", "struct" : plurirec,  "incr" : 0x10, "need" : False, "nbmax" : 16,  "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AL %d Reset %d[(idx,sub)]", "type" : 0x01, "access" : 'wo', "pdo" : False, "nbmax" : 0xC7}]},
+
+    0x6600 : {"name" : "AL 1-8 State", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AL 1-8 State %d[(sub)]", "type" : 0x05, "access" : 'ro', "pdo" : True, "nbmax" : 0xC7}]},
+
+    0x6601 : {"name" : "AL 9-16 State", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AL 9-16 State %d[(sub)]", "type" : 0x05, "access" : 'ro', "pdo" : True, "nbmax" : 0xC7}]},
+
+    0x6602 : {"name" : "AL General State", "struct" : var, "need" : False, "values" :
+                [{"name" : "AL General State", "type" : 0x01, "access" : 'ro', "pdo" : True}]},
+
+    0x6603 : {"name" : "AL Group 1-8 State", "struct" : var, "need" : False, "values" :
+                 [{"name" : "AL Group 1-8 State", "type" : 0x05, "access" : 'ro', "pdo" : True}]},
+
+    0x6610 : {"name" : "AL General Reset", "struct" : var, "need" : False, "values" :
+                 [{"name" : "AL General Reset", "type" : 0x01, "access" : 'wo', "pdo" : True}]},
+
+    0x6611 : {"name" : "AL 1-8 Reset", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AL 1-8 Reset %d[(sub)]", "type" : 0x05, "access" : 'wo', "pdo" : True, "nbmax" : 0xC7}]},
+
+    0x6612 : {"name" : "AL 9-16 Reset", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "AL 9-16 Reset %d[(sub)]", "type" : 0x05, "access" : 'wo', "pdo" : True, "nbmax" : 0xC7}]},
+
+
+    0x6F20 : {"name" : "Life Counter", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Life Counter %d[(sub)]", "type" : 0x05, "access" : 'ro', "pdo" : True, "nbmax" : 0xC7}]},
+
+    0x6F30 : {"name" : "Receive PDO Check", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "rPDO Check %d[(sub)]", "type" : 0x05, "access" : 'wo', "pdo" : True, "nbmax" : 0xC7}]},
+
+    0x6F31 : {"name" : "Transmit PDO check", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "tPDO check %d[(sub)]", "type" : 0x05, "access" : 'ro', "pdo" : True, "nbmax" : 0xC7}]},
+
+
+    0x6F50 : {"name" : "Receive PV", "struct" : rec, "need" : True, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Receive PV %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : True, "nbmax" : 0xC7}]},
+    0x7F50 : {"name" : "Receive PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Receive PV %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : True, "nbmax" : 0xC7}]},
+    0x8F50 : {"name" : "Receive PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Receive PV %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : True, "nbmax" : 0xC7}]},
+    0x9F50 : {"name" : "Receive PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Receive PV %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : True, "nbmax" : 0xC7}]},
+
+    0x6F51 : {"name" : "Alternate Receive PV", "struct" : rec, "need" : True, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Alternate Receive PV %d[(sub)]", "type" : 0x08, "access" : 'rw', "pdo" : True, "nbmax" : 0xC7}]},
+    0x7F51 : {"name" : "Alternate Receive PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Alternate Receive PV %d[(sub)]", "type" : 0x03, "access" : 'rw', "pdo" : True, "nbmax" : 0xC7}]},
+    0x8F51 : {"name" : "Alternate Receive PV","struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Alternate Receive PV %d[(sub)]", "type" : 0x10, "access" : 'rw', "pdo" : True, "nbmax" : 0xC7}]},
+    0x9F51 : {"name" : "Alternate Receive PV", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Alternate Receive PV %d[(sub)]", "type" : 0x04, "access" : 'rw', "pdo" : True, "nbmax" : 0xC7}]},
+
+    0x6F52 : {"name" : "Received Status", "struct" : rec, "need" : True, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Received Status %d[(sub)]", "type" : 0x05, "access" : 'rw', "pdo" : True, "nbmax" : 0xC7}]},
+
+    0x6F53 : {"name" : "Alternate Received Status", "struct" : rec, "need" : False, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Alternate Received Status %d[(sub)]", "type" : 0x05, "access" : 'rw', "pdo" : True, "nbmax" : 0xC7}]},
+
+    0x6F60 : {"name" : "Transmission Enable", "struct" : var, "need" : False, "values" :
+                 [{"name" : "Transmission Enable", "type" : 0x01, "access" : 'ro', "pdo" : False}]},
+}
+
+AddMenuEntries = [("Alarm function block",[0x6500, 0x6503, 0x6504, 0x6505, 0x6506, 0x6507, 0x6508, 0x6509, 0x650A, 0x650B, 0x650C, 0x650D, 0x650E, 0x7500, 0x7504, 0x750A, 0x750B, 0x8500, 0x8504, 0x850A, 0x850B, 0x9500, 0x9504, 0x950A, 0x950B])]

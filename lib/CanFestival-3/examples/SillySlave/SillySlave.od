@@ -1,0 +1,309 @@
+<?xml version="1.0"?>
+<!DOCTYPE PyObject SYSTEM "PyObjects.dtd">
+<PyObject module="node" class="Node" id="-1268630260">
+<attr name="Profile" type="dict" id="-1268626332" >
+</attr>
+<attr name="Description" type="string">Silly Slave example for CANfestival,  (C)GMB 2008</attr>
+<attr name="Dictionary" type="dict" id="-1268621556" >
+  <entry>
+    <key type="numeric" value="4096" />
+    <val type="numeric" value="33554432" />
+  </entry>
+  <entry>
+    <key type="numeric" value="4097" />
+    <val type="numeric" value="0" />
+  </entry>
+  <entry>
+    <key type="numeric" value="6144" />
+    <val type="list" id="-1214451316" >
+      <item type="string" value="{True:&quot;$NODEID+0x%X80&quot;%(base+1),False:0}[base&lt;4]" />
+      <item type="numeric" value="1" />
+      <item type="numeric" value="100" />
+      <item type="numeric" value="0" />
+      <item type="numeric" value="0" />
+    </val>
+  </entry>
+  <entry>
+    <key type="numeric" value="8193" />
+    <val type="numeric" value="0" />
+  </entry>
+  <entry>
+    <key type="numeric" value="4114" />
+    <val type="numeric" value="2147483904L" />
+  </entry>
+  <entry>
+    <key type="numeric" value="4115" />
+    <val type="numeric" value="0" />
+  </entry>
+  <entry>
+    <key type="numeric" value="6656" />
+    <val type="list" id="-1214450420" >
+      <item type="numeric" value="536936456" />
+    </val>
+  </entry>
+  <entry>
+    <key type="numeric" value="4120" />
+    <val type="list" id="-1214449748" >
+      <item type="numeric" value="17185" />
+      <item type="numeric" value="18" />
+      <item type="numeric" value="1" />
+      <item type="numeric" value="1" />
+    </val>
+  </entry>
+  <entry>
+    <key type="numeric" value="4608" />
+    <val type="list" id="-1214449460" >
+      <item type="string" value="&quot;$NODEID+0x600&quot;" />
+      <item type="string" value="&quot;$NODEID+0x580&quot;" />
+    </val>
+  </entry>
+</attr>
+<attr name="SpecificMenu" type="list" id="-1214449556" >
+</attr>
+<attr name="ParamsDictionary" type="dict" id="-1268617172" >
+  <entry>
+    <key type="numeric" value="4096" />
+    <val type="dict" id="-1268617036" >
+      <entry>
+        <key type="string" value="comment" />
+        <val type="string" value="fake nr" />
+      </entry>
+    </val>
+  </entry>
+  <entry>
+    <key type="numeric" value="4608" />
+    <val type="dict" id="-1268616900" >
+      <entry>
+        <key type="string" value="callback" />
+        <val type="True" value="" />
+      </entry>
+    </val>
+  </entry>
+  <entry>
+    <key type="numeric" value="6144" />
+    <val type="dict" id="-1268616764" >
+      <entry>
+        <key type="numeric" value="2" />
+        <val type="dict" id="-1268616628" >
+          <entry>
+            <key type="string" value="comment" />
+            <val type="string" value="send PDO1 after each SYNC" />
+          </entry>
+        </val>
+      </entry>
+      <entry>
+        <key type="numeric" value="3" />
+        <val type="dict" id="-1268616492" >
+          <entry>
+            <key type="string" value="comment" />
+            <val type="string" value="10mS" />
+          </entry>
+        </val>
+      </entry>
+      <entry>
+        <key type="numeric" value="5" />
+        <val type="dict" id="-1268616356" >
+          <entry>
+            <key type="string" value="comment" />
+            <val type="string" value="not used with SYNC" />
+          </entry>
+        </val>
+      </entry>
+    </val>
+  </entry>
+  <entry>
+    <key type="numeric" value="5120" />
+    <val type="dict" id="-1268616220" >
+      <entry>
+        <key type="numeric" value="1" />
+        <val type="dict" id="-1268616084" >
+          <entry>
+            <key type="string" value="comment" />
+            <val type="string" value="" />
+          </entry>
+        </val>
+      </entry>
+      <entry>
+        <key type="numeric" value="2" />
+        <val type="dict" id="-1268615948" >
+          <entry>
+            <key type="string" value="comment" />
+            <val type="string" value="" />
+          </entry>
+        </val>
+      </entry>
+      <entry>
+        <key type="numeric" value="3" />
+        <val type="dict" id="-1268615812" >
+          <entry>
+            <key type="string" value="comment" />
+            <val type="string" value="" />
+          </entry>
+        </val>
+      </entry>
+      <entry>
+        <key type="numeric" value="4" />
+        <val type="dict" id="-1268615676" >
+          <entry>
+            <key type="string" value="comment" />
+            <val type="string" value="" />
+          </entry>
+        </val>
+      </entry>
+      <entry>
+        <key type="numeric" value="5" />
+        <val type="dict" id="-1268615540" >
+          <entry>
+            <key type="string" value="comment" />
+            <val type="string" value="" />
+          </entry>
+        </val>
+      </entry>
+      <entry>
+        <key type="string" value="callback" />
+        <val type="False" value="" />
+      </entry>
+    </val>
+  </entry>
+  <entry>
+    <key type="numeric" value="6145" />
+    <val type="dict" id="-1268615404" >
+      <entry>
+        <key type="numeric" value="2" />
+        <val type="dict" id="-1268615268" >
+          <entry>
+            <key type="string" value="comment" />
+            <val type="string" value="Invio ogni 2 SYNC" />
+          </entry>
+        </val>
+      </entry>
+      <entry>
+        <key type="numeric" value="3" />
+        <val type="dict" id="-1268615132" >
+          <entry>
+            <key type="string" value="comment" />
+            <val type="string" value="10 mS" />
+          </entry>
+        </val>
+      </entry>
+    </val>
+  </entry>
+  <entry>
+    <key type="numeric" value="4114" />
+    <val type="dict" id="-1268614996" >
+      <entry>
+        <key type="string" value="comment" />
+        <val type="string" value="for timestamp" />
+      </entry>
+    </val>
+  </entry>
+  <entry>
+    <key type="numeric" value="6657" />
+    <val type="dict" id="-1268614860" >
+      <entry>
+        <key type="numeric" value="1" />
+        <val type="dict" id="-1268614724" >
+          <entry>
+            <key type="string" value="comment" />
+            <val type="string" value="Rx dal punto di vista del master, MCA lo trasmette" />
+          </entry>
+        </val>
+      </entry>
+    </val>
+  </entry>
+  <entry>
+    <key type="numeric" value="5632" />
+    <val type="dict" id="-1268614588" >
+      <entry>
+        <key type="numeric" value="1" />
+        <val type="dict" id="-1268614452" >
+          <entry>
+            <key type="string" value="comment" />
+            <val type="string" value="Tx dal punto di vista del master, MC lo riceve" />
+          </entry>
+        </val>
+      </entry>
+    </val>
+  </entry>
+  <entry>
+    <key type="numeric" value="4120" />
+    <val type="dict" id="-1268614316" >
+      <entry>
+        <key type="numeric" value="0" />
+        <val type="dict" id="-1268614180" >
+          <entry>
+            <key type="string" value="comment" />
+            <val type="string" value="4 pseudorandomic numbers:" />
+          </entry>
+        </val>
+      </entry>
+      <entry>
+        <key type="numeric" value="1" />
+        <val type="dict" id="-1268614044" >
+          <entry>
+            <key type="string" value="comment" />
+            <val type="string" value="" />
+          </entry>
+        </val>
+      </entry>
+      <entry>
+        <key type="numeric" value="2" />
+        <val type="dict" id="-1268613908" >
+          <entry>
+            <key type="string" value="comment" />
+            <val type="string" value="" />
+          </entry>
+        </val>
+      </entry>
+    </val>
+  </entry>
+</attr>
+<attr name="UserMapping" type="dict" id="-1268613772" >
+  <entry>
+    <key type="numeric" value="8193" />
+    <val type="dict" id="-1268613636" >
+      <entry>
+        <key type="string" value="need" />
+        <val type="False" value="" />
+      </entry>
+      <entry>
+        <key type="string" value="values" />
+        <val type="list" id="-1214456756" >
+          <item type="dict" id="-1268613500" >
+            <entry>
+              <key type="string" value="access" />
+              <val type="string" value="ro" />
+            </entry>
+            <entry>
+              <key type="string" value="pdo" />
+              <val type="True" value="" />
+            </entry>
+            <entry>
+              <key type="string" value="type" />
+              <val type="numeric" value="5" />
+            </entry>
+            <entry>
+              <key type="string" value="name" />
+              <val type="string">LifeSignal</val>
+            </entry>
+          </item>
+        </val>
+      </entry>
+      <entry>
+        <key type="string" value="name" />
+        <val type="string">LifeSignal</val>
+      </entry>
+      <entry>
+        <key type="string" value="struct" />
+        <val type="numeric" value="1" />
+      </entry>
+    </val>
+  </entry>
+</attr>
+<attr name="DS302" type="dict" id="-1268613364" >
+</attr>
+<attr name="ProfileName" type="string" value="DS-301" />
+<attr name="Type" type="string">slave</attr>
+<attr name="ID" type="numeric" value="0" />
+<attr name="Name" type="string">SillySlave</attr>
+</PyObject>

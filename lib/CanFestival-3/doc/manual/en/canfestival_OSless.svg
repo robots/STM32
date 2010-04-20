@@ -1,0 +1,661 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="841.88977pt"
+   height="595.27557pt"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.45"
+   sodipodi:docbase="/home/edouard/workspace/CanFestival-3/doc"
+   sodipodi:docname="canfestival_OSless.svg"
+   version="1.0"
+   inkscape:export-filename="canfestival_CAN.png"
+   inkscape:export-xdpi="87.57"
+   inkscape:export-ydpi="87.57"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   sodipodi:modified="TRUE">
+  <defs
+     id="defs4">
+    <marker
+       inkscape:stockid="Arrow2Mend"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow2Mend"
+       style="overflow:visible;">
+      <path
+         id="path4060"
+         style="font-size:12px;fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round"
+         d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.97309,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
+         transform="scale(-0.6,-0.6)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow2Send"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow2Send"
+       style="overflow:visible;">
+      <path
+         id="path4054"
+         style="font-size:12.0;fill-rule:evenodd;stroke-width:0.62500000;stroke-linejoin:round;"
+         d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
+         transform="scale(0.3) rotate(180) translate(-2.3,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow1Lend"
+       style="overflow:visible;">
+      <path
+         id="path3695"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt;marker-start:none;"
+         transform="scale(0.8) rotate(180)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lstart"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow1Lstart"
+       style="overflow:visible">
+      <path
+         id="path3698"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt;marker-start:none"
+         transform="scale(0.8)" />
+    </marker>
+    <linearGradient
+       id="linearGradient10920">
+      <stop
+         id="stop10922"
+         offset="0"
+         style="stop-color:#000000;stop-opacity:1;" />
+      <stop
+         id="stop10924"
+         offset="1"
+         style="stop-color:#88873c;stop-opacity:1;" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient2182">
+      <stop
+         style="stop-color:#000000;stop-opacity:1;"
+         offset="0"
+         id="stop2184" />
+      <stop
+         style="stop-color:#48883c;stop-opacity:1;"
+         offset="1"
+         id="stop2186" />
+    </linearGradient>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.6302963"
+     inkscape:cx="819.24193"
+     inkscape:cy="324.99316"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:window-width="1592"
+     inkscape:window-height="965"
+     inkscape:window-x="80"
+     inkscape:window-y="0"
+     showgrid="false"
+     gridspacingy="1cm"
+     gridspacingx="1cm"
+     gridoriginy="0cm"
+     gridoriginx="0cm"
+     inkscape:grid-points="true"
+     gridtolerance="0.1cm">
+    <sodipodi:guide
+       orientation="vertical"
+       position="753.6122"
+       id="guide6590" />
+    <sodipodi:guide
+       orientation="horizontal"
+       position="388.30944"
+       id="guide6592" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Calque 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <text
+       xml:space="preserve"
+       style="font-size:48px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       x="544.9906"
+       y="55.346416"
+       id="text12903"
+       sodipodi:linespacing="100%"><tspan
+         sodipodi:role="line"
+         id="tspan12905"
+         x="544.9906"
+         y="55.346416">CanFestival interface to target</tspan><tspan
+         sodipodi:role="line"
+         x="544.9906"
+         y="103.34642"
+         id="tspan6734">(on OS-less targets)</tspan></text>
+    <g
+       transform="matrix(1.1821592,0,0,1.1821592,-22.002342,-290.94663)"
+       id="use6032"
+       inkscape:export-filename="/home/edouard/workspace/CanFestival-3/doc/canfestival_OSless.png"
+       inkscape:export-xdpi="87"
+       inkscape:export-ydpi="87">
+      <rect
+         style="color:#000000;fill:#4c9d40;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:4.34227753;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible"
+         id="rect2749"
+         width="230.30719"
+         height="285.17609"
+         x="482.46152"
+         y="431.26938"
+         ry="24.502588"
+         rx="30.302513" />
+      <rect
+         rx="5.0717049"
+         ry="6.247427"
+         y="647.02209"
+         x="604.57062"
+         height="22.156359"
+         width="97.684883"
+         id="rect2751"
+         style="color:#000000;fill:#efeeb1;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.87500072;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible" />
+      <g
+         transform="translate(-105.8393,395.4256)"
+         id="g2753">
+        <rect
+           rx="12.494854"
+           style="opacity:1;color:#000000;fill:#efeeb1;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.8750006;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible"
+           id="rect2755"
+           width="183.69043"
+           height="75.672546"
+           x="501.7005"
+           y="183.25035"
+           ry="12.494862" />
+        <text
+           xml:space="preserve"
+           style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+           x="593.54962"
+           y="201.93582"
+           id="text2757"
+           sodipodi:linespacing="100%"><tspan
+             sodipodi:role="line"
+             x="593.54962"
+             y="201.93582"
+             id="tspan2759">SCHEDULING</tspan><tspan
+             sodipodi:role="line"
+             x="593.54962"
+             y="217.93582"
+             id="tspan2761">timer.c</tspan><tspan
+             sodipodi:role="line"
+             x="593.54962"
+             y="233.93582"
+             id="tspan2763" /><tspan
+             sodipodi:role="line"
+             x="593.54962"
+             y="249.93582"
+             id="tspan2765">TimeDispatch</tspan></text>
+      </g>
+      <text
+         sodipodi:linespacing="100%"
+         id="text2767"
+         y="453.71832"
+         x="596.70605"
+         style="font-size:16.62873268px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           y="453.71832"
+           x="596.70605"
+           id="tspan2769"
+           sodipodi:role="line">CanFestival Library</tspan></text>
+      <rect
+         style="color:#000000;fill:#efeeb1;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.87500072;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible"
+         id="rect2771"
+         width="97.684883"
+         height="22.156359"
+         x="604.57062"
+         y="618.47668"
+         ry="6.247427"
+         rx="5.0717049" />
+      <rect
+         rx="5.0717049"
+         ry="6.247427"
+         y="589.93121"
+         x="604.57062"
+         height="22.156359"
+         width="97.684883"
+         id="rect2773"
+         style="color:#000000;fill:#efeeb1;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.87500072;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible" />
+      <rect
+         style="color:#000000;fill:#efeeb1;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.87500072;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible"
+         id="rect2775"
+         width="97.684883"
+         height="22.156359"
+         x="604.57062"
+         y="561.38574"
+         ry="6.247427"
+         rx="5.0717049" />
+      <path
+         style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:0.99999911;stroke-linecap:butt;stroke-linejoin:miter;marker-start:url(#Arrow1Lstart);marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="M 671.86254,652.97067 L 640.82703,643.16673 L 645.22217,650.61744 L 614.18669,640.81358 L 618.58179,648.26435 L 587.54633,638.46044 L 591.94145,645.91116 L 560.90597,636.10729"
+         id="path2777"
+         sodipodi:nodetypes="cccccccc" />
+      <path
+         style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:0.99999928;stroke-linecap:butt;stroke-linejoin:miter;marker-start:url(#Arrow1Lstart);marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="M 672.46736,630.30537 L 640.09689,626.91783 L 645.89557,633.33704 L 613.52526,629.94953 L 619.32393,636.3687 L 586.95356,632.98119 L 592.75221,639.40037 L 560.38185,636.01282"
+         id="path2779"
+         sodipodi:nodetypes="cccccccc" />
+      <rect
+         ry="30.302544"
+         y="463.1806"
+         x="737.41772"
+         height="242.03027"
+         width="151.22868"
+         id="rect2781"
+         style="color:#000000;fill:#6f6f6f;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:4.34228134;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible"
+         rx="30.302513" />
+      <text
+         xml:space="preserve"
+         style="font-size:16.62873268px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:center;text-decoration:none;line-height:100%;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:middle;color:#000000;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;font-family:Bitstream Vera Sans"
+         x="816.53412"
+         y="486.68628"
+         id="text2783"
+         sodipodi:linespacing="100%"><tspan
+           sodipodi:role="line"
+           x="816.53412"
+           y="486.68628"
+           id="tspan2785">Application</tspan></text>
+      <g
+         id="g2787"
+         transform="translate(252.5741,337.1441)">
+        <rect
+           ry="12.494854"
+           y="183.78499"
+           x="501.54193"
+           height="61.490883"
+           width="114.01698"
+           id="rect2789"
+           style="opacity:1;color:#000000;fill:#efeeb1;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.87500036;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible"
+           rx="12.494858" />
+        <text
+           sodipodi:linespacing="100%"
+           id="text2791"
+           y="219.93582"
+           x="557.54962"
+           style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+           xml:space="preserve"><tspan
+             id="tspan2793"
+             y="219.93582"
+             x="557.54962"
+             sodipodi:role="line">Callbacks</tspan></text>
+      </g>
+      <path
+         sodipodi:nodetypes="cccccccc"
+         id="path2795"
+         d="M 768.23972,566.50754 L 705.85794,578.18206 L 720.55675,585.16803 L 658.17528,596.84252 L 672.87404,603.82843 L 610.49247,615.50297 L 625.19117,622.48891 L 562.80959,634.16337"
+         style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:0.9999994;stroke-linecap:butt;stroke-linejoin:miter;marker-start:url(#Arrow1Lstart);marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <g
+         id="g2797"
+         transform="translate(-105.8393,295.4256)">
+        <rect
+           ry="12.494852"
+           y="183.33594"
+           x="501.7005"
+           height="91.768173"
+           width="183.69043"
+           id="rect2799"
+           style="opacity:1;color:#000000;fill:#efeeb1;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.875;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible"
+           rx="12.494854" />
+        <text
+           sodipodi:linespacing="100%"
+           id="text2801"
+           y="201.93582"
+           x="593.54962"
+           style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+           xml:space="preserve"><tspan
+             id="tspan2803"
+             y="201.93582"
+             x="593.54962"
+             sodipodi:role="line">CAN</tspan><tspan
+             y="217.93582"
+             x="593.54962"
+             sodipodi:role="line"
+             id="tspan2805">DISPATCHING</tspan><tspan
+             y="233.93582"
+             x="593.54962"
+             sodipodi:role="line"
+             id="tspan2807">states.c</tspan><tspan
+             y="249.93582"
+             x="593.54962"
+             sodipodi:role="line"
+             id="tspan2809" /><tspan
+             y="265.93582"
+             x="593.54962"
+             sodipodi:role="line"
+             id="tspan2811">canDispatch</tspan></text>
+      </g>
+      <rect
+         style="color:#000000;fill:#efeeb1;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.87500072;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible"
+         id="rect2813"
+         width="97.684883"
+         height="22.156359"
+         x="604.57062"
+         y="-526.45117"
+         ry="6.247427"
+         rx="5.0717049"
+         transform="scale(1,-1)" />
+      <rect
+         rx="5.0717049"
+         ry="6.247427"
+         y="-554.9967"
+         x="604.57062"
+         height="22.156359"
+         width="97.684883"
+         id="rect2815"
+         style="color:#000000;fill:#efeeb1;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.87500072;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible"
+         transform="scale(1,-1)" />
+      <rect
+         rx="5.0717049"
+         ry="6.247427"
+         y="-497.90576"
+         x="604.57062"
+         height="22.156359"
+         width="97.684883"
+         id="rect2817"
+         style="color:#000000;fill:#efeeb1;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.87500072;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible"
+         transform="scale(1,-1)" />
+      <path
+         sodipodi:nodetypes="cccccccc"
+         id="path2819"
+         d="M 659.87914,528.52929 L 629.88686,541.16981 L 633.57193,533.34352 L 603.57965,545.98396 L 607.26468,538.15763 L 577.27244,550.79811 L 580.95748,542.97183 L 550.96522,555.61227"
+         style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:0.99999899;stroke-linecap:butt;stroke-linejoin:miter;marker-start:url(#Arrow1Lstart);marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <path
+         style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:0.99999899;stroke-linecap:butt;stroke-linejoin:miter;marker-start:url(#Arrow1Lstart);marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="M 650.06632,499.72944 L 624.5413,519.92334 L 626.00153,511.39702 L 600.4765,531.59082 L 601.93667,523.06446 L 576.41168,543.25831 L 577.87188,534.73199 L 552.34686,554.9258"
+         id="path2821"
+         sodipodi:nodetypes="cccccccc" />
+      <path
+         style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:0.99999911;stroke-linecap:butt;stroke-linejoin:miter;marker-start:url(#Arrow1Lstart);marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="M 771.36198,535.02148 L 707.94331,532.60242 L 720.73184,542.66783 L 657.31348,540.24882 L 670.10197,550.31415 L 606.68351,547.89515 L 619.47194,557.96051 L 556.05348,555.54144"
+         id="path2823"
+         sodipodi:nodetypes="cccccccc" />
+    </g>
+    <rect
+       ry="35.822411"
+       y="190.47337"
+       x="30.685579"
+       height="348.25095"
+       width="379.62906"
+       id="rect6034"
+       style="color:#000000;fill:#6f6f6f;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:5.13326883;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible"
+       rx="35.822426"
+       inkscape:export-filename="/home/edouard/workspace/CanFestival-3/doc/canfestival_OSless.png"
+       inkscape:export-xdpi="87"
+       inkscape:export-ydpi="87" />
+    <text
+       xml:space="preserve"
+       style="font-size:19.65781021px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:center;text-decoration:none;line-height:100%;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:middle;color:#000000;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;font-family:Bitstream Vera Sans"
+       x="230.63826"
+       y="213.4771"
+       id="text6036"
+       sodipodi:linespacing="100%"
+       inkscape:export-filename="/home/edouard/workspace/CanFestival-3/doc/canfestival_OSless.png"
+       inkscape:export-xdpi="87"
+       inkscape:export-ydpi="87"><tspan
+         id="tspan6038"
+         sodipodi:role="line"
+         x="230.63826"
+         y="213.4771">HW interfaces (for µC)</tspan></text>
+    <g
+       id="g6040"
+       transform="matrix(1.1821592,0,0,1.1821592,18.093542,-193.74028)"
+       inkscape:export-filename="/home/edouard/workspace/CanFestival-3/doc/canfestival_OSless.png"
+       inkscape:export-xdpi="87"
+       inkscape:export-ydpi="87">
+      <rect
+         ry="16.941456"
+         y="354.06866"
+         x="36.736599"
+         height="123.85986"
+         width="183.69043"
+         id="rect6042"
+         style="color:#000000;fill:#efeeb1;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.87499905;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible"
+         rx="16.941881" />
+      <text
+         sodipodi:linespacing="100%"
+         id="text6044"
+         y="376.4429"
+         x="128.57401"
+         style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           id="tspan6046"
+           y="376.4429"
+           x="128.57401"
+           sodipodi:role="line">CAN DRIVER</tspan><tspan
+           id="tspan6048"
+           y="392.4429"
+           x="128.57401"
+           sodipodi:role="line">INTERFACE</tspan><tspan
+           id="tspan6050"
+           y="408.4429"
+           x="128.57401"
+           sodipodi:role="line">(can_xxx.c)</tspan><tspan
+           id="tspan6052"
+           y="424.4429"
+           x="128.57401"
+           sodipodi:role="line" /><tspan
+           id="tspan6054"
+           y="440.4429"
+           x="128.57401"
+           sodipodi:role="line">canSend</tspan><tspan
+           id="tspan6056"
+           y="456.4429"
+           x="128.57401"
+           sodipodi:role="line" /><tspan
+           id="tspan6058"
+           y="472.4429"
+           x="128.57401"
+           sodipodi:role="line">canReceiveLoop</tspan></text>
+    </g>
+    <g
+       transform="matrix(1.1821592,0,0,1.1821592,18.093542,-102.86592)"
+       id="g6060"
+       inkscape:export-filename="/home/edouard/workspace/CanFestival-3/doc/canfestival_OSless.png"
+       inkscape:export-xdpi="87"
+       inkscape:export-ydpi="87">
+      <rect
+         rx="16.941881"
+         style="color:#000000;fill:#efeeb1;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.87499869;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible"
+         id="rect6062"
+         width="183.69043"
+         height="122.74969"
+         x="36.736599"
+         y="409.03406"
+         ry="16.941448" />
+      <text
+         xml:space="preserve"
+         style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         x="128.57401"
+         y="426.4429"
+         id="text6064"
+         sodipodi:linespacing="100%"><tspan
+           sodipodi:role="line"
+           x="128.57401"
+           y="426.4429"
+           id="tspan6066">SYSTEM TIMERS</tspan><tspan
+           sodipodi:role="line"
+           x="128.57401"
+           y="442.4429"
+           id="tspan6068">INTERFACE</tspan><tspan
+           sodipodi:role="line"
+           x="128.57401"
+           y="458.4429"
+           id="tspan6070">(timers_xxx.c)</tspan><tspan
+           sodipodi:role="line"
+           x="128.57401"
+           y="474.4429"
+           id="tspan6072" /><tspan
+           sodipodi:role="line"
+           x="128.57401"
+           y="490.4429"
+           id="tspan6078">CreateReceiveTask</tspan><tspan
+           sodipodi:role="line"
+           x="128.57401"
+           y="506.4429"
+           id="tspan7029" /><tspan
+           sodipodi:role="line"
+           x="128.57401"
+           y="522.4429"
+           id="tspan7031">TimerLoop</tspan></text>
+    </g>
+    <g
+       transform="matrix(1.1821592,0,0,1.1821592,230.88221,-230.53912)"
+       id="g6088"
+       inkscape:export-filename="/home/edouard/workspace/CanFestival-3/doc/canfestival_OSless.png"
+       inkscape:export-xdpi="87"
+       inkscape:export-ydpi="87">
+      <rect
+         rx="16.941881"
+         style="color:#000000;fill:#6ce065;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.87499928;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible"
+         id="rect6090"
+         width="91.845215"
+         height="88.572678"
+         x="46.65921"
+         y="398.63705"
+         ry="16.94146" />
+      <text
+         xml:space="preserve"
+         style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         x="94.574013"
+         y="432.4429"
+         id="text6092"
+         sodipodi:linespacing="100%"><tspan
+           sodipodi:role="line"
+           x="94.574013"
+           y="432.4429"
+           id="tspan6094">CAN</tspan><tspan
+           id="tspan6096"
+           sodipodi:role="line"
+           x="94.574013"
+           y="448.4429">receive</tspan><tspan
+           id="tspan6098"
+           sodipodi:role="line"
+           x="94.574013"
+           y="464.4429">IRQ</tspan></text>
+    </g>
+    <path
+       sodipodi:nodetypes="cc"
+       id="path6100"
+       d="M 250.75623,358.1612 C 266.42333,291.76685 290.94703,263.77378 307.3877,320.94216"
+       style="opacity:1;color:#000000;fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1.18215942;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:url(#Arrow1Lend);stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible"
+       inkscape:export-filename="/home/edouard/workspace/CanFestival-3/doc/canfestival_OSless.png"
+       inkscape:export-xdpi="87"
+       inkscape:export-ydpi="87" />
+    <path
+       sodipodi:nodetypes="cccccc"
+       id="path6102"
+       d="M 383.33328,310.1448 L 423.74719,314.80381 L 418.17769,302.49504 L 455.85971,315.1131 L 454.41495,299.80317 L 486.91842,322.6985"
+       style="opacity:1;color:#000000;fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1.18215919;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:url(#Arrow1Lend);stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible"
+       inkscape:export-filename="/home/edouard/workspace/CanFestival-3/doc/canfestival_OSless.png"
+       inkscape:export-xdpi="87"
+       inkscape:export-ydpi="87" />
+    <g
+       id="g6104"
+       transform="matrix(1.1821592,0,0,1.1821592,230.88221,-65.036825)"
+       inkscape:export-filename="/home/edouard/workspace/CanFestival-3/doc/canfestival_OSless.png"
+       inkscape:export-xdpi="87"
+       inkscape:export-ydpi="87">
+      <rect
+         ry="16.94146"
+         y="398.63705"
+         x="46.65921"
+         height="88.572678"
+         width="91.845215"
+         id="rect6106"
+         style="color:#000000;fill:#6ce065;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.87499928;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible"
+         rx="16.941881" />
+      <text
+         sodipodi:linespacing="100%"
+         id="text6108"
+         y="438.4429"
+         x="94.574013"
+         style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           id="tspan6110"
+           y="438.4429"
+           x="94.574013"
+           sodipodi:role="line">TIMER</tspan><tspan
+           y="454.4429"
+           x="94.574013"
+           sodipodi:role="line"
+           id="tspan6114">IRQ</tspan></text>
+    </g>
+    <path
+       style="opacity:1;color:#000000;fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1.18215919;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:url(#Arrow1Lend);stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible"
+       d="M 383.33328,428.36072 L 423.74719,433.01973 L 418.17769,420.71096 L 455.85971,433.32902 L 454.41495,418.01909 L 486.91842,440.91442"
+       id="path6124"
+       sodipodi:nodetypes="cccccc"
+       inkscape:export-filename="/home/edouard/workspace/CanFestival-3/doc/canfestival_OSless.png"
+       inkscape:export-xdpi="87"
+       inkscape:export-ydpi="87" />
+    <path
+       style="opacity:1;color:#000000;fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1.18215942;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:url(#Arrow1Lend);stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible"
+       d="M 240.98347,512.45635 C 259.90816,432.56811 302.89151,447.04848 308.47356,464.37868"
+       id="path6126"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/edouard/workspace/CanFestival-3/doc/canfestival_OSless.png"
+       inkscape:export-xdpi="87"
+       inkscape:export-ydpi="87" />
+    <path
+       sodipodi:type="star"
+       style="opacity:1;color:#000000;fill:#e06565;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:3.54594374;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible"
+       id="path6152"
+       sodipodi:sides="3"
+       sodipodi:cx="360.98669"
+       sodipodi:cy="199.39957"
+       sodipodi:r1="41.588718"
+       sodipodi:r2="20.794359"
+       sodipodi:arg1="0.53284389"
+       sodipodi:arg2="1.5800414"
+       inkscape:flatsided="false"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="M 396.8098,220.52601 L 360.79445,220.19304 L 324.7791,219.86006 L 343.07514,188.83634 L 361.37118,157.81263 L 379.09049,189.16932 L 396.8098,220.52601 z "
+       transform="matrix(0.5413462,-0.3125475,-0.3125475,-0.5413462,211.30009,595.96004)"
+       inkscape:export-filename="/home/edouard/workspace/CanFestival-3/doc/canfestival_OSless.png"
+       inkscape:export-xdpi="87"
+       inkscape:export-ydpi="87" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#ffff00;stroke-width:2.36431837;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:2.36431839, 4.72863679;stroke-dashoffset:0;stroke-opacity:1"
+       d="M 340.99283,345.3082 L 340.99283,407.20233"
+       id="path6154"
+       inkscape:export-filename="/home/edouard/workspace/CanFestival-3/doc/canfestival_OSless.png"
+       inkscape:export-xdpi="87"
+       inkscape:export-ydpi="87" />
+  </g>
+</svg>

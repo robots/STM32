@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE SQL [
+<!ELEMENT SQL (row)*>
+<!ATTLIST SQL
+  GROUP_BY NMTOKEN #FIXED "AuthID"
+  query CDATA #FIXED "SELECT AuthID AS SSN,COUNT(GroupID)
+                      FROM AUTHGROUP GROUP BY AuthID"
+>
+<!ELEMENT row (SSN, column2)>
+<!ATTLIST row num ID #IMPLIED>
+<!ELEMENT SSN (#PCDATA)>
+<!ELEMENT column2 (#PCDATA)>
+<!ATTLIST column2 CALC CDATA #FIXED "COUNT(GroupID)">
+]>
+
+<SQL>
+  <row num="1">
+    <SSN>111-22-3333</SSN>
+    <column2>1</column2>
+  </row>
+  <row num="2">
+    <SSN>333-22-4444</SSN>
+    <column2>2</column2>
+  </row>
+  <row num="3">
+    <SSN>666-44-5555</SSN>
+    <column2>1</column2>
+  </row>
+  <row num="4">
+    <SSN>999-88-7777</SSN>
+    <column2>1</column2>
+  </row>
+</SQL>
+
+

@@ -1,0 +1,52 @@
+As with all things, there is a tradeoff between security and
+convenience when using [gnosis.xml.pickle].  [gnosis.xml.pickle] is meant
+to be "secure by default".  This means, however, that the user familiar
+with the standard pickle module won't always get the expected
+behavior.  The following text explains the [gnosis.xml.pickle] security
+model.
+
+    +------------------------------------------------------------------+
+    | For the impatient, the following code will give decent security  |
+    | with the "expected" pickle behavior:                             |
+    |                                                                  |
+    |     from gnosis.xml.pickle.util import setParanoia               |
+    |     setParanoia(0)                                               |
+    +------------------------------------------------------------------+
+
+Now for the verbose explanation:
+
+The following priority list is used during unpickling when
+[xml_pickle] needs to create a class:
+
+    1. Get class from CLASS_STORE, or create on-the-fly.
+    2. Get class from a module the caller has imported
+    3. Get class from a module we can find in sys.path.
+
+These map in a straightforward way to PARANOIA levels:
+
+  PARANOIA = 2: "extreme paranoia"
+
+    XML_Pickler may only instantiate classes that have been
+    explicity placed in the [gnosis.xml.pickle] CLASS_STORE.
+    (You do this by using add_class_to_store())
+
+  PARANOIA = 1: "airtight"
+
+    In addition to the above, XML_Pickler may create classes
+    on-the-fly if they aren't in the [gnosis.xml.pickle] namespace.
+    (This is safe, because the classes can only contain data.)
+
+  PARANOIA = 0: "good enough"
+
+    In addition to the above, XML_Pickler may also instantiate
+    classes that the caller has imported or that have been globally
+    imported. (The intention is have the same behavior as the standard
+    pickle module.)
+
+  PARANOIA = -1: "free-for-all"
+
+    All of the above, plus XML_Pickler is allowed to import modules
+    itself.
+
+See "test_paranoia.py" for numerous examples.
+

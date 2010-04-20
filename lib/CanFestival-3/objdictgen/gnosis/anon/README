@@ -1,0 +1,25 @@
+Consult <http://gnosis.cx/anon/> for more information on this project, and a 
+working interface page.
+
+===============================================================================
+  
+encode_address.py     The main module for compression/encryption
+
+encode_address.cgi    A particular implementation of the anonym generator
+                      (more an example than a finished front-end)
+
+huffman               A Huffman encoding table (generated from a corpus  
+                      of email addresses in my email archives)
+
+anon-forward.cgi      A somewhat silly script to perform the forwarding
+                      that can be invoked via CGI (during testing)
+
+===============================================================================
+
+You can generate a KEYFILE on a Unix-like system using:
+
+    % head -c 64 /dev/random > KEYFILE
+
+The scripts 'new_*_key.sh' can be used to generate new keys for the named
+duration (and below).  They currently produce a debugging display of the 
+old and new keys; but that should go away. 

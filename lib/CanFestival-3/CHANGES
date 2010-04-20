@@ -1,0 +1,1329 @@
+Sun May 13 20:16:09 CEST 2007	etisserant
+
+	Fixed "function LoadCanDriver() should return library handle instead of 0 if succeeded" bug
+
+	unix.c 1.7
+
+Sun May 13 10:29:50 CEST 2007	etisserant
+
+	Applied wolfgang changes, and re-indented socket_can.c file
+
+	can_socket.c 1.6
+
+Sun May 13 10:29:08 CEST 2007	etisserant
+
+	Added debug level opt in configure and re-enabled debug macros.
+
+	states.c 1.11
+	applicfg.h 1.4
+	configure 1.20
+
+Sat May 12 23:07:48 CEST 2007	etisserant
+
+	Removed dummy sleep.
+
+	TestMasterSlave.c 1.14
+
+Sat May 12 23:06:43 CEST 2007	etisserant
+
+	Fixed problems in can_virtual, loop when closing pipes.
+
+	can_virtual.c 1.4
+
+Sat May 12 22:43:30 CEST 2007	etisserant
+
+	Wolfgang enhancements for RT-socket-CAN support
+
+	can_socket.c 1.5
+
+Sat May 12 22:42:51 CEST 2007	etisserant
+
+	CleanUp and minor fixes
+
+	dcf.c 1.2
+	Makefile.in 1.7
+	TestMasterSlave.c 1.13
+	TestMasterMicroMod.c 1.7
+	Makefile.in 1.12
+	Makefile.in 1.6
+	Makefile.in 1.6
+	Makefile.in 1.5
+	Makefile.in 1.5
+
+Fri May 11 18:34:54 CEST 2007	etisserant
+
+	Let user choose his own XENO_CONFIG.
+
+	configure 1.19
+
+Fri May 11 18:34:26 CEST 2007	etisserant
+
+	Fix can_socket again.
+
+	can_socket.c 1.4
+
+Fri May 11 15:24:43 CEST 2007	lbessard
+
+	Bugs on C File generating corrected
+
+	nodemanager.py 1.10
+	gen_cfile.py 1.16
+
+Fri May 11 15:16:45 CEST 2007	etisserant
+
+	Fixed can_socket compilation bugs
+
+	can_socket.c 1.3
+	.cvsignore 1.1
+
+Fri May 11 11:52:05 CEST 2007	greg
+
+	correction of lifegrd compilation warning
+
+	lifegrd.c 1.6
+
+Fri May 11 11:22:58 CEST 2007	lbessard
+
+	Bug on objectdictgen corrected
+
+	objdictgen.py 1.3
+
+Thu May 10 09:33:07 CEST 2007	greg
+
+	Test if index 1F22 exists for Master OD (Concise DCF)
+
+	states.c 1.10
+
+Fri May 04 13:57:54 CEST 2007	lbessard
+
+	Adding support for importing and exporting EDS files
+
+	objdictedit.py 1.17
+	nodemanager.py 1.9
+	node.py 1.11
+	gen_cfile.py 1.15
+	eds_utils.py 1.1
+	DS-406.prf 1.2
+	DS-404.prf 1.2
+	DS-401.prf 1.3
+
+Fri May 04 12:46:09 CEST 2007	greg
+
+	updated manual
+
+	manual.odt 1.10
+
+Fri May 04 12:33:30 CEST 2007	greg
+
+	Update help text.
+
+	TestMasterMicroMod.c 1.6
+
+Fri May 04 12:32:08 CEST 2007	greg
+
+	Master configure slave's heartbeat producer time by concise DCF.
+
+	TestSlave.od 1.5
+	TestSlave.c 1.9
+	TestMasterSlave.c 1.12
+	TestMaster.od 1.3
+	TestMaster.h 1.5
+	TestMaster.c 1.6
+	Master.c 1.6
+
+Fri May 04 12:26:46 CEST 2007	greg
+
+	Add concise DCF support
+
+	states.c 1.9
+	dcf.c 1.1
+	Makefile.in 1.6
+	dcf.h 1.1
+	data.h 1.11
+	manual.odt 1.9
+
+Fri May 04 12:22:48 CEST 2007	greg
+
+	Add default callback for index entry 0x1017
+
+	lifegrd.c 1.5
+	node.py 1.10
+
+Mon Apr 30 16:56:20 CEST 2007	greg
+
+	Support for DCF (DS-302)
+
+	objdictedit.py 1.16
+	nodemanager.py 1.8
+	node.py 1.9
+	gen_cfile.py 1.14
+	DS-302.prf 1.1
+
+Tue Apr 24 16:49:40 CEST 2007	etisserant
+
+	Added writeLocalDict and readLocalDict, that have to be called from application instead of getODEntry and setODEntry. Fix potential endianization problem.
+
+	CanFestival-3.def 1.4
+	objacces.c 1.12
+	objacces.h 1.6
+	main.c 1.4
+	Master.c 1.5
+	TestMasterMicroMod.c 1.5
+
+Tue Apr 24 16:16:03 CEST 2007	etisserant
+
+	Added _writenetworkdictionary option to avoir endianiation
+
+	sdo.c 1.19
+
+Tue Apr 24 14:41:19 CEST 2007	etisserant
+
+	Set PDO transmit time according to ESA perceptionof CanOpen
+
+	TestMasterMicroMod.c 1.4
+
+Tue Apr 24 13:26:03 CEST 2007	etisserant
+
+	Removed SDOTimeout application callback.Please use SDO callbacks instead.
+
+	sdo.c 1.18
+	sdo.h 1.7
+	data.h 1.10
+	win32test.h 1.3
+	objdict.h 1.5
+	appli.c 1.7
+	TestMasterSlave.c 1.11
+	Slave.h 1.3
+	Slave.c 1.4
+	Master.h 1.3
+	Master.c 1.4
+	TestMasterMicroMod.c 1.3
+
+Thu Apr 19 09:54:34 CEST 2007	etisserant
+
+	EDS import
+
+	objdictedit.py 1.15
+	nodemanager.py 1.7
+
+Wed Apr 18 13:06:39 CEST 2007	etisserant
+
+	Fixed segfault with Xenomai timer_xeno.c
+
+	timers_xeno.c 1.8
+
+Wed Apr 18 13:05:55 CEST 2007	etisserant
+
+	Removed compilation warnings with some GCC. + Fixed test for baudrate = none
+
+	TestMasterSlave.c 1.10
+	TestMasterMicroMod.c 1.2
+
+Wed Apr 18 13:05:15 CEST 2007	etisserant
+
+	Added install target for MicroMod
+
+	Makefile.in 1.2
+	Makefile.in 1.6
+
+Wed Apr 18 13:04:19 CEST 2007	etisserant
+
+	Removed compilation warnings with some GCC.
+
+	timer.c 1.6
+	canfestival.h 1.4
+	data.h 1.9
+
+Tue Apr 17 16:13:22 CEST 2007	etisserant
+
+	Added a MicroMod Master sample in examples/TestMasterMicroMod. Fixed some SDO abort code and callback problem in sdo.c.
+
+	sdo.c 1.17
+	TestMasterSlave.vcproj 1.1
+	getopt.h 1.1
+	getopt.c 1.1
+	TestMasterMicroMod.vcproj 1.1
+	TestMasterMicroMod.h 1.1
+	TestMasterMicroMod.c 1.1
+	TestMaster.od 1.1
+	TestMaster.h 1.1
+	TestMaster.c 1.1
+	Makefile.in 1.1
+	.cvsignore 1.1
+	Makefile.in 1.5
+	configure 1.18
+	CanFestival-3.vc8.sln 1.3
+
+Tue Apr 17 16:11:38 CEST 2007	etisserant
+
+	Removed binry flag on vcproj files
+
+	win32test.vcproj 1.3
+	can_uvccm_win32.vcproj 1.3
+	CanFestival-3.vc8.vcproj 1.4
+
+Tue Apr 17 10:50:50 CEST 2007	etisserant
+
+	*** empty log message ***
+
+	.cvsignore 1.4
+
+Tue Apr 17 10:50:28 CEST 2007	etisserant
+
+	Added SDO network dictionnary access callback when aborded.
+
+	sdo.c 1.16
+
+Tue Apr 17 10:48:17 CEST 2007	etisserant
+
+	Better error handling for unix and peak_linux.
+
+	unix.c 1.6
+	can_peak_linux.c 1.3
+
+Sun Apr 15 00:49:34 CEST 2007	etisserant
+
+	SetODEntry now call CO_data->storeODSubEntry(Index,SubIndex) for variables to be Stored (when column Save==True in GUI)
+
+	objacces.c 1.11
+	objdictdef.h 1.3
+	objacces.h 1.5
+	data.h 1.8
+	TestSlave.od 1.4
+	TestSlave.c 1.8
+	TestMasterSlave.c 1.9
+	Slave.c 1.3
+
+Sun Apr 15 00:45:49 CEST 2007	etisserant
+
+	Removed genrated dead prototypes for depricated callbacks.
+
+	TestSlave.h 1.4
+	TestMaster.h 1.4
+	Slave.h 1.2
+	Master.h 1.2
+	gen_cfile.py 1.13
+
+Fri Apr 13 21:54:13 CEST 2007	etisserant
+
+	Updated doc.
+
+	manual_en.pdf 1.2
+	manual.odt 1.8
+
+Fri Apr 13 10:57:01 CEST 2007	etisserant
+
+	Moved DS-301 PDF into objdictgen. Fixed installation on linux. Now TestMasterSlave is also installed in $PREFIX/bin.
+
+	manual_en.pdf 1.1
+	canfestival.gif 1.1
+	301_v04000201.pdf 1.1
+	Makefile.in 1.2
+	CONTRIBUTORS 1.2
+	.cvsignore 1.3
+	objdictedit.py 1.14
+	DS301_index.py 1.4
+	about.html 1.1
+	Makefile.in 1.5
+	Makefile.in 1.4
+	Makefile.in 1.5
+	Makefile.in 1.5
+	Makefile.in 1.4
+	Makefile.in 1.4
+	canfestival_overview.svg 1.1
+	Makefile.in 1.7
+	Makefile.in 1.11
+	canfestival_scheduling.svg 1.1
+	canfestival_OSless.svg 1.1
+	canfestival_OS.svg 1.1
+
+Thu Apr 12 17:11:16 CEST 2007	etisserant
+
+	Added cosmetics with Can_Virtual
+
+	can_virtual.c 1.3
+
+Thu Apr 12 17:10:27 CEST 2007	etisserant
+
+	Removed dead code.
+
+	Makefile.in 1.3
+	TestMasterSlave.c 1.8
+
+Thu Apr 12 16:36:31 CEST 2007	etisserant
+
+	Removed Mutex liberation on CanSend. Too much race condition to avoid. Cannot be deeply tested.
+
+	unix.c 1.5
+
+Thu Apr 12 16:20:22 CEST 2007	etisserant
+
+	Implemented writeNetworkDictCallBack test in TestMasterSlave example. Fixed callback assignement race condition in sdo.c.
+
+	sdo.c 1.15
+	TestSlave.od 1.3
+	TestSlave.c 1.7
+	TestMasterSlave.h 1.5
+	Master.c 1.3
+
+Thu Apr 12 16:17:35 CEST 2007	etisserant
+
+	Post_sync have to be called even if in pre-op state. Fixed.
+
+	sync.c 1.7
+
+Thu Apr 12 16:14:07 CEST 2007	etisserant
+
+	Now, setNodeId does change TPDO and RPDO CobId without testing previous CobId in order to avoid confusion. Standard does not says when 'default value' should be applied. See DS301 - Object 1400h - 15FFh: Receive PDO Communication Parameter page 108.
+
+	states.c 1.8
+
+Wed Apr 11 07:50:33 CEST 2007	etisserant
+
+	Updated doc. Cleaned some code.
+
+	manual.odt 1.7
+	unix.c 1.4
+
+Sat Apr 07 09:49:05 CEST 2007	etisserant
+
+	Some win32 fixes following yesterday's API changes.
+
+	CanFestival-3.def 1.3
+	nmtSlave.c 1.4
+	sync.h 1.3
+	states.h 1.4
+	drivers_win32.cpp 1.4
+	CanFestival-3.vc8.vcproj 1.3
+
+Fri Apr 06 16:49:27 CEST 2007	etisserant
+
+	Changes in the API: - No more mandatory callbacks declared for each node anymore 	heartbeatError 	SDOtimeoutError 	initialisation 	preOperational 	operational 	stopped 	post_sync 	post_TPDO 	canSend  - Fill function ptr to declare callbacks 	CO_Data.heartbeatError 	CO_Data.SDOtimeoutError 	CO_Data.initialisation 	CO_Data.preOperational 	CO_Data.operational 	CO_Data.stopped 	CO_Data.post_sync 	CO_Data.post_TPDO  - CanClose now takes CO_Data* as parameter - canSend is provided to the stack directly by OS interface, no specific callback.
+
+	timer.c 1.5
+	sync.c 1.6
+	states.c 1.7
+	sdo.c 1.14
+	pdo.c 1.4
+	nmtSlave.c 1.3
+	nmtMaster.c 1.3
+	lifegrd.c 1.4
+	canfestival.h 1.3
+	sync.h 1.2
+	states.h 1.3
+	sdo.h 1.6
+	lifegrd.h 1.4
+	data.h 1.7
+	main.c 1.3
+	appli.c 1.6
+	TestMasterSlave.h 1.4
+	TestMasterSlave.c 1.7
+	Slave.c 1.2
+	Master.c 1.2
+	unix.c 1.3
+	manual.odt 1.6
+	objdictedit.py 1.13
+	canfestival.h 1.3
+	drivers_win32.cpp 1.3
+	timers_unix.c 1.7
+
+Thu Apr 05 10:06:11 CEST 2007	lbessard
+
+	Bug on CanOpen help popup corrected
+
+	objdictedit.py 1.12
+
+Thu Apr 05 09:03:18 CEST 2007	lbessard
+
+	Bug on CanOpen help popup corrected
+
+	objdictedit.py 1.11
+	DS301_index.py 1.3
+
+Wed Apr 04 13:11:49 CEST 2007	etisserant
+
+	Win32 Native support and dynamicaly loaded CAN drivers for Linux, Cygwin and Win32.
+
+	Makefile.in 1.10
+	.cvsignore 1.2
+	Makefile.in 1.4
+	Makefile.in 1.4
+	Makefile.in 1.3
+
+Wed Apr 04 13:04:31 CEST 2007	etisserant
+
+	Win32 Native support and dynamicaly loaded CAN drivers for Linux, Cygwin and Win32.
+
+	resource.h 1.2
+	CanFestival-3.rc 1.2
+	CanFestival-3.def 1.2
+	sdo.c 1.13
+	Makefile.in 1.5
+	timerscfg.h 1.2
+	config.h 1.2
+	canfestival.h 1.2
+	applicfg.h 1.2
+	canfestival.h 1.2
+	applicfg.h 1.3
+	timers_driver.h 1.3
+	timer.h 1.3
+	data.h 1.6
+	can_driver.h 1.5
+	can.h 1.3
+	win32test.vcproj 1.2
+	win32test.od 1.2
+	win32test.h 1.2
+	win32test.c 1.2
+	main.c 1.2
+	.cvsignore 1.2
+	getopt.h 1.2
+	getopt.c 1.2
+	TestSlave.c 1.6
+	TestMasterSlave.h 1.3
+	TestMasterSlave.c 1.6
+	TestMaster.c 1.5
+	.cvsignore 1.3
+	timers_win32.cpp 1.2
+	drivers_win32.cpp 1.2
+	unix.c 1.2
+	Makefile.in 1.5
+	timers_xeno.c 1.7
+	Makefile.in 1.3
+	timers_unix.c 1.6
+	Makefile.in 1.3
+	Makefile.in 1.3
+	can_virtual.c 1.2
+	Makefile.in 1.9
+	can_uvccm_win32.vcproj 1.2
+	can_uvccm_win32.def 1.2
+	can_uvccm_win32.cpp 1.2
+	.cvsignore 1.2
+	can_socket.c 1.2
+	Makefile.in 1.3
+	cancfg.h.tail 1.2
+	cancfg.h.head 1.2
+	can_peak_win32.vcproj 1.2
+	can_peak_win32.def 1.2
+	can_peak_win32.c 1.4
+	Makefile.in 1.3
+	.cvsignore 1.3
+	can_peak_linux.c 1.2
+	Makefile.in 1.2
+	.cvsignore 1.2
+	lincan.h 1.2
+	canmsg.h 1.2
+	can_lincan.c 1.2
+	Makefile.in 1.3
+	.cvsignore 1.2
+	configure 1.17
+	CanFestival-3.vc8.vcproj 1.2
+	CanFestival-3.vc8.sln 1.2
+	.cvsignore 1.2
+
+Tue Apr 03 20:20:26 CEST 2007	etisserant
+
+	file getopt.c was initially added on branch BRANCH_WIN32PORT.
+
+	getopt.c 1.1
+
+Tue Apr 03 15:10:52 CEST 2007	etisserant
+
+	file .cvsignore was initially added on branch BRANCH_WIN32PORT.
+
+	.cvsignore 1.1
+	.cvsignore 1.1
+
+Mon Apr 02 14:41:37 CEST 2007	etisserant
+
+	file .cvsignore was initially added on branch BRANCH_WIN32PORT.
+
+	.cvsignore 1.1
+
+Fri Mar 30 16:57:45 CEST 2007	etisserant
+
+	file unix.c was initially added on branch BRANCH_WIN32PORT.
+
+	unix.c 1.1
+
+Mon Mar 26 12:06:21 CEST 2007	etisserant
+
+	file can_peak_win32.vcproj was initially added on branch BRANCH_WIN32PORT.
+
+	can_peak_win32.vcproj 1.1
+
+Fri Feb 16 17:11:49 CET 2007	leonid
+
+	file win32test.vcproj was initially added on branch BRANCH_WIN32PORT.
+
+	win32test.vcproj 1.1
+
+Thu Feb 15 17:23:45 CET 2007	leonid
+
+	file CanFestival-3.vc8.vcproj was initially added on branch BRANCH_WIN32PORT.
+
+	CanFestival-3.vc8.vcproj 1.1
+
+Wed Feb 14 22:19:53 CET 2007	leonid
+
+	file resource.h was initially added on branch BRANCH_WIN32PORT.
+
+	resource.h 1.1
+
+Tue Feb 13 18:38:30 CET 2007	etisserant
+
+	Removed all non-supported and uncontrolled source code. Please refer to CVS version "Before_..." to see old code.
+
+	Makefile.in 1.6
+	states.c 1.6
+	Makefile.in 1.4
+	Makefile.in 1.8
+
+Tue Feb 13 18:06:17 CET 2007	etisserant
+
+	Removed all non-supported and uncontrolled source code. Please refer to CVS version "Before_..." to see old code.
+
+	Makefile.in 1.4
+	objdictgen.py 1.2
+	Makefile.in 1.2
+	TestSlave.c 1.5
+	TestMaster.c 1.4
+	Makefile.in 1.3
+	Makefile.in 1.7
+	Makefile.in 1.4
+	configure 1.16
+
+Tue Feb 13 17:21:19 CET 2007	etisserant
+
+	- Some fixes in Makefile.in
+
+	Makefile.in 1.4
+
+Tue Feb 13 16:36:44 CET 2007	etisserant
+
+	- Better array initialization in data.h CANOPEN_NODE_DATA_INITIALIZER macro. Use a little hack with configure and config.h to create the "pure Ansi C" initializer. - Workaround for the compiler compatibility with empty arrays (i.e. Index 1016). - Some fixes in Makefile.in
+
+	gen_cfile.py 1.12
+	Makefile.in 1.3
+	data.h 1.5
+	TestSlave.c 1.4
+	Makefile.in 1.5
+	configure 1.15
+
+Fri Feb 09 09:36:19 CET 2007	frdupin
+
+	copy/paste error
+
+	pdo.c 1.3
+
+Wed Feb 07 12:27:05 CET 2007	frdupin
+
+	pointer bogue for *(d->iam_a_slave)
+
+	states.c 1.5
+
+Mon Feb 05 10:22:31 CET 2007	frdupin
+
+	little/big endian and nodeId
+
+	sdo.c 1.12
+
+Tue Jan 30 11:18:20 CET 2007	frdupin
+
+	big endian bogue : nodeIdServer in now in 32 bits
+
+	sdo.c 1.11
+
+Tue Jan 30 10:28:44 CET 2007	frdupin
+
+	unused variables
+
+	sync.c 1.5
+
+Tue Jan 30 10:28:22 CET 2007	frdupin
+
+	forgot some comments ...
+
+	sdo.c 1.10
+
+Tue Jan 30 10:25:19 CET 2007	frdupin
+
+	BIG endian def is moved to config.h
+
+	applicfg.h 1.3
+
+Tue Jan 30 10:24:09 CET 2007	frdupin
+
+	16 bits arch compatibility and unused variables
+
+	sdo.c 1.9
+
+Mon Jan 29 15:39:20 CET 2007	frdupin
+
+	hcs12 is big_endian
+
+	configure 1.14
+
+Mon Jan 29 14:42:32 CET 2007	frdupin
+
+	compilers compatibility
+
+	objdict.h 1.4
+	objdict.c 1.3
+	appli.c 1.5
+
+Mon Jan 29 14:33:45 CET 2007	frdupin
+
+	Add comment in config.h
+
+	configure 1.13
+
+Mon Jan 29 14:32:58 CET 2007	frdupin
+
+	compilers compatibility
+
+	gen_cfile.py 1.11
+	ports.h 1.2
+	data.h 1.4
+	TestSlave.h 1.3
+	TestSlave.c 1.3
+	TestMaster.h 1.3
+	TestMaster.c 1.3
+
+Mon Jan 29 09:42:22 CET 2007	frdupin
+
+	compiler compatibility : accessDictionaryError contains nothing out of debogue mode
+
+	objacces.c 1.10
+	objacces.h 1.4
+
+Mon Jan 29 09:27:58 CET 2007	frdupin
+
+	compiler compatibility : comments
+
+	sdo.h 1.5
+	lifegrd.h 1.3
+
+Fri Jan 26 10:49:00 CET 2007	lbessard
+
+	LGPL copyright on generated files removed
+
+	gen_cfile.py 1.10
+
+Fri Jan 26 08:54:02 CET 2007	lbessard
+
+	Code for avoiding possible problem on Window while importing html module Add possibility to load CanOpen DS-301 Help even if no index is selected
+
+	objdictedit.py 1.10
+	DS301_index.py 1.2
+
+Thu Jan 25 17:36:39 CET 2007	frdupin
+
+	compilator compatitibility
+
+	timer.c 1.4
+	sync.c 1.4
+	states.c 1.4
+	sdo.c 1.8
+	pdo.c 1.2
+	objacces.c 1.9
+	nmtSlave.c 1.2
+	nmtMaster.c 1.2
+	lifegrd.c 1.3
+	applicfg.h 1.2
+	timerscfg.h 1.3
+	timer.h 1.2
+	states.h 1.2
+	sdo.h 1.4
+	pdo.h 1.2
+	objdictdef.h 1.2
+	objacces.h 1.3
+	nmtSlave.h 1.2
+	nmtMaster.h 1.2
+	lifegrd.h 1.2
+	def.h 1.2
+	data.h 1.3
+	can.h 1.2
+
+Thu Jan 25 16:49:51 CET 2007	lbessard
+
+	Bug corrected on gen_cfile
+
+	gen_cfile.py 1.9
+
+Mon Jan 22 12:06:29 CET 2007	lbessard
+
+	DS-401 and DS-418 updated
+
+	DS-418.prf 1.2
+	DS-401.prf 1.2
+
+Sat Jan 20 09:49:02 CET 2007	lbessard
+
+	Adding the possibility for users to choose between Dynamic Mapping and Static Mapping
+
+	objdictedit.py 1.9
+	nodemanager.py 1.6
+	node.py 1.8
+
+Thu Jan 18 15:15:55 CET 2007	lbessard
+
+	TIME_OF_DAY and TIME_DIFFERENCE disabled
+
+	node.py 1.7
+
+Thu Jan 18 14:18:24 CET 2007	lbessard
+
+	gen_cfile.py modified for avoiding possible conflict in mapped variable names
+
+	gen_cfile.py 1.8
+
+Thu Jan 11 11:08:56 CET 2007	frdupin
+
+	PDO mapping parameters : number of mapped app must be in RW access
+
+	node.py 1.6
+
+Wed Jan 10 17:42:34 CET 2007	lbessard
+
+	Bug reported by Dean corrected
+
+	node.py 1.5
+	gen_cfile.py 1.7
+
+Wed Jan 03 10:33:55 CET 2007	lbessard
+
+	Bug on map variable type changing  and on comments with special characters corrected
+
+	objdictedit.py 1.8
+	nodemanager.py 1.5
+	node.py 1.4
+	gen_cfile.py 1.6
+
+Tue Jan 02 15:10:38 CET 2007	frdupin
+
+	index 0x1004 is a visible_string
+
+	node.py 1.3
+
+Tue Dec 19 16:45:39 CET 2006	frdupin
+
+	some improvements
+
+	readme.txt 1.4
+	objdict.h 1.3
+	appli.c 1.4
+
+Tue Dec 19 16:30:57 CET 2006	frdupin
+
+	prototypes in c-ansi style
+
+	gen_cfile.py 1.5
+
+Wed Dec 13 18:48:01 CET 2006	lbessard
+
+	Some bugs reported by Francis Dupin corrected.
+
+	objdictedit.py 1.7
+	nodemanager.py 1.4
+	node.py 1.2
+
+Wed Dec 13 16:21:14 CET 2006	frdupin
+
+	*** empty log message ***
+
+	readme.txt 1.3
+
+Wed Dec 13 15:36:30 CET 2006	frdupin
+
+	lock interrupt before candispatch
+
+	appli.c 1.3
+
+Wed Dec 13 14:48:04 CET 2006	frdupin
+
+	unused variable deleted
+
+	objacces.c 1.8
+
+Wed Dec 13 14:44:27 CET 2006	frdupin
+
+	Tested. OK on Canfestival  3 rc2
+
+	readme.txt 1.2
+	objdict.od 1.2
+	objdict.h 1.2
+	objdict.c 1.2
+	appli.c 1.2
+
+Wed Dec 13 14:13:10 CET 2006	frdupin
+
+	Add prototypes
+
+	lifegrd.c 1.2
+	sync.c 1.3
+	states.c 1.3
+	sdo.c 1.7
+	sdo.h 1.3
+
+Tue Dec 12 17:32:05 CET 2006	frdupin
+
+	Je n'ai pas terminé
+
+	manual.odt 1.5
+
+Tue Dec 12 17:30:26 CET 2006	frdupin
+
+	yes, I prefer in pdf
+
+	CANOpen_memento.pdf 1.1
+
+Tue Dec 12 17:27:48 CET 2006	frdupin
+
+	Moved from ..
+
+	CANOpen_memento.odg 1.1
+
+Wed Nov 29 15:51:15 CET 2006	etisserant
+
+	minval/maxval macro operators precedence fix. Thanks Luis Jim?nez.
+
+	timer.c 1.3
+	timers_unix.c 1.5
+
+Thu Aug 31 10:28:53 CEST 2006	etisserant
+
+	SOCKET-CAN support added. Many thanks to Jan Kiszka !
+
+	timers_xeno.c 1.6
+	can_socket.c 1.1
+	Makefile.in 1.1
+	configure 1.12
+
+Thu Aug 10 17:57:33 CEST 2006	etisserant
+
+	Updated doc
+
+	manual.odt 1.4
+
+Thu Aug 10 17:38:53 CEST 2006	etisserant
+
+	Updated doc
+
+	manual.odt 1.3
+
+Thu Aug 10 17:13:23 CEST 2006	lbessard
+
+	Bug on NoteBook in Windows corrected
+
+	objdictedit.py 1.5
+	objdictedit.py 1.6
+
+Thu Aug 10 08:53:05 CEST 2006	etisserant
+
+	cygwin/pcan_light commit. Changes in configure for dual port handling.
+
+	can_peak_win32.c 1.3
+	configure 1.11
+
+Tue Aug 08 22:34:32 CEST 2006	etisserant
+
+	First working cygwin/pcan_light commit. can_peak_win32.c is obfuscated.
+
+	can_peak_win32.c 1.2
+	Makefile.in 1.2
+	.cvsignore 1.2
+	configure 1.10
+
+Fri Jun 23 16:32:42 CEST 2006	etisserant
+
+	Updated configure and fixes in Makefiles.in for cygwin compiling.
+
+	Makefile.in 1.2
+	TestMasterSlave.c 1.5
+	Makefile.in 1.4
+	Makefile.in 1.2
+	Makefile.in 1.2
+	Makefile.in 1.2
+	Makefile.in 1.2
+	Makefile.in 1.6
+	Makefile.in 1.2
+	configure 1.9
+
+Wed Jun 21 08:31:34 CEST 2006	lbessard
+
+	Add incremented index in Add Map Variable Remove jaxe from makefile and configure
+
+	objdictedit.py 1.4
+	nodemanager.py 1.3
+	Makefile.in 1.2
+	configure 1.8
+
+Tue Jun 20 22:43:37 CEST 2006	etisserant
+
+	Cygwin port. Still untested. Compiles and link.
+
+	timer.c 1.2
+	timerscfg.h 1.2
+	.cvsignore 1.2
+	timers_unix.c 1.4
+	can_peak_win32.c 1.1
+	Makefile.in 1.1
+	.cvsignore 1.1
+	configure 1.7
+
+Tue Jun 20 19:02:43 CEST 2006	etisserant
+
+	Some fixes for GUI running Windows
+
+	objdictedit.py 1.3
+
+Tue Jun 20 17:41:13 CEST 2006	etisserant
+
+	Added bauderate/disable option to TestMasterSlave Master and Slave nodes.
+
+	TestMasterSlave.c 1.4
+
+Tue Jun 20 16:56:39 CEST 2006	lbessard
+
+	Bug on receiveLoopTask termination corrected
+
+	timers_xeno.c 1.5
+	timers_unix.c 1.3
+
+Mon Jun 19 16:35:12 CEST 2006	etisserant
+
+	Fixed Xeno crash when no more alarm are set...
+
+	timers_xeno.c 1.4
+
+Mon Jun 19 14:19:23 CEST 2006	etisserant
+
+	Fixed some bugs with Xenomai and CAN/peak
+
+	timers_xeno.c 1.3
+
+Fri Jun 16 14:44:23 CEST 2006	etisserant
+
+	SDO callbacks. Removed TimerLoop. Now call StartTimerLoop (non blocking) and StopTimerLoop
+
+	sdo.c 1.6
+	timers_driver.h 1.2
+	sdo.h 1.2
+	data.h 1.2
+	TestMasterSlave.c 1.3
+	timers_xeno.c 1.2
+	timers_unix.c 1.2
+	configure 1.6
+
+Fri Jun 16 14:24:59 CEST 2006	lbessard
+
+	Code clean-up and fixed xenomai compile problem
+
+	sync.c 1.2
+	sdo.c 1.5
+	TestMasterSlave.h 1.2
+	TestMasterSlave.c 1.2
+	configure 1.5
+
+Tue Jun 13 16:05:57 CEST 2006	lbessard
+
+	Some bugs found corrected
+
+	objdictedit.py 1.2
+	nodemanager.py 1.2
+
+Tue Jun 13 08:52:47 CEST 2006	lbessard
+
+	Bugs on gen_cfile.py reported by Errin Bechtel corrected
+
+	gen_cfile.py 1.4
+
+Tue Jun 06 15:02:57 CEST 2006	lbessard
+
+	*** empty log message ***
+
+	gen_cfile.py 1.3
+
+Tue May 30 23:17:59 CEST 2006	ppavel
+
+	The LinCAN option is listed as accepted one by configure --can option.
+
+	configure 1.4
+
+Tue May 30 23:13:59 CEST 2006	ppavel
+
+	Included interfacing code for LinCAN driver. The driver is selected at configure time by    ./configure --can=lincan
+
+	can_lincan.c 1.1
+	Makefile.in 1.1
+
+Mon May 29 08:57:53 CEST 2006	anonymous
+
+	Test
+
+	AUTHORS 1.2
+
+Fri May 26 21:24:17 CEST 2006	etisserant
+
+	Linux and BSD now use "unix" target. Generic is for driverless compilation.
+
+	Makefile.in 1.3
+	applicfg.h 1.1
+	can_driver.h 1.4
+	Makefile.in 1.2
+	Makefile.in 1.1
+	.cvsignore 1.1
+	configure 1.3
+
+Tue May 23 01:15:22 CEST 2006	oremeq
+
+	Modification of the dictionnary to support NVRAM. (Object 0x1010, 0x1011.)
+
+	TestSlave.od 1.2
+	TestSlave.h 1.2
+	TestSlave.c 1.2
+	TestMaster.od 1.2
+	TestMaster.h 1.2
+	TestMaster.c 1.2
+
+Mon May 22 09:46:29 CEST 2006	etisserant
+
+	NVRAM is not related ro CAN !!
+
+	Makefile.in 1.5
+
+Fri May 19 20:20:06 CEST 2006	oremeq
+
+	First version of NVRAM implemented on the file system for can_virtual
+
+	Makefile.in 1.4
+
+Thu May 18 21:54:24 CEST 2006	etisserant
+
+	Re-orginized led and nvram related code, for generic target.
+
+	can_driver.h 1.3
+	Makefile.in 1.3
+	Makefile.in 1.3
+	Makefile.in 1.3
+	configure 1.2
+
+Thu May 18 16:26:59 CEST 2006	dejoigny
+
+	déplacement de l'envoi du bootup
+
+	states.c 1.2
+
+Wed May 17 20:43:56 CEST 2006	dejoigny
+
+	Modifs mineures.
+
+	objacces.h 1.2
+	applicfg.h 1.2
+
+Wed May 17 20:40:17 CEST 2006	dejoigny
+
+	CANOPEN_BIG_ENDIAN :   fonctionne pour SDO et PDO.   SDO segmentés testés en upload et download. Semble ok.
+
+	sdo.c 1.4
+	objacces.c 1.7
+
+Wed May 17 15:01:30 CEST 2006	dejoigny
+
+	Bogue:big endian
+
+	objacces.c 1.6
+
+Wed May 17 10:52:20 CEST 2006	dejoigny
+
+	provisoire
+
+	objacces.c 1.5
+
+Tue May 16 17:29:08 CEST 2006	dejoigny
+
+	data.h manquant
+
+	interrupt.c 1.2
+
+Tue May 16 17:22:15 CEST 2006	dejoigny
+
+	correction bogue pour BIG_ENDIAN
+
+	objacces.c 1.4
+
+Tue May 16 17:20:24 CEST 2006	dejoigny
+
+	ajout filtrage msgs
+
+	candriver.h 1.2
+	canOpenDriver.c 1.2
+
+Tue May 16 17:18:56 CEST 2006	dejoigny
+
+	pas de debogue
+
+	sdo.c 1.3
+
+Mon May 15 08:02:47 CEST 2006	lbessard
+
+	Bug on number in hexa computed by gen_cfile corrected
+
+	gen_cfile.py 1.2
+
+Mon May 15 08:00:47 CEST 2006	etisserant
+
+	Updated manual
+
+	manual.odt 1.2
+
+Fri May 12 22:14:03 CEST 2006	oremeq
+
+	ADDED LED to TESTMASTERSLAVE. It looks nice! Some code for the NVRAM support
+
+	Makefile.in 1.2
+	can_driver.h 1.2
+	Makefile.in 1.2
+	Makefile.in 1.2
+	Makefile.in 1.2
+
+Thu May 11 13:52:43 CEST 2006	etisserant
+
+	Fixed Endianisation/ValueRange order in SetODentry
+
+	objacces.c 1.3
+
+Wed May 10 21:05:57 CEST 2006	etisserant
+
+	Commit some Fix from Francis on sdo.c and abjacces.c. Fix endianisation problems while accessing OD. Also fix SDO abord handling bug.
+
+	sdo.c 1.2
+	objacces.c 1.2
+
+Wed May 10 16:59:39 CEST 2006	etisserant
+
+	Commit a new cvs repo.
+
+	timers_driver.h 1.1
+	timer.h 1.1
+	sync.h 1.1
+	states.h 1.1
+	sdo.h 1.1
+	pdo.h 1.1
+	objdictdef.h 1.1
+	objacces.h 1.1
+	nmtSlave.h 1.1
+	nmtMaster.h 1.1
+	lifegrd.h 1.1
+	param.h 1.1
+	memory.x 1.1
+	interrupts.h 1.1
+	exit.h 1.1
+	def.h 1.1
+	data.h 1.1
+	can_driver.h 1.1
+	can.h 1.1
+	.cvsignore 1.1
+	TestSlave.od 1.1
+	TestSlave.h 1.1
+	TestSlave.c 1.1
+	TestMasterSlave.h 1.1
+	TestMasterSlave.c 1.1
+	TestMaster.od 1.1
+	TestMaster.h 1.1
+	TestMaster.c 1.1
+	Slave.h 1.1
+	Slave.c 1.1
+	Master.h 1.1
+	Master.c 1.1
+	Makefile.in 1.1
+	.cvsignore 1.1
+	ports.txt 1.1
+	ports.s 1.1
+	interrupt.c 1.1
+	canOpenDriver.c 1.1
+	Makefile.in 1.1
+	code_debug.txt 1.1
+	configure 1.1
+	Makefile.in 1.1
+	LICENCE 1.1
+	COPYING 1.1
+	CONTRIBUTORS 1.1
+	CHANGES 1.1
+	AUTHORS 1.1
+	.cvsignore 1.1
+	timer.c 1.1
+	sync.c 1.1
+	states.c 1.1
+	sdo.c 1.1
+	pdo.c 1.1
+	objacces.c 1.1
+	nmtSlave.c 1.1
+	nmtMaster.c 1.1
+	lifegrd.c 1.1
+	Makefile.in 1.1
+	.cvsignore 1.1
+	xml_in.py 1.1
+	objdictgen.py 1.1
+	objdictedit.sh 1.1
+	objdictedit.py 1.1
+	nodemanager.py 1.1
+	node.py 1.1
+	gen_cfile.py 1.1
+	example_objdict.xml 1.1
+	example_objdict.html 1.1
+	example_objdict.h 1.1
+	example_objdict.c 1.1
+	__init__.py 1.1
+	DS301_index.py 1.1
+	.cvsignore 1.1
+	objdict_Jaxe_cfg.xml 1.1
+	objdict.xsl 1.1
+	objdict.xsd 1.1
+	DS-419.prf 1.1
+	DS-418.prf 1.1
+	DS-410.prf 1.1
+	DS-408.prf 1.1
+	DS-406.prf 1.1
+	DS-404.prf 1.1
+	DS-401.prf 1.1
+	Makefile.in 1.1
+	.cvsignore 1.1
+	timerscfg.h 1.1
+	timerscfg.h 1.1
+	regbase.h 1.1
+	interrupt.h 1.1
+	error.h 1.1
+	candriver.h 1.1
+	canOpenDriver.h 1.1
+	alire.txt 1.1
+	regs.h 1.1
+	portsaccess.h 1.1
+	ports_def.h 1.1
+	ports.h 1.1
+	applicfg.h 1.1
+	vectors.s 1.1
+	trace32_flash_programmer.cmm 1.1
+	trace32_flash_debug_sans_init.cmm 1.1
+	trace32_flash_debug.cmm 1.1
+	readme.txt 1.1
+	objdict.od 1.1
+	objdict.h 1.1
+	objdict.c 1.1
+	appli.c 1.1
+	Makefile.in 1.1
+	Makefile.in 1.1
+	.cvsignore 1.1
+	timers_xeno.c 1.1
+	Makefile.in 1.1
+	.cvsignore 1.1
+	timers_unix.c 1.1
+	Makefile.in 1.1
+	.cvsignore 1.1
+	can_virtual.c 1.1
+	Makefile.in 1.1
+	.cvsignore 1.1
+	Makefile.in 1.1
+	.cvsignore 1.1
+	manual.odt 1.1
+	

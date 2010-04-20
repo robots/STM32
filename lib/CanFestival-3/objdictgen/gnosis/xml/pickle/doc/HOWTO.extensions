@@ -1,0 +1,95 @@
+The package gnosis.xml.pickle provides two different ways for you
+to add support for pickling of non-builtin types:
+
+    1. __getstate__()/__setstate__() methods
+    2. Mutator objects
+
+__getstate__()/__setstate__() are part of the standard pickle
+protocol and are documented in the Python manual. (xml_pickle is
+compatible with the internal protocols of the standard pickle module).
+
+This file documents Mutator objects.
+
+An obvious question is:  "Which method do I use?"
+
+If you are xml_pickling an object that already supports the standard
+pickle protocol, then you probably don't have to do anything - __getstate__
+and __setstate__ are supported automatically. "Most" classes should
+already support the standard pickle protocol.
+
+On the other hand, if you are xml_pickling an object that can't
+be pickled, you would use a Mutator to transform the object into
+something that can be pickled. Also, using a Mutator gives you
+more control over how objects are represented in the XML stream,
+so you can create "pretty-printed" representations, etc.
+
+To create a mutator, you derive a class from XMLP_Mutator. Your
+mutator object is required to define two functions:
+
+   from gnosis.xml.pickle.ext import XMLP_Mutator, XMLP_Mutated
+   class myMutator(XMLP_Mutator):
+         def mutate(self,obj):
+            # return a mutated version of obj as an XMLP_Mutated object
+
+         def unmutate(self,mobj):
+            # take mutated object mobj and recreate obj
+            # note: mobj is of type XMLP_Mutated
+
+To make up a silly example, here is a mutator that mutates
+integers into strings:
+
+   from gnosis.xml.pickle.ext import XMLP_Mutator, XMLP_Mutated
+   import gnosis.xml.pickle.ext as mutate
+   import string
+   class silly_mutator(XMLP_Mutator):
+        def mutate(self,number):
+            return XMLP_Mutated( "%d" % number )
+
+        def unmutate(self,mobj):
+            # note: mobj.obj is the string we created above
+            return string.atoi(mobj.obj)
+
+Now, to add silly_mutator to xml_pickle, you do:
+
+    m = silly_mutator( IntType, "silly_string", in_body=1 )
+    mutate.add_mutator( m )
+
+    Explanation:
+       The parameter "IntType" says that we want to catch integers.
+       "silly_string" will be the typename in the XML stream.
+       "in_body=1" tells xml_pickle to place the value string in the body
+        of the tag.
+
+        examples:
+          in_body = 1:
+            <attr name="foo" type="silly_string"> Value goes here </attr>
+          in_body = 0:
+            <attr name="foo" type="silly_string" value="Value goes here" />
+
+        in_body is only applicable for Mutators that return a numerical or
+        string value.
+
+In addition to the two required functions "mutatate" and "unmutate", a
+Mutator can define two additional functions:
+
+       def wants_obj(self,obj):
+           # return 1 if we want to mutate obj, 0 if not.
+
+       def wants_mutated(self,mobj):
+           # return 1 if we can unmutate mobj, 0 if not
+
+By default, a Mutator will be asked to mutate/unmutate all objects of
+the type it registered ("IntType", in our silly example). You would
+only need to override wants_obj/wants_mutated to provide specialized
+sub-type handling (based on content, for example). test_mutators.py
+shows examples of how to do this.
+
+Advanced usage:
+---------------
+
+It is perfectly legal to register multiple mutators for each type,
+or multiple mutators for the same typetag.  In that case, the mutators
+are chained together, and each searched until one says "I want to
+handle this object/mutated_object".  Mutators registered later are
+searched first.  See "test_mutators.py" for several examples.
+

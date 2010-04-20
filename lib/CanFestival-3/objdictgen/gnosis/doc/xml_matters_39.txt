@@ -1,0 +1,478 @@
+XML MATTERS #39: Getting the most out of gnosis.xml.objectify
+Using utility functions for enhanced object behavior
+
+David Mertz, Ph.D.
+Protagonist, Gnosis Software, Inc.
+November 2004
+
+    The XML binding [gnosis.xml.objectify] was designed, in many ways,
+    more as a toolkit than as a final tool. But this leaves some
+    (potential) users confused about how to specialize it for some
+    common tasks. This article shows readers how very thin wrappers can
+    customize gnosis.xml.objectify to perform actions such as: (a) XPath
+    access to child objects; (b) Automatically reserialize objects to
+    XML; (c) Modify the syntax of access to nodes. Some of these
+    techniques involve rather trivial specialization of provided parent
+    classes. Others involve small utility functions.
+
+INTRODUCTION
+------------------------------------------------------------------------
+
+  Python XML bindings seem to pop up almost every day; not because of
+  anything missing in existing libraries like [gnosis.xml.objectify] or
+  [elementtree], but simply out of "Not Invented Here" syndrome. The
+  author continues to feel that his own gnosis.xml.objectify--the
+  -first- of these tools to be developed--continues to be the most
+  versatile and Pythonic binding available (and also one of the fastest
+  and most memory friendly). Unfortunately, the multiplication of
+  just-slightly-different libraries for the same purpose is an
+  affliction Python suffers in several other areas as well.
+
+  In part, developers invent their own tools simply because they do not
+  immediately see how to accomplish goals in the existing tools.  Let us
+  remedy that, in part, relative to [gnosis.xml.objectify].
+
+The gnosis.xml.objectify philosophy.
+
+  My goal in creating [gnosis.xml.objectify] was to provide a module
+  that transforms that -data- in XML documents into completely "native"
+  Python objects. In particular, it is not very "Pythonic" to access
+  data using -getters- and -setters- or other similar methods. In Java
+  and some other languages you do things this way--and largely as a
+  result of the Java style, this is how you do things in DOM, even in
+  Python.
+
+  For [gnosis.xml.objectify], all the data that comes from an XML
+  documents--whether from element bodies or from XML attributes--is
+  simply data in object attributes. If a given object has multiple
+  children with the same name, the attribute points to a list of
+  like-named children. But even if there happens to only be one child
+  with a given name, that one thing is kind enough to act like a list
+  for iteration purposes.  When accessing a [gnosis.xml.objectify]
+  object, the simplest thing that could possibly work almost always
+  -does- work.
+
+  Here is a very quick primer/example for readers new to the library:
+
+      >>> from gnosis.xml.objectify import make_instance
+      >>> xml = "<foo><bar>Text</bar><baz a1='bat'/><baz>blip</baz></foo>"
+      >>> foo = make_instance(xml)
+      >>> foo
+      <foo id="48b170">
+      >>> foo.bar
+      <bar id="48b300">
+      >>> foo.baz
+      [<baz id="48b210">, <baz id="48b030">]
+      >>> for bar in foo.bar: print bar
+      ...
+      <bar id="48b300">
+      >>> foo.baz[0].a1
+      u'bat'
+      >>> foo.bar.PCDATA
+      u'Text'
+      >>> foo.bar[0].PCDATA
+      u'Text'
+
+What gnosis.xml.objectify does not (did not) do.
+
+  The node objects in [gnosis.xml.objectify] trees are, by design, quite
+  dumb. Yes, they print moderately nice looking representations of
+  themselves; and single instances also act list-like when appropriate,
+  but instance-like otherwise.  But generally, node objects eschew any
+  special methods or attributes--or at least they do so unless you
+  decide to program your own special behavior into particular node types,
+  specified by their element name.  For one thing, any methods I might
+  have added to node objects would potentionally conflict with tagnames
+  in the generic XML documents [gnosis.xml.objectify] parses.  But more
+  importantly, I believe Python is natively a perfectly good language
+  (excellent, in fact): so you can and should use exactly the same
+  generic techniques by which you work with any old object on ones that
+  happen to have been generated from XML sources.
+
+  However, I have found--particularly of late--that the very flexibility
+  of [gnosis.xml.objectify] gives some users that false impression that
+  they cannot achieve the constrained goals that some more XML-oriented
+  bindings provide as default behaviors. To address this, I have added a
+  subpackage [gnosis.xml.objectify.utils] to the Gnosis Utilities
+  package to illustrate several of the most-requested XML-oriented
+  usages.  However, these utilities, while genuinely useful as provided,
+  are still intended more as examples of what you can do than as
+  "official" APIs for [gnosis.xml.objectify].  The idea here is that
+  [gnosis.xml.objectify] does not -have- an API, except the API of
+  Python itself.
+
+PERFORMING XPATH SEARCHES
+------------------------------------------------------------------------
+
+  One of the perceived strengths of Fredrik Lundh's [elementtree] and
+  Uche Ogbuji's [anobind] is their use of XPath-like node-search
+  methods.  To my mind, XPath syntax is still somewhat overly
+  XML-oriented; but enough users have requested this that I decided to
+  add a utility function 'gnosis.xml.objectify.utils.XPath()' to Gnosis
+  Utilities.  In about 50 lines I was able to implement a significant
+  -superset- of the XPath support in either [elementtree] or [anobind],
+  though not the complete XPath specification which is large.
+
+  Specifically, I enabled the following XPath features:
+
+    * Named node search by specifying a tagname;
+
+    * Recursive node search using the '//' delimiter;
+
+    * Wildcard searches using the '*' symbol;
+
+    * Text node search using the 'text()' pseudo-function;
+
+    * Attribute search using the '@' prefix;
+
+    * Wildcare attribute search using the '@*' symbol;
+
+    * Node indexing/slicing.
+
+  Moreover, being Python, I allow users to use not only XPath simple
+  numeric indexing, but also a general slice notation.  Since XPath is
+  one-based in indexing, and Python is zero-based, I emphasize the
+  non-Python semantics by indicating slices differently in a
+  pseudo-XPath: '/tagname[2..5]', for example, indicates the inclusive
+  range from the second to the fifth '<tagname>' element in the document
+  root.
+
+  While I was at it, I wrote the whole thing as a lazy iterator so that
+  there is no need to instantiate a large node-list if you do not need
+  one.  Of course, if you want an instantiated node-list, just use
+  'list(XPath(obj,path))' to get one.
+
+  However, even though I recognize the coolness of it, my simple
+  function does not bother implementing predicative indexing. There is
+  nothing conceptually difficult about implementing the remaining bits
+  of full XPath; I just did not find it necessary (or concise) as
+  illustration.  The test script 'test_xpath.py' that will be included
+  in future Gnosis Utilities distributions, for example, includes the
+  following test XPaths (and outputs correctly on each):
+
+      #-------------- Patterns tested in text_xpath.py ----------------#
+      patterns = '''/bar  //bar  //*  /baz/*/bar
+                    /bar[2]  //bar[2..4]
+                    //@a1  //bar/@a1  /baz/@*  //@*
+                    baz//bar/text()  /baz/text()[3]'''
+
+Node walking in four lines.
+
+  As a support function, a created a little recursive traversal function
+  to walk all the nodes of a [gnosis.xml.objectify] object.  You can use
+  it by itself if you like.  It might be useful in performing your own
+  non-XPath filtering on a tree.  Of course, the following calls should
+  be equivalent: 'walk_xo(obj)' and 'XPath(o,"//*")' (the first will
+  perform slightly less housekeeping.  The function looks like:
+
+      #---------- Compact, lazy, recursive node traversal -------------#
+      def walk_xo(o):
+          yield o
+          for node in children(o):
+              for child in walk_xo(node):
+                  yield child
+
+  Simple, huh? Another small support function just parses out index
+  values if they are given within a (pseudo-)XPath.  I will not bother
+  reproducing that here.
+
+An (almost) full XPath wrapper.
+
+  The trick in making the function 'XPath()' so concise is the fact it
+  has so little need to worry about XML -per se-.  Most of the work here
+  is just in making sense of the XPath string itself.  Some existing
+  one-line wrapper functions like 'children()', 'text()' and
+  'attributes()' make the code look a bit nicer, but they are themselves
+  extremely simple filters.  In other words, you could use something
+  very close to this same function against objects that never derived
+  from XML.
+
+      #------ The gnosis.xml.objectify.utils.XPath() function ---------#
+      def XPath(o, path):
+          "Find node(s) within an _XO_ object"
+          path = path.replace('//','/!!') # Placeholder hack for easy splitting
+          if path.startswith('/'):        # No need for init / since node==root
+              path = path[1:]
+          if path.startswith('!!'):       # Recursive path fragment
+              path, start, stop = indices(path)
+              i = 0
+              for node in walk_xo(o):
+                  if i >= stop: return
+                  for match in XPath(node, path[2:]):
+                      if start <= i < stop:
+                          yield match
+                      i += 1
+          elif '/' in path[1:]:           # Compound, non-recursive
+              head, tail = path.split('/', 1)
+              for node in XPath(o, head):
+                  for match in XPath(node, tail):
+                      yield match
+          else:                           # Atomic path fragment
+              path, start, stop = indices(path)
+              if path=="*":               # Node wildcard
+                  for node in islice(children(o), start, stop):
+                      yield node
+              elif path=="text()":        # Node text(s)
+                  for s in islice(text(o), start, stop):
+                      yield s
+              elif path.startswith('@*'): # All node attributes
+                  for attr in attributes(o):
+                      yield attr
+              elif path.startswith('@'):  # Specific node attribute
+                  for attr in attributes(o):
+                      if attr[0]==path[1:]:
+                          yield attr
+              elif hasattr(o, path):      # Named node type
+                  for node in islice(getattr(o, path), start, stop):
+                      yield node
+
+SERIALIZING TO XML
+------------------------------------------------------------------------
+
+  From time to time, users have been bothered by the fact that
+  [gnosis.xml.objectify] does not reserialize its objects to XML.  In
+  comparison with other Python XML bindings, this is said to be a
+  weakness.  Here I disagree: those other bindings still force you to
+  think of their Python objects in XML terms, not Python terms, in my
+  opinion.  Only "blessed" objects/attributes are serialized, not
+  everything a Python object might -have-.
+
+  For example, in [elmenttree] you can perform steps like:
+
+      >>> from elementtree import ElementTree
+      >>> et = ElementTree.parse("xpath.xml")
+      >>> et.write(sys.stdout)
+
+  But if you change the object 'et' (or any child nodes you might
+  generate with methods like '.getroot()', '.find()', or '.findall()'),
+  your additions are not generally serializable.  For example, this does
+  not change the serialization at all, even though it changes the
+  object:
+
+      >>> et.new = 'flaz'
+      >>> et.getroot().more = 123
+      >>> et.write(sys.stdout).
+
+  Similarly, with [anobind] and its '.unbind()' method. In those
+  libaries you can add special XML-oriented nodes using API methods like
+  '.append()', '.insert()', or '.remove()'. But then,
+  [gnosis.xml.objectify] can also add "blessed" attributes using its
+  'gnosis.xml.objectify.addChild()' utility function (and using
+  'gnosis.xml.objectify.createPyObj()' to make a special '_XO_' object
+  to add.
+
+  If you -just- want generic serialization [gnosis.xml.objectify]
+  objects, perhaps with a few values changed from the original XML, you
+  can write a utility function to do this in 10 lines:
+
+      #------------------ Generic XML serialization -------------------#
+      def write_xml(o, out=stdout):
+          "Serialize an _XO_ object back into XML"
+          out.write("<%s" % tagname(o))
+          for attr in attributes(o):
+              out.write(' %s=%s' % attr)
+          out.write('>')
+          for node in content(o):
+              if type(node) in StringTypes:
+                  out.write(node)
+              else:
+                  write_xml(node, out=out)
+          out.write("</%s>" % tagname(o))
+
+  But to my mind, the real power of working with objects in Python comes
+  in non-generic serialization and transformation. Rather than just dump
+  every attribute back to XML, you might want to filter and massage
+  nodes before writing them. Of course, just what you manipulate depends
+  on your application requirements.
+
+CUSTOM CONTAINER OBJECTS
+------------------------------------------------------------------------
+
+  An approach to XML binding taken by Dave Kuhlman's [generateDS], and
+  by some other less mature bindings, is to require custom Python
+  classes for each XML element type in the document(s) being processed.
+  In Kuhlman's case, these custom classes are generated from
+  corresponding W3C XML Schemas (but only allow a subset of the full WXS
+  specification).  In contrast, [gnosis.xml.objectify]--along with
+  [elementtree], [anobind] and some others--will bind any old XML
+  document without any special programming.
+
+  However, [gnosis.xml.objectify], like [anobind] but unlike
+  [elementtree], lets you create custom node classes if you -want- to
+  use them.  In fact, you can perfectly well substitute the base class
+  for -every- node object, giving your whole application custom
+  behaviors.
+
+  I think beginning users of [gnosis.xml.objectify] have been
+  intimidated by the idea of specializing classes per-tagname.  A few
+  examples show just how non-threatening it really is.
+
+Redefining the _XO_ base class.
+
+  Whenever you customize a base class, you need to "inject" the next
+  class back into the 'gnosis.xml.objectify' namespace. This step is
+  slightly "magic", but not difficult to do. I might give the step a
+  friendlier name in a wrapper function in the future, but the style
+  emphasizes that you are changing the module itself. For example, only
+  tagnames are "mangled" in Gnosis Utilities 1.1.1, but not attribute
+  names. This makes it more difficult than need be to access attributes
+  whose name contains characters disallowed in Python variables. One fix
+  for this would be to also allow dictionary-like access to these
+  attributes:
+
+      #----------- Adding dictionary-like attribute access ------------#
+      >>> import gnosis.xml.objectify
+      >>> class newXO(gnosis.xml.objectify._XO_):
+      ...     def __getitem__(self, key):
+      ...         return getattr(self,key)
+      ...
+      >>> gnosis.xml.objectify._XO_ = newXO
+      >>> o = make_instance('<o><my-doc my-name="david">Stuff</my-doc></o>')
+      >>> print o.my__doc['my-name']
+      david
+      >>> getattr(o.my__doc,'my-name')  # Works without custom base
+      u'david'
+
+Redefining per-tagname node classes.
+
+  Redefining base classes is probably of greatest utility for specific
+  per-tagname classes that you know certain things about. For example,
+  if a certain element is always a leaf node in a particular document
+  type (and has no XML attributes), you might want to refer to its
+  PCDATA just by the node name itself.  Of course, if the input XML is not
+  structured in the way you assume, accessing children is more difficult
+  in this case.   One way to program this behavior is:
+
+        >>> from gnosis.xml.objectify import make_instance
+        >>> xml = '''<group>
+        ...            <var><description>foo</description></var>
+        ...            <var><description>bar</description></var>
+        ...          </group>'''
+        group = make_instance(xml)
+        print group[0].variable[0].description
+        <description id="23cf2c">
+        print group[0].variable[0].description.PCDATA
+        foo
+        >>> import gnosis.xml.objectify
+        >>> class AutoPCDATA(gnosis.xml.objectify._XO_):
+        ...     def __repr__(self):
+        ...         return self.PCDATA
+        ...
+        >>> gnosis.xml.objectify._XO_description = AutoPCDATA
+        >>> group = make_instance(xml)
+        >>> print group[0].variable[0].description
+        foo
+
+   You might be even more clever in 'AutoPCDATA' by checking objects for
+   what other attributes than '.PCDATA' they have, and returning
+   different values for the different cases.
+
+   Another application-specific approach to custom classes would perform
+   calculated access. One of the several Python bindings called
+   'XMLObject' gives an example of data about a family with multiple
+   members:
+
+      #---------------------- Family tree as XML ----------------------#
+      <Family>
+        <Member Name="Abe" DOB="3/31/42" />
+        <Member Name="Betty" DOB="2/4/49" />
+        <Member Name="Edith" Father="Abe" Mother="Betty" DOB="8/30/80" />
+        <Member Name="Janet" Father="Frank" Mother="Edith" DOB="1/17/03" />
+      </Family>
+
+   It might be handy to access family members just by name, without
+   bothering with the whole XML hierarchy.  One obvious approach is
+   with a custom 'Family' class:
+
+      #-------- Dictionary-like access into a child attribute ---------#
+      class Family(gnosis.xml.objectify._XO_):
+          def __getitem__(self, key):
+              for member in self.Member:
+                  if member.Name = key:
+                      return member
+      gnosis.xml.objectify._XO_Family = Family
+      Family = make_instance('family.xml')
+      print Family['Janet'].DOB
+
+  If names are not quite unique, however, you may want to elaborate on
+  this particular approach.
+
+WRAPPING UP
+------------------------------------------------------------------------
+
+  The general techniques for wrapping [gnosis.xml.objectify] shown in
+  this article are meant mostly as examples for more specific
+  customizations by users. You can obtain an great flexibility and power
+  by keeping APIs highly open and minimally specified, leaving
+  customization to an application level rather than a library level.
+
+RESOURCES
+------------------------------------------------------------------------
+
+  David has written several prior articles for IBM developerWorks that
+  touch on the evolving [gnosis.xml.objectify]:
+
+  _XML Matters_: On the 'Pythonic' treatment of XML documents as objects(II)
+
+    http://www-106.ibm.com/developerworks/xml/library/xml-matters2/index.html
+
+  _XML Matters_: Revisiting xml_pickle and xml_objectify
+
+    http://www-106.ibm.com/developerworks/xml/library/x-matters11.html
+
+  Fredrik Lundh's [elementtree] library is a popular Python XML binding
+  tool.  Its homepage is:
+
+    http://effbot.org/zone/element-index.htm
+
+  David has discussed [elementtree] in a prior _XML Matters_
+  installment:
+
+    http://www-128.ibm.com/developerworks/xml/library/x-matters28/index.html
+
+  Dave Kuhlman's [generateDS] module has a homepage at:
+
+    http://www.rexx.com/~dkuhlman/#generateDS
+
+  He wrote a nice essay comparing [generateDS] with
+  [gnosis.xml.objectify].  I believe Gnosis Utilities has grown several
+  useful additions since then though (but so, probably has
+  [generateDS]):
+
+    http://www.rexx.com/~dkuhlman/gnosis_generateds.html
+
+  Uche Ogbuji has created a Python XML binding called [anobind] whose
+  homepage is:
+
+    http://uche.ogbuji.net/uche.ogbuji.net/tech/4Suite/anobind/
+
+  Also of note are Uche's ongoing discussions of many XML binding
+  libraries:
+
+    On Anobind:
+    http://www.xml.com/pub/a/2003/08/13/py-xml.html
+
+    On [gnosis.xml.objectify]:
+    http://www.xml.com/pub/a/2003/07/02/py-xml.html
+
+    On [generateDS]:
+    http://www.xml.com/pub/a/2003/06/11/py-xml.html
+
+    On ElementTree:
+    http://www.xml.com/pub/a/2003/02/12/py-xml.html
+
+  The XPath Language (XPath) Version 1.0:
+
+    http://www.w3.org/TR/xpath#path-abbrev
+
+
+ABOUT THE AUTHOR
+------------------------------------------------------------------------
+
+  {Picture of Author: http://gnosis.cx/cgi-bin/img_dqm.cgi}
+  To David Mertz, all the world is a stage; and his career is devoted to
+  providing marginal staging instructions. David may be reached at
+  mertz@gnosis.cx; his life pored over at http://gnosis.cx/publish/.
+  Suggestions and recommendations on this, past, or future, columns are
+  welcomed. Check out David's book _Text Processing in Python_ at
+  http//gnosis.cx/TPiP/.

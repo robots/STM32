@@ -1,0 +1,425 @@
+(c) WestTech, 2002 -- may be freely distributed if unaltered
+
+XML MATTERS #20: Squeezing OOP data into XML rules
+The gnosis.xml.validity Library
+
+David Mertz, Ph.D.
+Subsumer, Gnosis Software, Inc.
+May, 2002
+
+    Most hitherto existing XML API's have enforced
+    well-formedness at a programmatic level, but hardly any can
+    guarantee validity.  This is a serious weakness in the whole
+    field of XML processing. This installment discusses its
+    author's [gnosis.xml.validity] library for enforcing validity
+    in Python objects intended for XML serialization.
+
+
+IMPLEMENTING CONSTRAINTS?
+------------------------------------------------------------------------
+
+  A tip I wrote previously for IBM developerWorks' XML Zone took
+  a conceputal look at reconciling object-oriented programming
+  techiques with XML validity contraints.  This installment of
+  _XML Matters_ presents an early version of an actual Python
+  module for doing it.  One could create an analogous capability
+  in other programming languages, but Python provides
+  particularly versatile reflection mechanisms, and allows clear
+  expression of validity constraints.
+
+  On the face of it, Python--with its extremely dynamic (albeit
+  strict) typing--might seem like a strange choice for
+  implementing what is, essentially, an elaborate type system.
+  But any oddness one might perceive is superficial.  In fact,
+  the type systems of languages like Java, C++, or C#, while
+  static, are far too impoverished to offer much meaningful help
+  to XML validity constraints.  A pure functional language like
+  Haskell might offer type hierarchies, discriminated unions,
+  quantification and existential types, and so on, but OOP
+  languages typically lack these things.  In statically typed OOP
+  languages, one would have to build just as much custom
+  validation into a library as does the currently discussed
+  Python library.
+
+  The module [gnosis.xml.validity] can helpfully be contrasted
+  with several other XML-related.  Two other libraries that have
+  been incorporated into the author's [gnosis.xml] package,
+  were discussed in earlier articles.  [gnosis.xml.pickle] is
+  able to produce a specialized XML serialization of any Python
+  object whatsoever.  As with Python's standard [pickle] and
+  [cPickle] modules, this provides a way to save and restore
+  objects.  [gnosis.xml.objectify] operates in a reverse
+  direction: given an arbitrary XML document, we can generate a
+  "Pythonic" object (with a slight loss of information about the
+  original XML).
+
+  Python standard library includes support for DOM and SAX
+  processing of XML documents.  Widely used 3rd party Python
+  packages extend the support to include XSLT processing.  DOM
+  (specifically 'xml.dom.minidom') offers a rather heavy API for
+  OOP-style manipulation of XML documents--with methods common
+  across DOM implementation in many programming languages.  SAX
+  treats an XML document as a series of parsing events, and
+  basically allows a procedural programming style.  XSLT declares
+  a set of rules for transforming an XML document into something
+  else (such as a different XML document).
+
+  All of these libraries are useful, but none of them prevent an
+  application from modifying aN XML-representation object in ways
+  that break the validity of the underlying XML.  For example,
+  deleting, adding, or moving a DOM node can easily create a DOM
+  hierarchy that cannot be dumped into valid XML document.
+
+WHAT MAKES UP VALIDITY?
+------------------------------------------------------------------------
+
+  The basic idea of XML validity is to specify -what- can occur
+  inside an element, how -often- it can occur, and what
+  -alternatives- exist about what can occur.  As well, when
+  multiple things can occur inside an element, the order of
+  occurence can be specified (or left open, as needed).  DTD's
+  differ somewhat from W3C XML Schemas in what they can express,
+  but the jist is the same.  Let us look at a highly simplified
+  hypothetical 'dissertation.dtd':
+
+      #---- A "dissertation" DTD with all basic constraints ---#
+      <!ELEMENT dissertation (dedication?, chapter+, appendix*)>
+      <!ELEMENT dedication (#PCDATA)>
+      <!ELEMENT chapter (title, paragraph+)>
+      <!ELEMENT title (#PCDATA)>
+      <!ELEMENT paragraph (#PCDATA | figure | table)+>
+      <!ELEMENT figure EMPTY>
+      <!ELEMENT table EMPTY>
+      <!ELEMENT appendix (#PCDATA)>
+
+  In other words, a dissertation -may- contain -one- dedication,
+  -must- contain (one or more) chapters, and -may- contain (zero
+  or more) appendixes.  The various subelement occur in the
+  listed order (if at all).  Some elements contain only character
+  data.  In the case of the '<paragraph>' tag, it may contain
+  -either- character data -or- a '<figure>' subelement -or- a
+  '<table>' subelement, or any combination of each of them.
+  Structures can nest, but every basic validity concept is in the
+  example.
+
+  What the [gnosis.xml.validity] module does is let you create,
+  e.g., a 'disseration' Python object that can -only- represent a
+  valid disseration.  Moreover, when transformed into XML--using
+  the 'print' command or 'str()' function--the XML automatically
+  matches the desired DTD.
+
+
+VALIDITY IN ACTION
+------------------------------------------------------------------------
+
+  The easiest way to understand what [gnosis.xml.validity] does
+  is to see it used.  In attitude, [gnosis.xml.validity] owes a
+  heritage to the [Spark] parser.  That is, "validity classes"
+  are defined using Python reflection rather than traditional
+  sequential programming.  The symmetry is interesting inasmuch
+  as [Spark] and [gnosis.xml.validity] in a sense do exactly
+  opposite things--the former assumes rule-based structure in
+  external texts, the latter enforces it in internal objects.
+
+  A validity class is based very closely on a corresponding DTD
+  or XML Schema.  A class simply inherits from a relevant
+  validity type, then specializes (if necessary) by adding a
+  class attribute.  A convention is used that any class named
+  with an initial underscore represents a structure that does not
+  have a corresponding tag.  For example, a <paragraph> element
+  in a disseration can contain a collection of PCDATA and <figure>
+  and <table> elements.  The disjunction type that is assembled
+  into a <paragraph> collection does not itself have an XML tag.
+  Therefore, this disjuction type is named '_mixedpara' in the
+  below example:
+
+      #------------------- dissertation.py --------------------#
+      from gnosis.xml.validity import *
+      class appendix(PCDATA):   pass
+      class table(EMPTY):       pass
+      class figure(EMPTY):      pass
+      class _mixedpara(Or):     _disjoins = (PCDATA, figure, table)
+      class paragraph(Some):    _type = _mixedpara
+      class title(PCDATA):      pass
+      class _paras(Some):       _type = paragraph
+      class chapter(Seq):       _order = (title, _paras)
+      class dedication(PCDATA): pass
+      class _apps(Any):         _type = appendix
+      class _chaps(Some):       _type = chapter
+      class _dedi(Maybe):       _type = dedication
+      class dissertation(Seq):  _order = (_dedi, _chaps, _apps)
+
+  As with a DTD, the top level of a particular object/XML
+  document can be any tag whose rules are given.  'dissertation'
+  happens to be the highest level available here, but one can
+  create documents of lower types also.  Let us take a look:
+
+      #--------- Creating a valid disseration chapter ---------#
+      >>> from dissertation import chapter, title, _paras, paragraph, PCDATA
+      >>> chap1 = chapter(( title(PCDATA('About Validity')),
+      ...                   _paras([paragraph(PCDATA('It is a good thing'))])
+      ...                ))
+      >>> print chap1
+      <chapter><title>About Validity</title>
+      <paragraph>It is a good thing</paragraph>
+      </chapter>
+
+  A <chapter> is initialized with a tuple containing a <title>
+  and a '_paras' list. A <title>, in turn is initialized with
+  some 'PCDATA', which is itself initialized with a (Unicode)
+  string.  Likewise, a '_paras' list contains some <paragraph>'s,
+  which are themselves initialized with 'PCDATA'.  Once an
+  appropriate object exists, it simply prints itself as valid
+  XML.
+
+  All of those nested initialization, although obeying the
+  details of the specified DTD validity rules, are rather
+  cumbersome to bother with.  Therefore [gnosis.xml.validity]
+  allows a -much- friendlier style for initialization.  Whenever
+  a particular type is required, the initializer for that type is
+  transparently *lifted* into the type itself.  Moreover, when a
+  "quantification" type would normally be initialized by a list
+  of things of the right type, specifying just one thing *lifts*
+  the thing into a length one list of the thing.  "Lifting" is
+  recursive.  One note is that 'Seq' types that use
+  lifting must use the factory function 'LiftSeq()', but other
+  types can lift their own initialization arguments (the details
+  have to do with "new-style" inheritance from immutable Python
+  types).  This sounds complicated, but it is enormously obvious
+  in practice:
+
+      >>> from dissertation import LiftSeq
+      >>> chap1 = LiftSeq(chapter,('About Validity','It is a good thing'))
+      >>> print chap1
+      <chapter><title>About Validity</title>
+      <paragraph>It is a good thing</paragraph>
+      </chapter>
+
+
+VALIDITY ENFORCEMENT
+------------------------------------------------------------------------
+
+  So far, we have created some valid XML/objects.  But so what? We
+  could have also just written the valid XML text by hand.  The
+  value of [gnosis.xml.validity] comes when you want to modify an
+  object in either valid or invalid ways.  For example, here is a
+  valid modification:
+
+      #---------- Adding a paragraph (valid operation) --------#
+      >>> paras_ch1 = chap1[1]
+      >>> paras_ch1 += [paragraph('OOP can enforce it')]
+      >>> print chap1
+      <chapter><title>About Validity</title>
+      <paragraph>It is a good thing</paragraph>
+      <paragraph>OOP can enforce it</paragraph>
+      </chapter>
+
+  What happens, to the contrary, when we try something that is
+  not allowed?  For example, a dissertation can have at most one
+  dedication (at least as we have specified the example):
+
+      #----------- Creating an optional dedication ------------#
+      >>> from dissertation import _dedi, dedication
+      >>> Maybe_dedication = _dedi([])
+      >>> print Maybe_dedication
+
+      >>> Maybe_dedication.append(dedication("To Mom."))
+      >>> print Maybe_dedication
+      <dedication>To Mom.</dedication>
+
+      >>> Maybe_dedication.append(dedication("Also to Dad."))
+      Traceback (most recent call last):
+        File "<pyshell#71>", line 1, in ?
+          Maybe_dedication.append(dedication("Also to Dad."))
+        File "validity.py", line 140, in append
+          raise LengthError, self.length_message % self._tag
+      LengthError: List <_dedi> must have length zero or one
+
+  Likewise, one cannot include something of the wrong type, even
+  if the length of a quantification would be OK:
+
+      #-------- Attempting to add item of wrong type ----------#
+      >>> from gnosis.xml.validity import ValidityError
+      >>> try:
+      ...     paras_ch1.append(dedication("To my advisor"))
+      ... except ValidityError, x:
+      ....    print x
+      Items in _paras must be of type <class 'dissertation.paragraph'>
+      (not <class 'dissertation.dedication'>)
+
+  All the exceptions that might be raised by violating
+  constraints are descended from 'ValidityError'.  Programming
+  using the [gnosis.xml.validity] library will probably involve
+  wrapping many operation in 'try/except' blocks; it should not
+  be possible to create an invalid object by attempting a
+  disallowed operation.
+
+
+SOME WORDS ON THE IMPLEMENTATION
+------------------------------------------------------------------------
+
+  A first note is that [gnosis.xml.validity] is strictly for
+  Python 2.2+.  Although it is possible to implement it in
+  earlier Python versions, I felt this project makes a good
+  testing ground for some newer Python features.  Specifically,
+  the library takes advantage of the type/class unification, and
+  new-style classes.  I have some ideas about doing some tricky
+  stuff with metaclasses in future library versions, and I might
+  even work in properties and slots.
+
+  The design of [gnosis.xml.validity] relies heavily on Python's
+  introspection/reflection capabilities.  Several abstract
+  classes comprise the main functionality.  Each of these classes
+  must have concrete children to actually -do- anything, although
+  all the children need to implement is (at most) one class
+  attribute each.  When an XML tag corresponds to a class, the
+  tag name is taken directly from the class name. As noted
+  earlier, if a class name begins with an underscore, it has no
+  corresponding XML tag.  The basic rule here is that any
+  "tagged" validity class serializes itself with surrounding
+  open/close tags; a "tagless" class just serializes its raw
+  content (which might, however, include items that themselves
+  have tags).  A limitation this scheme imposes is that
+  [gnosis.xml.validity] cannot work with DTD's specifying XML
+  tags with lead underscores; this limitation -could- be removed
+  in future versions, but probably will not unless users have a
+  need for this.
+
+  The base abstract classes consist of the following:
+
+  *PCDATA*: This one may be used directly, and so is not really
+  abstract.  An XML element that -contains- PCDATA should inherit
+  from this, but need not provide any further specialization.
+  But in an alternation list for the 'Or' type, one simply lists
+  'PCDATA'.  This is very closely modelled on DTD syntax.  I
+  recommend listing 'PCDATA' first in such a list (as DTD's
+  require), but that is not currently mandatory.
+
+  *EMPTY*: Also modelled on DTD syntax.  As with 'PCDATA', this
+  class should be inherited from, but no further specialization
+  is required.
+
+  *Or*: A child of 'Or' must add a '_disjoins' tuple as a class
+  attribute.  Normally, that one attribute will be the whole
+  implementation.  Listed in the tuple should be other validity
+  classes.  Conceptually, a disjunction should involve two or
+  more things, but no error is currently raised if there are
+  fewer disjoins.
+
+  *Seq*: A child of 'Seq' must add an '_order' tuple as a class
+  attribute.  Normally, that one attribute will be the whole
+  implementation.  Listed in the tuple should be two or more
+  other validity classes; as with 'Or' the tuple length is not
+  currently checked.  In instantiating a 'Seq' child, it is
+  usually safer to utilize the factory function 'ListSeq()'.
+
+  *Quantification*: This abstract class is a special case, in a
+  way.  The examples in this article have not used
+  'Quantification', but have instead used (still abstract)
+  children of it.  For example, this is the implementation of the
+  class 'Some':
+
+      #------- 'Quantification' abstract child 'Some' ---------#
+      class Some(Quantification):
+          length_message = "List <%s> must have length >= 1"
+          min_length = 1
+          max_length = maxint
+
+  The classes 'Maybe' and 'Any' have similar implementation.
+  These three 'Quantification' children cover all the
+  quantification options for DTD's, but XML Schemas can allow
+  others, e.g. 'Three_to_Seven', whose implementation is
+  straightforward.  I realize that a pretty good 'length_message'
+  could be generated from the other attributes, but I felt like
+  the pluralization and phrasing of messages was better done by a
+  programmer.
+
+  A concrete descendent of 'Quantification' must add a '_type'
+  class attribute, which points simply to another validity class.
+  In principle, a concrete child could add its own 'min_length',
+  'max_length' and 'length_message'--but using an intermediary
+  feels like better design.
+
+
+WHAT REMAINS TO BE DONE
+------------------------------------------------------------------------
+
+  As of this writing [gnosis.xml.validity] is largely a
+  proof-of-concept.  A few things are still missing.  The most
+  glaring absence is the complete lack of facility for adding XML
+  tag attributes--let alone enforcing their validity.  In
+  structure, attributes look a lot like subelements--merely
+  unordered ones--so similar enforcement mechanism can be
+  added to later versions of [gnosis.xml.validity].  This
+  addition is certainly the highest priority for a next feature.
+
+  There are some other conveniences would be nice to have in
+  [gnosis.xml.validity].  It would be nice to generate a set of
+  Python validity classes automatically from a DTD or XML Schema.
+  Unlike in a DTD, however, a set of Python validity classes need
+  to be defined in a particular order--or at least in an order
+  that defines each class earlier than it is named in an
+  attribute of another class.
+
+  Reading from an existing, and valid, XML document would often
+  be useful.  It is not necessarily obvious what the best way to
+  achieve this is.  Since member items need to be valid object
+  prior to their inclusion in larger structures, the simplest
+  recursive descent approach would not work.  But it should be
+  possible to deserialize an XML document to corresponding
+  validity classes.
+
+  Finally, some sort of higher level interface to the presented
+  validity classes might ease work with them.  The strategy used
+  in the library now is to raise exceptions for every disallowed
+  action; but there may be ways of wrapping this in more
+  convenient API's.  Perhaps silent failure or flag return values
+  would be useful, or maybe some other sort of fallback
+  operations for error cases.  Deciding the right interfaces
+  probably will require more experimentation by users (including
+  myself).
+
+  I welcome reader feedback about what direction later versions
+  of [gnosis.xml.validity] should take.  I believe the initial
+  functionality will already aid a variety of XML programming
+  tasks, but given how little similar library development has
+  been done elsewhere, my intuitions about what is most useful
+  are still vague.
+
+
+RESOURCES
+------------------------------------------------------------------------
+
+  The general goals that went into the development of the
+  [gnosis.xml.validity] library were outlined in the XML Zone
+  tipe at:
+
+    http://www-106.ibm.com/developerworks/library/x-tipoop.html
+
+  The Haskell library [HaXml] accomplishes everything that mine
+  does, but within the framework of a pure functional language.
+  While this is very different, conceptually, from an
+  object-oriented approach, readers can read about [HaXml] in an
+  ealier installment of this column:
+
+    http://www-106.ibm.com/developerworks/library/x-matters14.html
+
+  XML Matters #7 (developerWorks, March 2001) compared DTDs and
+  Schemas.  For the issues with each, take a look there.
+
+    http://www-106.ibm.com/developerworks/xml/library/x-matters7.html
+
+  The most current version of Gnosis_Utils can always be found at
+  the below URL.  Make sure to download at least version 1.0.2 to
+  obtain [gnosis.xml.validity]:
+
+    http://gnosis.cx/download/Gnosis_Utils-current.tar.gz
+
+ABOUT THE AUTHOR
+------------------------------------------------------------------------
+
+  {Picture of Author: http://gnosis.cx/cgi-bin/img_dqm.cgi}
+  David Mertz uses a wholly unstructured brain to write about
+  structured document formats.  David may be reached at
+  mertz@gnosis.cx; his life pored over at
+  http://gnosis.cx/publish/.

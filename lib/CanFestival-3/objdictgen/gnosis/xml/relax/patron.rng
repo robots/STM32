@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<element name="patron" xmlns="http://relaxng.org/ns/structure/1.0">
+  <interleave>
+    <element name="name">
+      <text/>
+    </element>
+    <element name="id-num">
+      <text/>
+    </element>
+    <zeroOrMore>
+      <element name="book">
+        <choice>
+          <attribute name="isbn"/>
+          <attribute name="title"/>
+        </choice>
+      </element>
+    </zeroOrMore>
+  </interleave>
+</element>

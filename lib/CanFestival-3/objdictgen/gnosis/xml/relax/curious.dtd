@@ -1,0 +1,3 @@
+<!ELEMENT foo EMPTY>  
+<!ATTLIST foo bar CDATA "curious"
+              baz CDATA #FIXED "curiouser">

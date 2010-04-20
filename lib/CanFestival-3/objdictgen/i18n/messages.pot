@@ -1,0 +1,1008 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-11-02 11:29+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../networkedit.py:902 ../objdictedit.py:962
+msgid ""
+"\n"
+"An error happens.\n"
+"\n"
+"Click on OK for saving an error report.\n"
+"\n"
+"Please be kind enough to send this file to:\n"
+"edouard.tisserant@gmail.com\n"
+"\n"
+"\n"
+"Error:\n"
+msgstr ""
+
+#: ../gen_cfile.py:199
+#, python-format
+msgid ""
+"\n"
+"Domain variable not initialized\n"
+"index : 0x%04X\n"
+"subindex : 0x00"
+msgstr ""
+
+#: ../networkedit.py:34
+msgid ""
+"\n"
+"Usage of networkedit.py :"
+msgstr ""
+
+#: ../objdictedit.py:33
+msgid ""
+"\n"
+"Usage of objdictedit.py :"
+msgstr ""
+
+#: ../objdictgen.py:32
+msgid ""
+"\n"
+"Usage of objdictgen.py :"
+msgstr ""
+
+#: ../networkedit.py:913 ../objdictedit.py:973
+msgid " : "
+msgstr ""
+
+#: ../commondialogs.py:560 ../commondialogs.py:1209
+#, python-format
+msgid " and %s"
+msgstr ""
+
+#: ../commondialogs.py:367 ../commondialogs.py:562
+msgid " must be integer!"
+msgstr ""
+
+#: ../commondialogs.py:365 ../commondialogs.py:560
+msgid " must be integers!"
+msgstr ""
+
+#: ../networkedit.py:626 ../objdictedit.py:535
+#, python-format
+msgid " possibly defined %d times"
+msgstr ""
+
+#: ../gen_cfile.py:77 ../gen_cfile.py:81
+#, python-format
+msgid "!!! %s isn't a valid type for CanFestival."
+msgstr ""
+
+#: ../gen_cfile.py:102
+#, python-format
+msgid "!!! Datatype with value \"0x%4.4X\" isn't defined in CanFestival."
+msgstr ""
+
+#: ../nodelist.py:158
+#, python-format
+msgid "\"%s\" EDS file is not available"
+msgstr ""
+
+#: ../nodelist.py:99
+#, python-format
+msgid "\"%s\" folder doesn't exist"
+msgstr ""
+
+#: ../eds_utils.py:232
+#, python-format
+msgid "\"%s\" is not a valid CPJ line"
+msgstr ""
+
+#: ../eds_utils.py:367
+#, python-format
+msgid "\"%s\" is not a valid EDS line"
+msgstr ""
+
+#: ../objdictedit.py:780
+#, python-format
+msgid "\"%s\" is not a valid file!"
+msgstr ""
+
+#: ../objdictedit.py:803 ../objdictedit.py:826
+#, python-format
+msgid "\"%s\" is not a valid folder!"
+msgstr ""
+
+#: ../eds_utils.py:333
+#, python-format
+msgid "\"%s\" is not a valid formula for attribute \"%s\" of section \"[%s]\""
+msgstr ""
+
+#: ../eds_utils.py:177 ../eds_utils.py:339
+#, python-format
+msgid "\"%s\" is not a valid value for attribute \"%s\" of section \"[%s]\""
+msgstr ""
+
+#: ../commondialogs.py:1508
+#, python-format
+msgid "\"%s\" is not a valid value!"
+msgstr ""
+
+#: ../eds_utils.py:242
+#, python-format
+msgid "\"Node%dPresent\" keyname in \"[%s]\" section is missing"
+msgstr ""
+
+#: ../eds_utils.py:235
+#, python-format
+msgid "\"Nodes\" keyname in \"[%s]\" section is missing"
+msgstr ""
+
+#: ../eds_utils.py:238
+msgid "\"Nodes\" value not corresponding to number of nodes defined"
+msgstr ""
+
+#: ../eds_utils.py:278 ../eds_utils.py:291 ../eds_utils.py:304
+#, python-format
+msgid "\"[%s]\" section is defined two times"
+msgstr ""
+
+#: ../commondialogs.py:1250
+#, python-format
+msgid ""
+"%s\n"
+"Would you like to replace it ?"
+msgstr ""
+
+#: ../networkedit.py:684 ../objdictedit.py:593
+#, python-format
+msgid "%s Profile"
+msgstr ""
+
+#: ../objdictgen.py:68
+#, python-format
+msgid "%s is not a valid file!"
+msgstr ""
+
+#: ../objdictedit.py:726
+#, python-format
+msgid "%s is not a valid folder!"
+msgstr ""
+
+#: ../networkedit.py:631 ../objdictedit.py:540
+#, python-format
+msgid "%s: %s entry of struct %s%s."
+msgstr ""
+
+#: ../eds_utils.py:384 ../eds_utils.py:392
+msgid ", "
+msgstr ""
+
+#: ../networkedit.py:890 ../networkedit.py:892 ../networkedit.py:893
+#: ../objdictedit.py:950 ../objdictedit.py:952 ../objdictedit.py:953
+msgid ",   "
+msgstr ""
+
+#: ../commondialogs.py:367 ../commondialogs.py:562 ../commondialogs.py:1211
+#, python-format
+msgid ", %s"
+msgstr ""
+
+#: ../networkedit.py:888 ../objdictedit.py:948
+msgid ". "
+msgstr ""
+
+#: ../commondialogs.py:1232
+msgid "A Node with this ID already exist in the network!"
+msgstr ""
+
+#: ../commondialogs.py:564
+msgid "A type must be selected!"
+msgstr ""
+
+#: ../networkedit.py:284 ../objdictedit.py:277
+msgid "About"
+msgstr ""
+
+#: ../networkedit.py:764 ../objdictedit.py:460
+msgid "About CAN Festival"
+msgstr ""
+
+#: ../commondialogs.py:1468 ../networkedit.py:185 ../objdictedit.py:175
+#: ../subindextable.py:463
+msgid "Add"
+msgstr ""
+
+#: ../commondialogs.py:275
+msgid "Add Map Variable"
+msgstr ""
+
+#: ../networkedit.py:209
+msgid "Add Slave Node"
+msgstr ""
+
+#: ../commondialogs.py:475
+msgid "Add User Type"
+msgstr ""
+
+#: ../commondialogs.py:1152
+msgid "Add a slave to nodelist"
+msgstr ""
+
+#: ../subindextable.py:345 ../subindextable.py:857
+msgid "Add subindexes"
+msgstr ""
+
+#: ../subindextable.py:353
+msgid "Add to DCF"
+msgstr ""
+
+#: ../objdictgen.py:75
+msgid "All done"
+msgstr ""
+
+#: ../subindextable.py:865 ../subindextable.py:885
+msgid "An integer is required!"
+msgstr ""
+
+#: ../eds_utils.py:777
+#, python-format
+msgid "Array or Record entry 0x%4.4X must have a \"SubNumber\" attribute"
+msgstr ""
+
+#: ../eds_utils.py:386 ../eds_utils.py:394
+#, python-format
+msgid "Attribute \"%s\" is"
+msgstr ""
+
+#: ../eds_utils.py:384 ../eds_utils.py:392
+#, python-format
+msgid "Attributes %s are"
+msgstr ""
+
+#: ../objdictedit.py:196
+msgid "Build Dictionary\tCTRL+B"
+msgstr ""
+
+#: ../networkedit.py:214
+msgid "Build Master Dictionary"
+msgstr ""
+
+#: ../networkedit.py:280 ../objdictedit.py:273
+msgid "CAN Festival Docs\tF2"
+msgstr ""
+
+#: ../objdictedit.py:809
+msgid "CANFestival C files (*.c)|*.c|All files|*.*"
+msgstr ""
+
+#: ../nodelist.py:303 ../nodelist.py:313
+msgid "Can't find node"
+msgstr ""
+
+#: ../objdictedit.py:448
+msgid "Check if Acrobat Reader is correctly installed on your computer"
+msgstr ""
+
+#: ../objdictedit.py:455
+msgid "Check if xpdf is correctly installed on your computer"
+msgstr ""
+
+#: ../commondialogs.py:1085 ../objdictedit.py:663 ../objdictedit.py:714
+#: ../objdictedit.py:758 ../objdictedit.py:786 ../objdictedit.py:809
+msgid "Choose a file"
+msgstr ""
+
+#: ../networkedit.py:448 ../networkedit.py:475
+msgid "Choose a project"
+msgstr ""
+
+#: ../networkedit.py:556
+msgid "Choose a slave to remove"
+msgstr ""
+
+#: ../commondialogs.py:1240
+msgid "Choose an EDS file"
+msgstr ""
+
+#: ../networkedit.py:194 ../objdictedit.py:184
+msgid "Close\tCTRL+W"
+msgstr ""
+
+#: ../objdictedit.py:481
+msgid "Close Application"
+msgstr ""
+
+#: ../objdictedit.py:735
+msgid "Close File"
+msgstr ""
+
+#: ../networkedit.py:511
+msgid "Close Project"
+msgstr ""
+
+#: ../nodemanager.py:220
+msgid "Couldn't find DS-302 in 'config' folder!"
+msgstr ""
+
+#: ../commondialogs.py:893
+msgid "Create a new Node"
+msgstr ""
+
+#: ../commondialogs.py:140
+msgid "Current Profile Indexes:"
+msgstr ""
+
+#: ../networkedit.py:232 ../objdictedit.py:225
+msgid "DS-301 Profile"
+msgstr ""
+
+#: ../networkedit.py:277 ../objdictedit.py:270
+msgid "DS-301 Standard\tF1"
+msgstr ""
+
+#: ../commondialogs.py:954 ../networkedit.py:234 ../objdictedit.py:227
+msgid "DS-302 Profile"
+msgstr ""
+
+#: ../commondialogs.py:718
+msgid "Default String Size:"
+msgstr ""
+
+#: ../subindextable.py:350
+msgid "Default value"
+msgstr ""
+
+#: ../commondialogs.py:1473 ../subindextable.py:370
+msgid "Delete"
+msgstr ""
+
+#: ../subindextable.py:347 ../subindextable.py:877
+msgid "Delete subindexes"
+msgstr ""
+
+#: ../commondialogs.py:726 ../commondialogs.py:982
+msgid "Description:"
+msgstr ""
+
+#: ../eds_utils.py:699
+#, python-format
+msgid "Domain entry 0x%4.4X DataType must be 0xF(DOMAIN) if defined"
+msgstr ""
+
+#: ../commondialogs.py:1202
+msgid "EDS File"
+msgstr ""
+
+#: ../commondialogs.py:1172
+msgid "EDS File:"
+msgstr ""
+
+#: ../nodelist.py:137
+msgid "EDS file already imported"
+msgstr ""
+
+#: ../commondialogs.py:1243 ../objdictedit.py:758 ../objdictedit.py:786
+msgid "EDS files (*.eds)|*.eds|All files|*.*"
+msgstr ""
+
+#: ../commondialogs.py:762 ../commondialogs.py:1038 ../networkedit.py:466
+#: ../networkedit.py:743 ../networkedit.py:749 ../objdictedit.py:430
+#: ../objdictedit.py:436 ../objdictedit.py:448 ../objdictedit.py:455
+#: ../objdictedit.py:652 ../subindextable.py:865 ../subindextable.py:885
+msgid "ERROR"
+msgstr ""
+
+#: ../networkedit.py:184 ../objdictedit.py:174
+msgid "Edit"
+msgstr ""
+
+#: ../networkedit.py:788 ../objdictedit.py:844
+#, python-format
+msgid "Edit %s Profile"
+msgstr ""
+
+#: ../commondialogs.py:112
+msgid "Edit Communication Profile"
+msgstr ""
+
+#: ../commondialogs.py:1444
+msgid "Edit DCF Entry Values"
+msgstr ""
+
+#: ../networkedit.py:781 ../objdictedit.py:837
+msgid "Edit DS-301 Profile"
+msgstr ""
+
+#: ../networkedit.py:785 ../objdictedit.py:841
+msgid "Edit DS-302 Profile"
+msgstr ""
+
+#: ../commondialogs.py:965
+msgid "Emergency support"
+msgstr ""
+
+#: ../commondialogs.py:1448
+msgid "Entry Values:"
+msgstr ""
+
+#: ../commondialogs.py:368 ../commondialogs.py:566 ../commondialogs.py:1212
+#: ../commondialogs.py:1223 ../commondialogs.py:1228 ../commondialogs.py:1232
+#: ../commondialogs.py:1508 ../networkedit.py:493 ../networkedit.py:504
+#: ../networkedit.py:517 ../networkedit.py:548 ../networkedit.py:571
+#: ../networkedit.py:851 ../networkedit.py:870 ../networkedit.py:914
+#: ../networkedit.py:924 ../objdictedit.py:682 ../objdictedit.py:704
+#: ../objdictedit.py:722 ../objdictedit.py:726 ../objdictedit.py:776
+#: ../objdictedit.py:780 ../objdictedit.py:799 ../objdictedit.py:803
+#: ../objdictedit.py:822 ../objdictedit.py:826 ../objdictedit.py:914
+#: ../objdictedit.py:933 ../objdictedit.py:974 ../objdictedit.py:984
+msgid "Error"
+msgstr ""
+
+#: ../eds_utils.py:415
+#, python-format
+msgid ""
+"Error on section \"[%s]\":\n"
+"%s incompatible with DataType"
+msgstr ""
+
+#: ../eds_utils.py:387
+#, python-format
+msgid ""
+"Error on section \"[%s]\":\n"
+"%s required for a %s entry"
+msgstr ""
+
+#: ../eds_utils.py:395
+#, python-format
+msgid ""
+"Error on section \"[%s]\":\n"
+"%s unsupported for a %s entry"
+msgstr ""
+
+#: ../networkedit.py:200 ../objdictedit.py:199
+msgid "Exit"
+msgstr ""
+
+#: ../objdictedit.py:795 ../objdictedit.py:818
+msgid "Export successful"
+msgstr ""
+
+#: ../objdictedit.py:194
+msgid "Export to EDS file"
+msgstr ""
+
+#: ../nodelist.py:188
+msgid "Fail to save Master Node"
+msgstr ""
+
+#: ../nodelist.py:228
+msgid "Fail to save node list"
+msgstr ""
+
+#: ../subindextable.py:46
+msgid "False"
+msgstr ""
+
+#: ../networkedit.py:182 ../objdictedit.py:173
+msgid "File"
+msgstr ""
+
+#: ../commondialogs.py:1212
+#, python-format
+msgid "Form isn't complete. %s must be filled!"
+msgstr ""
+
+#: ../commondialogs.py:368 ../commondialogs.py:566
+#, python-format
+msgid "Form isn't valid. %s"
+msgstr ""
+
+#: ../commondialogs.py:960
+msgid "Generate SYNC"
+msgstr ""
+
+#: ../subindextable.py:813
+#, python-format
+msgid "Give a new name for index 0x%04X"
+msgstr ""
+
+#: ../subindextable.py:450
+msgid "Have Callbacks"
+msgstr ""
+
+#: ../commondialogs.py:945
+msgid "Heartbeat"
+msgstr ""
+
+#: ../networkedit.py:186 ../objdictedit.py:176
+msgid "Help"
+msgstr ""
+
+#: ../commondialogs.py:1179
+msgid "Import EDS"
+msgstr ""
+
+#: ../objdictedit.py:192
+msgid "Import EDS file"
+msgstr ""
+
+#: ../objdictedit.py:772
+msgid "Import successful"
+msgstr ""
+
+#: ../commondialogs.py:353 ../commondialogs.py:1287
+msgid "Index"
+msgstr ""
+
+#: ../nodemanager.py:627
+#, python-format
+msgid "Index 0x%04X already defined!"
+msgstr ""
+
+#: ../nodemanager.py:629
+#, python-format
+msgid "Index 0x%04X isn't a valid index for Map Variable!"
+msgstr ""
+
+#: ../commondialogs.py:279
+msgid "Index:"
+msgstr ""
+
+#: ../networkedit.py:616 ../objdictedit.py:525
+#, python-format
+msgid "Index: 0x%04X"
+msgstr ""
+
+#: ../objdictedit.py:772 ../objdictedit.py:795 ../objdictedit.py:818
+msgid "Information"
+msgstr ""
+
+#: ../eds_utils.py:196 ../eds_utils.py:200 ../eds_utils.py:204
+#: ../eds_utils.py:208 ../eds_utils.py:215 ../eds_utils.py:222
+#: ../eds_utils.py:360
+#, python-format
+msgid "Invalid value \"%s\" for keyname \"%s\" of section \"[%s]\""
+msgstr ""
+
+#: ../eds_utils.py:228 ../eds_utils.py:357
+#, python-format
+msgid "Keyname \"%s\" not recognised for section \"[%s]\""
+msgstr ""
+
+#: ../commondialogs.py:552
+msgid "Length"
+msgstr ""
+
+#: ../commondialogs.py:513
+msgid "Length:"
+msgstr ""
+
+#: ../networkedit.py:622 ../objdictedit.py:531
+msgid "Mandatory"
+msgstr ""
+
+#: ../networkedit.py:259 ../objdictedit.py:252 ../subindextable.py:65
+msgid "Map Variable"
+msgstr ""
+
+#: ../commondialogs.py:546
+msgid "Maximum"
+msgstr ""
+
+#: ../commondialogs.py:505
+msgid "Maximum:"
+msgstr ""
+
+#: ../commondialogs.py:541
+msgid "Minimum"
+msgstr ""
+
+#: ../commondialogs.py:497
+msgid "Minimum:"
+msgstr ""
+
+#: ../subindextable.py:368
+msgid "Modify"
+msgstr ""
+
+#: ../commondialogs.py:287 ../commondialogs.py:694 ../commondialogs.py:901
+msgid "Name:"
+msgstr ""
+
+#: ../networkedit.py:183
+msgid "Network"
+msgstr ""
+
+#: ../commondialogs.py:931
+msgid "Network Management:"
+msgstr ""
+
+#: ../networkedit.py:318 ../networkedit.py:583
+msgid "Networkedit"
+msgstr ""
+
+#: ../networkedit.py:581
+#, python-format
+msgid "Networkedit - %s"
+msgstr ""
+
+#: ../networkedit.py:190 ../objdictedit.py:180
+msgid "New\tCTRL+N"
+msgstr ""
+
+#: ../subindextable.py:52
+msgid "No"
+msgstr ""
+
+#: ../networkedit.py:856 ../objdictedit.py:919
+msgid "No map variable index left!"
+msgstr ""
+
+#: ../nodelist.py:235
+#, python-format
+msgid "Node 0x%2.2X doesn't exist"
+msgstr ""
+
+#: ../commondialogs.py:940
+msgid "Node Guarding"
+msgstr ""
+
+#: ../commondialogs.py:760 ../commondialogs.py:1036
+msgid "Node ID must be integer!"
+msgstr ""
+
+#: ../commondialogs.py:702 ../commondialogs.py:905
+msgid "Node ID:"
+msgstr ""
+
+#: ../commondialogs.py:690 ../networkedit.py:230 ../objdictedit.py:223
+msgid "Node infos"
+msgstr ""
+
+#: ../commondialogs.py:755 ../commondialogs.py:1031
+msgid "Node name can't be undefined or start with a digit and must be composed of alphanumerical characters or underscore!"
+msgstr ""
+
+#: ../nodelist.py:165
+#, python-format
+msgid "Node with \"0x%2.2X\" ID doesn't exist"
+msgstr ""
+
+#: ../commondialogs.py:935 ../commondialogs.py:1010 ../commondialogs.py:1020
+#: ../commondialogs.py:1056 ../commondialogs.py:1096 ../subindextable.py:166
+msgid "None"
+msgstr ""
+
+#: ../commondialogs.py:358
+msgid "Number"
+msgstr ""
+
+#: ../subindextable.py:856
+msgid "Number of subindexes to add:"
+msgstr ""
+
+#: ../subindextable.py:876
+msgid "Number of subindexes to delete:"
+msgstr ""
+
+#: ../commondialogs.py:291
+msgid "Number:"
+msgstr ""
+
+#: ../commondialogs.py:1085
+msgid "OD Profile files (*.prf)|*.prf|All files|*.*"
+msgstr ""
+
+#: ../objdictedit.py:663 ../objdictedit.py:714
+msgid "OD files (*.od)|*.od|All files|*.*"
+msgstr ""
+
+#: ../objdictedit.py:309 ../objdictedit.py:507
+msgid "Objdictedit"
+msgstr ""
+
+#: ../objdictedit.py:505
+#, python-format
+msgid "Objdictedit - %s"
+msgstr ""
+
+#: ../networkedit.py:192 ../objdictedit.py:182
+msgid "Open\tCTRL+O"
+msgstr ""
+
+#: ../networkedit.py:620 ../objdictedit.py:529
+msgid "Optional"
+msgstr ""
+
+#: ../commondialogs.py:950
+msgid "Options:"
+msgstr ""
+
+#: ../commondialogs.py:1019 ../commondialogs.py:1084
+msgid "Other"
+msgstr ""
+
+#: ../networkedit.py:236 ../networkedit.py:692 ../objdictedit.py:229
+#: ../objdictedit.py:601
+msgid "Other Profile"
+msgstr ""
+
+#: ../networkedit.py:257 ../objdictedit.py:250 ../subindextable.py:63
+msgid "PDO Receive"
+msgstr ""
+
+#: ../networkedit.py:255 ../objdictedit.py:248 ../subindextable.py:64
+msgid "PDO Transmit"
+msgstr ""
+
+#: ../objdictgen.py:60
+msgid "Parsing input file"
+msgstr ""
+
+#: ../networkedit.py:154 ../objdictedit.py:145
+#, python-format
+msgid "Please point your browser at: %s"
+msgstr ""
+
+#: ../commondialogs.py:116
+msgid "Possible Profile Indexes:"
+msgstr ""
+
+#: ../nodemanager.py:218
+msgid "Problem with DS-302! Syntax Error."
+msgstr ""
+
+#: ../commondialogs.py:909
+msgid "Profile:"
+msgstr ""
+
+#: ../commondialogs.py:1250
+msgid "Question"
+msgstr ""
+
+#: ../subindextable.py:38 ../subindextable.py:39
+msgid "Read Only"
+msgstr ""
+
+#: ../subindextable.py:38 ../subindextable.py:39
+msgid "Read/Write"
+msgstr ""
+
+#: ../networkedit.py:227 ../objdictedit.py:220
+msgid "Redo\tCTRL+Y"
+msgstr ""
+
+#: ../networkedit.py:222 ../objdictedit.py:215
+msgid "Refresh\tCTRL+R"
+msgstr ""
+
+#: ../networkedit.py:211
+msgid "Remove Slave Node"
+msgstr ""
+
+#: ../networkedit.py:556
+msgid "Remove slave"
+msgstr ""
+
+#: ../subindextable.py:366
+msgid "Rename"
+msgstr ""
+
+#: ../subindextable.py:814
+msgid "Rename an index"
+msgstr ""
+
+#: ../networkedit.py:253 ../objdictedit.py:246 ../subindextable.py:62
+msgid "SDO Client"
+msgstr ""
+
+#: ../networkedit.py:251 ../objdictedit.py:244 ../subindextable.py:61
+msgid "SDO Server"
+msgstr ""
+
+#: ../networkedit.py:197 ../objdictedit.py:187
+msgid "Save\tCTRL+S"
+msgstr ""
+
+#: ../objdictedit.py:189
+msgid "Save As...\tALT+S"
+msgstr ""
+
+#: ../commondialogs.py:970
+msgid "Save Configuration"
+msgstr ""
+
+#: ../eds_utils.py:248 ../eds_utils.py:311
+#, python-format
+msgid "Section \"[%s]\" is unrecognized"
+msgstr ""
+
+#: ../commondialogs.py:1287
+msgid "Size"
+msgstr ""
+
+#: ../commondialogs.py:1198
+msgid "Slave Name"
+msgstr ""
+
+#: ../commondialogs.py:1156
+msgid "Slave Name:"
+msgstr ""
+
+#: ../commondialogs.py:1200
+msgid "Slave Node ID"
+msgstr ""
+
+#: ../commondialogs.py:1223
+msgid "Slave Node ID must be a value in decimal or hexadecimal!"
+msgstr ""
+
+#: ../commondialogs.py:1228
+msgid "Slave Node ID must be between 0 and 127!"
+msgstr ""
+
+#: ../commondialogs.py:1164
+msgid "Slave Node ID:"
+msgstr ""
+
+#: ../commondialogs.py:976
+msgid "Store EDS"
+msgstr ""
+
+#: ../commondialogs.py:1287
+msgid "Subindex"
+msgstr ""
+
+#: ../networkedit.py:617 ../objdictedit.py:526
+#, python-format
+msgid "Subindex: 0x%02X"
+msgstr ""
+
+#: ../nodemanager.py:264
+msgid ""
+"Syntax Error\n"
+"Bad OD Profile file!"
+msgstr ""
+
+#: ../networkedit.py:511 ../objdictedit.py:481 ../objdictedit.py:735
+msgid "There are changes, do you want to save?"
+msgstr ""
+
+#: ../nodemanager.py:659
+msgid "Too many User Types have already been defined!"
+msgstr ""
+
+#: ../subindextable.py:46
+msgid "True"
+msgstr ""
+
+#: ../commondialogs.py:283 ../commondialogs.py:479 ../commondialogs.py:710
+#: ../commondialogs.py:897
+msgid "Type:"
+msgstr ""
+
+#: ../gen_cfile.py:581
+#, python-format
+msgid ""
+"Unable to Generate C File\n"
+"%s"
+msgstr ""
+
+#: ../eds_utils.py:640
+#, python-format
+msgid ""
+"Unable to generate EDS file\n"
+"%s"
+msgstr ""
+
+#: ../eds_utils.py:780
+#, python-format
+msgid ""
+"Unable to import EDS file\n"
+"%s"
+msgstr ""
+
+#: ../nodelist.py:212
+#, python-format
+msgid ""
+"Unable to load CPJ file\n"
+"%s"
+msgstr ""
+
+#: ../nodemanager.py:288
+#, python-format
+msgid "Unable to load file \"%s\"!"
+msgstr ""
+
+#: ../commondialogs.py:321
+msgid "Undefined"
+msgstr ""
+
+#: ../networkedit.py:225 ../objdictedit.py:218
+msgid "Undo\tCTRL+Z"
+msgstr ""
+
+#: ../nodemanager.py:855
+#, python-format
+msgid "Unnamed%d"
+msgstr ""
+
+#: ../networkedit.py:261 ../objdictedit.py:254 ../subindextable.py:60
+msgid "User Type"
+msgstr ""
+
+#: ../commondialogs.py:1287
+msgid "Value"
+msgstr ""
+
+#: ../commondialogs.py:493
+msgid "Values"
+msgstr ""
+
+#: ../subindextable.py:38
+msgid "Write Only"
+msgstr ""
+
+#: ../objdictgen.py:70
+msgid "Writing output file"
+msgstr ""
+
+#: ../subindextable.py:52
+msgid "Yes"
+msgstr ""
+
+#: ../subindextable.py:82
+msgid "access"
+msgstr ""
+
+#: ../subindextable.py:82
+msgid "comment"
+msgstr ""
+
+#: ../networkedit.py:890 ../networkedit.py:892 ../objdictedit.py:950
+#: ../objdictedit.py:952
+msgid "file : "
+msgstr ""
+
+#: ../networkedit.py:893 ../objdictedit.py:953
+msgid "function : "
+msgstr ""
+
+#: ../networkedit.py:893 ../objdictedit.py:953
+msgid "line : "
+msgstr ""
+
+#: ../commondialogs.py:648
+msgid "master"
+msgstr ""
+
+#: ../subindextable.py:82
+msgid "name"
+msgstr ""
+
+#: ../subindextable.py:82
+msgid "save"
+msgstr ""
+
+#: ../commondialogs.py:648 ../commondialogs.py:1007
+msgid "slave"
+msgstr ""
+
+#: ../subindextable.py:82
+msgid "subindex"
+msgstr ""
+
+#: ../subindextable.py:82
+msgid "type"
+msgstr ""
+
+#: ../subindextable.py:82
+msgid "value"
+msgstr ""

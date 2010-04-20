@@ -1,0 +1,66 @@
+.project
+
+syntax: regexp
+^objdictgen/gnosis$
+syntax: regexp
+\.o$
+syntax: regexp
+\.pyc$
+syntax: regexp
+\.a$
+syntax: regexp
+\.orig$
+syntax: regexp
+^\.settings.*
+syntax: regexp
+\.rej$
+syntax: regexp
+^drivers/can_socket/Makefile$
+syntax: regexp
+^drivers/timers_unix/Makefile$
+syntax: regexp
+^drivers/unix/Makefile$
+syntax: regexp
+^drivers/Makefile$
+syntax: regexp
+^examples/CANOpenShell/Debug$
+syntax: regexp
+^examples/CANOpenShell/CANOpenShellMasterOD\.c$
+syntax: regexp
+^examples/CANOpenShell/CANOpenShellMasterOD\.h$
+syntax: regexp
+^examples/CANOpenShell/CANOpenShellSlaveOD\.c$
+syntax: regexp
+^examples/CANOpenShell/CANOpenShellSlaveOD\.h$
+syntax: regexp
+^examples/CANOpenShell/Makefile$
+
+syntax: regexp
+^examples/SillySlave/Makefile$
+syntax: regexp
+^examples/TestMasterMicroMod/Makefile$
+syntax: regexp
+^examples/TestMasterSlave/Makefile$
+syntax: regexp
+^examples/TestMasterSlaveLSS/Makefile$
+syntax: regexp
+^examples/Makefile$
+syntax: regexp
+^drivers/Makefile$
+syntax: regexp
+^Makefile$
+syntax: regexp
+^objdictgen/canfestival_config\.py$
+syntax: regexp
+^objdictgen/Makefile$
+syntax: regexp
+^examples/Makefile$
+syntax: regexp
+^src/Makefile$
+
+syntax: regexp
+^include/config\.h$
+syntax: regexp
+^examples/TestMasterMicroMod/TestMasterMicroMod$
+syntax: regexp
+^examples/TestMasterSlave/TestMasterSlave$

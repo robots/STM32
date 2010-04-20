@@ -1,0 +1,571 @@
+(c) WestTech, 2002 -- may be freely distributed if unaltered
+
+Spam Filtering Techniques:
+Comparing a Half-Dozen Approaches to Eliminating Unwanted Email
+
+David Mertz, Ph.D.
+Noise Reducer, Gnosis Software, Inc.
+August 2002
+
+    The problem of unsolicited email has continued to increase
+    every month for years.  Unethical senders bear little or no
+    cost for mass distribution of messages, but normal email
+    users are forced to spend time and effort purging fradulent
+    and otherwise unwanted mail from our mailboxes.  This article
+    discusses and compares several broad approaches to the
+    automatic elimination of unwanted email; some specific
+    popular tools following these approaches are mentioned and
+    tested.
+
+
+INTRODUCTION
+------------------------------------------------------------------------
+
+  This article is incomplete in a special sense.  I will only
+  write about ways that computer code can help eliminate
+  unsolicited commercial email (UCE); computer viruses, trojans,
+  and worms; frauds perpetrated electronically; and other
+  undesired and troublesome email.  But in some sense, the final
+  and best solution will probably involve elements of -legal
+  code- as well.  However, a discussion of law is outside the
+  scope of this article and of the developerWorks website.
+
+  Considering matters technically--but also with common
+  sense--what is generally called "SPAM" email is somewhat
+  broader than the category -unsolicited commercial email-;
+  basically it encompasses all the email that we do not want, and
+  that is only very loosely directed at us.  Such messages are
+  not always commercial per se, and some stretch the outer limits
+  of what it means to be solicited.  For example, we do not want
+  to get viruses (even from our unwary friends); nor do we
+  generally want chain letters, even if they don't ask for money;
+  nor proselytizing messages from strangers; nor outright
+  attempts to defraud us.  In any case, it is usually not very
+  ambiguous whether a message is spam, and many, many people get
+  the same such emails.
+
+  The problem with spam is that it tends to swamp desirable
+  email.  In my own experience, a few years ago I occassionally
+  received an inappropriate message or two during a day.  Every
+  day of this month, I received -many times- more spams than I
+  did legitimate correspondences.  On average, I probably get 10
+  spams for every appropriate email.  In some ways I am
+  unusual--as a public writer, I feel I need to maintain a widely
+  published email address; moreover, I both welcome and receive
+  numerous correspondences from strangers related to my published
+  writing and to my software libraries.  Unfortunately, a letter
+  from a stranger--with who-knows-which email application, OS,
+  native natural language, and so on, is not -immediately-
+  obvious in its purpose; and spammers try to slip their messages
+  underneath such ambiguities.  My seconds are valuable to me,
+  especially when they are claimed many times during every hour
+  of a day.
+
+
+Hiding contact information
+------------------------------------------------------------------------
+
+  For some email users, a reasonable, sufficient and very simple
+  approach to avoiding spam is simply to remain reticent with
+  email addresses.  For these people, an email address is
+  something to be guarded, and revealed only to selected, trusted
+  parties.  As extra precautions, email address can be chosen to
+  avoid easily guessed names and dictionary words, and addresses
+  can be disguised when posting to public fora.  We have all seen
+  email addresses cutely encoded in forms like
+  "<mertzHIDDEN@NOSPAM.gnosis.cx>" or "echo zregm@tabfvf.pk | tr
+  A-Za-z N-ZA-Mn-za-m".
+
+  In addition to hiding addresses, a secretive emailer often uses
+  one or more of the free email services for -throwaway-
+  addresses.  If you need to transact email with a semi-trusted
+  party, a temporary address can be used for a few days, then
+  abandoned along with any spam it might thereafter accumulate.
+  The -real- "confidantes only" address is kept protected.
+
+  I have found in my informal survey of discussions of spam on
+  web-boards, mailing lists, the Usenet, and so on, that a
+  category of email users gains sufficient protection from these
+  basic precautions.
+
+  However, for me--and for many other people--this approach is
+  simply not possible.  I have a publicly available email
+  address, and have good reasons why it needs to remain so.  I
+  -do- utilize a variety of addresses within the domain I control
+  to detect the source of spam leaks; but the unfortunate truth
+  is that most spammers get my email address the same way my
+  legitimate correspondents do: from the listing at the top of
+  articles like this, and other public disclosures of my address.
+
+
+FILTERING SOFTWARE
+------------------------------------------------------------------------
+
+  This article looks at filtering software from a particular
+  perspective.  I want to know how well different approaches work
+  in correctly identifying spam as spam, and desirable messages
+  as legitimate.  For purposes of answering this question, I am
+  not particularly interested in the details of configuring
+  filter applications to work with various Mail Transfer Agents
+  (MTAs).  There is certainly a great deal of aracana surrounding
+  the best configuration of MTAs like Sendmail, QMail, Procmail,
+  Fetchmail, and others.  As well, many email clients have their
+  own filtering options and/or plug-in APIs.  Fortunately, most
+  of the filters I look at come with pretty good documentation
+  covering configuring them with various MTAs.
+
+  For purposes of my testing, I developed two corpora of
+  messages:  spam and legitimate.  These corpora were both taken
+  from mail I myself actually received.  Most of the messages
+  used were received in the last couple months, but I added a
+  significant subset of messages up to several years old to
+  broaden the test.  I cannot know exactly what will be contained
+  in next month's emails, so the past provides the best facsimile
+  to the future's novelty.  That sounds cryptic, but all I mean
+  is that I do not want to limit the patterns to a few words,
+  phrases, regular expressions, etc. that might characterize the
+  very latest emails, but that fail to generalize to the two
+  types.
+
+  In addition to the corpora, I developed training message sets
+  for those tools that -learn- about spam and non-spam messages.
+  The training sets are both larger and partially disjoint from
+  the testing corpora.  The testing corpora consist of slightly
+  fewer than 2000 spam messages, and about the same number of
+  good messages.  The training sets are about twice as large.
+
+  A general comment on testing is worth emphasizing.  False
+  negatives in spam filters just mean that some unwanted messages
+  make it to your inbox.  Not a good thing, but not horrible in
+  itself.  False positives are cases where legitimate messages
+  are misidentified as spam.  These can potentially be -very-
+  bad, some legitimate messages are important, even urgent, in
+  nature; and even those messages that are merely conversational
+  are ones we do not want to lose.  Most filtering software
+  allows you to save rejected messages in temporary folders
+  pending review--but if you need to review a folder of spam, the
+  usefulness of the software is thereby reduced.
+
+Basic structured text filters
+------------------------------------------------------------------------
+
+  The email client I use has the capability to sort incoming
+  email based on simple strings found in specific header fields,
+  the header in general, and/or in the body.  Its capability is
+  very simple, and does not even include regular expression
+  matching.  Almost all email clients have this much filtering
+  capability.
+
+  Over the last few months, I have developed a fairly small
+  number of text filters.  These few simple filters correctly
+  catch about 80% of the spam I receive.  Unfortunately, they
+  also have a relatively high false positive rate--enough that I
+  need to manually examine -some- of the spam folders from time to
+  time (I sort probable spam into several different folders; and
+  save them all to develop message corpora).  Although exact
+  details will differ between users, a general pattern can be
+  useful to most readers:
+
+  SET 1:
+  A few people or mailing lists that do funny things with their
+  headers that get them flagged on other rules.  I catch
+  something in the header (usually the From:) and whitelist it
+  (either to INBOX or somewhere else).
+
+  SET 2:
+  In no particular order, I run the following spam filters:
+
+  - Identify a specific bad sender
+  - Look for "<>" as the From: header
+  - Look for "@<" in the header (lots of spam has this for some
+    reason)
+  - Look for "Content-Type:  audio".  Nothing I want has
+    this, only virii (YMMV).
+  - Look for "euc-kr" and "ks_c_5601-1987" in the headers.  I
+    can't read that language, but for some reason I get a *huge*
+    volume of Korean spam (of course, for an actual readers of
+    Korean, this is not a good rule).
+
+  SET 3:
+  Store messages to known legitimate addresses.  I have several
+  such rules, but they all just match a literal To: field.
+
+  SET 4:
+  Look for messages that have a legit address in the -header-,
+  but that wasn't caught by the previous To:  filters.  I find
+  that when I am only in the Bcc:  field, it's almost always an
+  unsolicited mailing to a list of alphabetically sequential
+  addresses (mertz1@..., mertz37@..., etc).
+
+  SET 5:
+  Anything left at this point is probably spam (it probably has
+  forged headers to avoid identification of the sender).
+
+
+Whitelist/verification filters
+------------------------------------------------------------------------
+
+  An fairly aggressive technique for spam filtering is what I
+  would call -whitelist plus automated verification- approach.
+  There are several tools that implement a whitelist with
+  verification: TDMA is a popular multi-platform open source
+  tool; ChoiceMail is a commercial tool for Windows; most others
+  seem more preliminary.
+
+  A whitelist filter connects to an MTA, and only passes mail
+  from explicitly approved recipients on to the inbox.  Other
+  messages generate a special challenge response to the sender.
+  The whitelist filter's response contains some kind of unique
+  code that identifies the original message, such as a hash or
+  sequential ID.  This challenge message contains instructions
+  for the sender to reply in order to be added to the whitelist
+  (the response message must contain the code generated by the
+  whitelist filter).  Almost all spam messages contain forged
+  return address information, so the challenge usually does not
+  even arrives anywhere; but even those spammers who provide
+  usable return addresses are unlikely to respond to a challenge.
+  When a legitimate sender answers a challenge, her/his address
+  is added to the whitelist so that any future messages from the
+  same address are passed through automatically.
+
+  Although I have not used any of these tools more than
+  experimentally myself, I would expect whitelist/verification
+  filters to be very nearly 100% effective in blocking spam
+  messages.  It is conceivable that spammers will start adding
+  challenge responses to their systems, but this could be
+  countered by making challenges slightly more sophisticated
+  (e.g. requiring small human modification to a code).  Spammers
+  who respond, moreover, make themselves more easily traceable
+  for people seeking legal remedies against them.
+
+  The problem with whitelist/verification filters is the extra
+  burden they place on legitimate senders.  Inasmuch as some
+  correspondents may fail to respond to challenges--for any
+  reason--this makes for a type of false positive.  In the best
+  case, a slight extra effort is required for legitimate senders.
+  But senders who have unreliable ISPs, picky firewalls, multiple
+  email addresses, non-native understanding of English (or
+  whatever language the challenge is written in), or who simply
+  overlook or cannot be bothered with challenges, may not have
+  their legitimate messages delivered.  Moreover, sometimes
+  legitimate "correspondents" are not people at all, but
+  automated response systems with no capability of challenge
+  response.  Whitelist/verification filters are likely to require
+  extra efforts to deal with mailing-list signups, online
+  purchases, website registrations, and other "robot
+  correspondences."
+
+
+Distributed adaptive blacklists
+------------------------------------------------------------------------
+
+  Spam is almost by definition delivered to a large number of
+  recipients.  And as a matter of practice, there is little if
+  any customization of spam messages to individual recipients.
+  Each recipient of a spam, however, absent prior filtering must
+  press her own "delete" button to get rid of the message.
+  Distributed blacklists are ways to let one user's delete button
+  warn millions of other users as to the spamminess of the
+  message.
+
+  Tools like Razor and Pyzor operate around servers that store
+  digests of known spams.  When a message is received by a MTA, a
+  distributed blacklist filter is called to determine whether the
+  message is a known spam.  These tools use clever statistical
+  techniques for creating digests, so that spams with minor or
+  automated mutations (or just different headers resulting from
+  transport routes) do not prevent recognition of message
+  identity.  In addition, maintainers of distributed blacklist
+  servers frequently create "honey-pot" addresses that are
+  created specifically for the purpose of attracting spam (but
+  never for any legitimate correspondences).
+
+  In my testing, I found *zero* false positive spam
+  categorizations by Pyzor.  I would not expect any to occur
+  using other similar tools, like Razor.  There is some common
+  sense to this.  Even if someone were ill-intentioned in trying
+  to taint legitimate messages, she would not have samples of
+  -my- good messages to report to the servers--it is generally
+  only the spam messages that are widely distributed.  It is
+  -conceivable- that a widely sent but legitimate message such
+  as the developerWorks newsletter could be misreported, but the
+  maintainers of distributed blacklist servers would almost
+  certainly detect this and quickly correct such problems.
+
+  As the below chart shows, however, false negatives are far more
+  common using distributed blacklists than with any of the other
+  techniques I tested.  The authors of Pyzor recommend using the
+  tool in -conjunction- with other techniques rather than as a
+  lone filter.  While this seems reasonable, it is not clear that
+  such combined filtering will actually produce many more spam
+  identifications than the other techniques by themselves.
+
+  In addition, since distributed blacklists require talking to a
+  server to perform verification, Pyzor performed far more
+  slowly against my test corpora than did any other techniques.
+  For testing a trickle of messages this is no big deal, for a
+  high-volume ISP, it could be a problem.  I also found that I
+  consistently experienced a couple network timeouts for each
+  thousand queries, so my results have a handful of "errors" in
+  place of "spam" or "good" identifications.
+
+
+Rule based rankings
+------------------------------------------------------------------------
+
+  The most popular tool for rule based spam filtering, by a good
+  margin, is -SpamAssassin-.  There are other tools, but they are
+  not as widely used or actively maintained.  SpamAssassin (and
+  similar tools) evaluate a large number of patterns--mostly
+  regular expressions--against a candidate message.  Some matched
+  patterns add to a message's score, while others subtract from
+  it.  If a message's score exceeds a certain threshold, it is
+  filtered as spam; otherwise it is considered legitimate.
+
+  Some ranking rules are fairly constant over time--forged
+  headers and auto-executing JavaScript, for example, almost
+  timelessly mark spam.  Other rules need to be updated as the
+  products and scams advanced by spammers evolves.  Herbal
+  Viagra and heirs of African dictators might be the rage today,
+  but tomorrow they might be edged out by some brand new
+  snake-oil drug or pornographic theme.  As spam evolves,
+  SpamAssassin must evolve to keep up with it.
+
+  The README for SpamAssassin makes some very strong claims:
+
+    In its most recent test, SpamAssassin differentiated between
+    spam and non-spam mail correctly in 99.94% of cases.  Since
+    then, it's just been getting better and better!
+
+  My testing showed nowhere near this level of success.  Against
+  my corpora, SpamAssassin had about 0.3% false positives and a
+  whopping 19% false negatives.  In fairness, this only evaluated
+  the rule based filters, not the optional checks against
+  distributed blacklists.  Additionally, my spam corpus is not
+  purely spam--it also includes a large collection of what are
+  probably virus attachments (I do not open them to check for
+  sure, but I know they are not messages I authorized).
+  SpamAssassin's FAQ disclaims responsibility for finding
+  viruses; on the other hand, the below techniques do much better
+  in finding them, so the disclaimer is not all that compelling.
+
+  SpamAssassin runs much quicker than distributed blacklists
+  which need to query network servers.  But it also runs much
+  slower than even non-optimized versions of the below
+  statistical models (written in interpreted Python using naive
+  data structures).
+
+
+Baysian word distribution filters
+------------------------------------------------------------------------
+
+  Paul Graham wrote a provocative essay this August 2002.  In "A
+  Plan for Spam," Graham suggested building Baysian probability
+  models of spam and non-spam words.  Graham's essay, or any
+  general text on statistics and probability, can provide more
+  mathematical background than I will here.
+
+  The general idea here is that some words occur more frequently
+  in known spam and other words occur more frequently in
+  legitimate messages.  Using well-known mathematics, it is
+  possible to generate a "spam-indicative probability" for each
+  word.  Another simple mathematical formula can be used to
+  determine the overall "spam probability" of a novel message,
+  based on the collection of words it contains.
+
+  Graham's idea has several noteworthy benefits:
+
+  (1) It can generate a filter automatically from corpora of
+  categorized messages rather than requiring human effort in rule
+  development;
+
+  (2) It can be customized to individual users' characteristic
+  spam and legitimate messages;
+
+  (3) It can be implemented in a very small number of lines of
+  code;
+
+  (4) It works surprisingly well.
+
+  At first brush, it would be reasonable to suppose that a set of
+  hand-tuned and laboriously developed rules like those in
+  SpamAssassin would predict spam more accurately than a
+  scattershod automated approach.  It turns out that this
+  supposition is dead wrong.  A statistical model basically just
+  works better than a rule based approach.  As a side benefit, a
+  Graham-style Bayesian filter is also simpler and faster than
+  SpamAssassin.
+
+  Within days--perhaps hours--of Graham's article being
+  published, many people simulataneously started working on
+  implementing the system.  For purposes of my testing, I used a
+  Python implementation created by a correspondent of mine named
+  John Barham.  I thank him for providing his implementation.
+  However, the mathematics are simple enough that every other
+  implementation is largely equivalent.
+
+  There are some issues of data structures and storage techniques
+  that will effect operating speed of different tools.  But the
+  actual predictive accuracy depends on very few factors--the
+  main significant factor is probably the word-lexing technique
+  used, and this matters mostly for eliminating spurious random
+  strings.  Barham's implementation simply looks for relatively
+  short, disjoint sequences of characters from a small set
+  (alphanumeric plus a few others).
+
+
+Baysian trigram filters
+------------------------------------------------------------------------
+
+  Bayesian techniques built on a word model work rather well.
+  One disadvantage the word model has is that the number of
+  "words" one encounters in email is virtually unbounded.  This
+  fact may be counterintuitive--it seems reasonable to suppose
+  that you would reach an asymptote once almost all the English
+  words had been included.  From my prior research into full text
+  indexing I know that this is simply not true--the number of
+  "word-like" character sequences one encounters is nearly
+  unlimited, and new texts keep producing new sequences.  This
+  fact is particularly true of emails, which contain random
+  strings in Message-ID's, content separators, UU and base64
+  encodings, and so on.  There are various ways to throw out
+  words from the model--the easiest is just to discard the
+  sufficiently infrequent ones.
+
+  I decided to look into how well a much more starkly limited
+  model space would work for a Baysian spam filter.
+  Specifically, I decided to use trigrams for my probability
+  model rather than "words."  This idea was not invented whole
+  cloth, of course; there is a variety of research into language
+  recognition/differentiation, cryptographic unicity distances of
+  English, pattern frequencies, and related areas, that strongly
+  suggest trigrams are a good unit.
+
+  There were several decisions I made along the way.  The biggest
+  choice was deciding what a trigram is.  While this is somewhat
+  simpler than identifying a "word," the completely naive
+  approach of looking at every (overlapping) sequence of three
+  bytes is non-optimal.  In particular, considering high-bit
+  characters--although occurring relatively frequently in
+  multi-byte character sets (i.e.  CJK)--forces a much bigger
+  trigram space on us than does looking only at the ASCII range.
+  Limiting the trigram space even further than to low-bit
+  characters produces a smaller space, but not better overall
+  results.
+
+  For my trigram analysis, I utilized only the most highly
+  differentiating trigrams as message categorizers.  But I
+  arrived at the chosen numbers of "spam" and "good" trigrams
+  only by trial and error.  I also picked the cutoff probability
+  for spam rather arbitrarily:  I made an interesting discover
+  that no message in the "good" corpus was assigned a spam
+  probability above .0071, other than two false positives in the
+  .99 range.  Lowering my cutoff from an initial 0.9 to 0.1,
+  however, allowed me to catch a few more message in the "spam"
+  corpus.  For purposes of speed, I select no more than 100
+  "interesting" trigrams from each candidate message--changing
+  that 100 to something else can produce slight variations in the
+  results (but not in an obvious direction).
+
+
+Summary and Chart
+------------------------------------------------------------------------
+
+  Given the testing methodology described earlier, let us look at
+  the concrete testing results.  While I do not present any
+  quantitative data on it, the chart is arranged in order of
+  speed, from fastest to slowest.  Trigrams are fast, Pyzor
+  (network lookup) is slow.  In evaluating techniques, as I
+  stated, I consider false positives very bad, and false
+  negatives only slightly bad.
+
+
+                         Good Corpus         Spam Corpus
+
+      "The Truth"         1851 / 0              0 / 1916
+
+      Trigram Model       1849 / 2            142 / 1774
+
+      Word Model          1847 / 4             97 / 1819
+
+      SpamAssassin        1846 / 5            358 / 1558
+
+      Pyzor               1847 / 0 (4 err)    971 / 943 (2 err)
+
+
+
+RESOURCES
+------------------------------------------------------------------------
+
+  Lawrence Lessig has written a number of books and articles that
+  particularly insightfully contrast what he metonymically calls
+  "west-coast code" and "east-coast code"--i.e. the laws passed
+  in Washington D.C. (and elsewhere) versus the software written
+  in Silicon Valley (and elsewhere).  I wrote a short review of
+  Lessig's _Code and Other Laws of Cyberspace_ at:
+
+    http://gnosis.cx/publish/reviews/lessig_review_rpr
+
+  Lessig has his own website, of course.  It provides a lot to
+  think about:
+
+    http://cyberlaw.stanford.edu/lessig/
+
+  Tagged Message Delivery Agent (TMDA):
+
+    http://tmda.net/
+
+  DigitalPortal Software's ChoiceMail:
+
+    http://www.digiportal.com/product4.html
+
+  Pyzor is a Python-based distributed spam catalog/filter.
+  Information is at:
+
+    http://pyzor.sourceforge.net/
+
+  Vipul's Razor is a very popular distributed spam
+  catalog/filter.  Razor is optionally called by a number of
+  other filter tools, such as SpamAssassin.  Information on Razor
+  is at:
+
+    http://razor.sourceforge.net/
+
+  SpamAssassin is the most popular rule based spam filter.  It
+  lives at:
+
+    http://spamassassin.taint.org/
+
+  Paul Graham's essay "A Plan for Spam" can be read at:
+
+    http://www.paulgraham.com/spam.html
+
+  Eric Raymond has created a fast implementation of Paul Graham's
+  idea under the name "bogofilter." As well as using some
+  efficient data representation and storage strategies,
+  bogofiliter tries to be smart about identifying what makes a
+  meaningful word:
+
+    http://www.tuxedo.org/~esr/bogofilter/
+
+  My own trigram-based categorization tools are still at an early
+  alpha or prototype level.  However, you are welcome to use them
+  as a basis for development.  They are public domain, like all
+  the tools I write for developerWorks articles:
+
+    http://gnosis.cx/download/trigram-tools.zip
+
+
+ABOUT THE AUTHOR
+------------------------------------------------------------------------
+
+  {Picture of Author:  http://gnosis.cx/cgi-bin/img_dqm.cgi}
+  David Mertz dislikes spam.  He wishes to thank Andrew Blais for
+  assistance in this article's testing, as well as for listening
+  to David's peculiar fascination with trigrams and their
+  distributions.  David may be reached at mertz@gnosis.cx; his
+  life pored over at http://gnosis.cx/publish/.  Suggestions and
+  recommendations on this, past, or future, columns are welcomed.
+
+
+

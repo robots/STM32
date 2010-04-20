@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>          <!-- version 0.48 -->
+<!ELEMENT PyObject (attr+)>
+<!ATTLIST PyObject
+    class CDATA #REQUIRED
+    id    CDATA #REQUIRED
+>
+<!ELEMENT attr (item* | entry* | attr*)>
+<!ATTLIST attr
+    name CDATA #REQUIRED
+    type (None | PyObject | dict | list | numeric | string | tuple) #REQUIRED
+    id    CDATA #IMPLIED
+    refid CDATA #IMPLIED
+    value CDATA #IMPLIED
+    class CDATA #IMPLIED
+>
+<!ELEMENT entry (key, val)>
+<!ELEMENT item (item* | attr* | entry*)>
+<!ATTLIST item
+    type (None | PyObject | dict | list | numeric | string | tuple) #REQUIRED
+    id    CDATA #IMPLIED
+    refid CDATA #IMPLIED
+    value CDATA #IMPLIED
+    class CDATA #IMPLIED
+>
+<!ELEMENT key (item*)>
+<!ATTLIST key
+    type (numeric | string | tuple) #REQUIRED
+    value CDATA #IMPLIED
+>
+<!ELEMENT val (item* | entry* | attr*)>
+<!ATTLIST val
+    type (None | PyObject | dict | list | numeric | string | tuple) #REQUIRED
+    id    CDATA #IMPLIED
+    refid CDATA #IMPLIED
+    value CDATA #IMPLIED
+    class CDATA #IMPLIED
+>

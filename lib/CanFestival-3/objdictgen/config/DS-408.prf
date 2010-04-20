@@ -1,0 +1,1738 @@
+global Mapping, AddMenuEntries
+
+"""
+MappingDictionary for DS-408
+"""
+
+Mapping = {
+    0x0080 : {"name" : "Value parameter record Unsigned8", "struct" : array, "need" : True, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'ro', "pdo" : False}]},
+
+    0x0081 : {"name" : "Value parameter record Unsigned16", "struct" : array, "need" : True, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x06, "access" : 'ro', "pdo" : False},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'ro', "pdo" : False}]},
+
+    0x0082 : {"name" : "Value parameter record Unsigned32", "struct" : array, "need" : True, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x06, "access" : 'ro', "pdo" : False},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'ro', "pdo" : False}]},
+
+    0x0083 : {"name" : "Value parameter record integer8", "struct" : array, "need" : True, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'ro', "pdo" : False}]},
+
+    0x0084 : {"name" : "Value parameter record integer16", "struct" : array, "need" : True, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'ro', "pdo" : False},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'ro', "pdo" : False}]},
+
+    0x0085 : {"name" : "Value parameter record integer32", "struct" : array, "need" : True, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'ro', "pdo" : False},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'ro', "pdo" : False}]},
+
+    0x0086 : {"name" : "Value parameter record Float32", "struct" : array, "need" : True, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x08, "access" : 'ro', "pdo" : False},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'ro', "pdo" : False}]},
+
+    0x0087 : {"name" : "Value parameter record Float64", "struct" : array, "need" : True, "values" :
+                [{"name" : "Number of Entries", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x11, "access" : 'ro', "pdo" : False},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'ro', "pdo" : False},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'ro', "pdo" : False}]},
+
+
+
+
+
+    0x6040 : {"name" : "Device control word", "struct" : var, "need" : True, "values" :
+                [{"name" : "Device control word", "type" : 0x06, "access" : 'rw', "pdo" : True}]},
+
+    0x6041 : {"name" : "Device status word", "struct" : var, "need" : True, "values" :
+                [{"name" : "Device status word", "type" : 0x06, "access" : 'ro', "pdo" : True}]},
+
+    0x6042 : {"name" : "Device mode", "struct" : var, "need" : True, "values" :
+                [{"name" : "Device mode", "type" : 0x05, "access" : 'rw', "pdo" : True}]},
+
+    0x6043 : {"name" : "Device control mode", "struct" : var, "need" : False, "values" :
+                [{"name" : "Device control mode", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x604E : {"name" : "Device error code", "struct" : var, "need" : False, "values" :
+                [{"name" : "Device error code", "type" : 0x05, "access" : 'ro', "pdo" : True}]},
+
+    0x604F : {"name" : "Device local", "struct" : var, "need" : False, "values" :
+                [{"name" : "Device local", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6050 : {"name" : "Device version", "struct" : var, "need" : False, "values" :
+                [{"name" : "Device version", "type" : 0x09, "access" : 'ro', "pdo" : False}]},
+
+    0x6051 : {"name" : "Device code number", "struct" : var, "need" : False, "values" :
+                [{"name" : "Device code number", "type" : 0x06, "access" : 'rw', "pdo" : True}]},
+
+    0x6052 : {"name" : "Device serial number", "struct" : var, "need" : False, "values" :
+                [{"name" : "Device version", "type" : 0x09, "access" : 'ro', "pdo" : True}]},
+
+    0x6053 : {"name" : "Device description", "struct" : var, "need" : False, "values" :
+                [{"name" : "Device description", "type" : 0x09, "access" : 'rw', "pdo" : False}]},
+
+    0x6054 : {"name" : "Device model description", "struct" : var, "need" : False, "values" :
+                [{"name" : "Device model description", "type" : 0x09, "access" : 'ro', "pdo" : False}]},
+
+    0x6055 : {"name" : "Device model URL", "struct" : var, "need" : False, "values" :
+                [{"name" : "Device model URL", "type" : 0x09, "access" : 'ro', "pdo" : False}]},
+
+    0x6056 : {"name" : "Device parameter set code", "struct" : var, "need" : False, "values" :
+                [{"name" : "Device parameter set code", "type" : 0x05, "access" : 'rw', "pdo" : True}]},
+
+    0x6057 : {"name" : "Device vendor name", "struct" : var, "need" : False, "values" :
+                [{"name" : "Device vendor name", "type" : 0x09, "access" : 'ro', "pdo" : False}]},
+
+    0x605F : {"name" : "Device capability", "struct" : var, "need" : True, "values" :
+                [{"name" : "Device capability", "type" : 0x07, "access" : 'ro', "pdo" : True}]},
+
+    0x6100 : {"name" : "viv actual value conditioning max interface number", "struct" : var, "need" : False, "values" :
+                [{"name" : "viv actual value conditioning", "type" : 0x05, "access" : 'ro', "pdo" : True}]},
+
+    0x6101 : {"name" : "viv actual value conditioning interface number", "struct" : var, "need" : False, "values" :
+                [{"name" : "viv actual value conditioning", "type" : 0x05, "access" : 'rw', "pdo" : True}]},
+
+    0x6102 : {"name" : "viv actual value conditioning type", "struct" : var, "need" : False, "values" :
+                [{"name" : "viv actual value conditioning type", "type" : 0x05, "access" : 'rw', "pdo" : True}]},
+
+    0x6103 : {"name" : "viv actual value conditioning sign", "struct" : var, "need" : False, "values" :
+                [{"name" : "viv actual value conditioning sign", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6104 : {"name" : "viv actual value conditioning actual value", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6110 : {"name" : "viv actual value conditioning actual valuei 1", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6111 : {"name" : "viv actual value conditioning actual valuei 2", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6112 : {"name" : "viv actual value conditioning actual valuei 3", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6113 : {"name" : "viv actual value conditioning actual valuei 4", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6114 : {"name" : "viv actual value conditioning actual valuei 5", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6115 : {"name" : "viv actual value conditioning actual valuei 6", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6116 : {"name" : "viv actual value conditioning actual valuei 7", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6117 : {"name" : "viv actual value conditioning actual valuei 8", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6120 : {"name" : "viv actual value conditioning min pressure", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6121 : {"name" : "viv actual value conditioning max pressure", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6122 : {"name" : "viv actual value conditioning area", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6123 : {"name" : "viv actual value conditioning pressure offset", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6124 : {"name" : "viv actual value conditioning min tranducer signal", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6125 : {"name" : "viv actual value conditioning max tranducer signal", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6130 : {"name" : "viv actual value conditioning min referance", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6131 : {"name" : "viv actual value conditioning max referance", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6132 : {"name" : "viv actual value conditioning T1", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6133 : {"name" : "viv actual value conditioning min interface", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6134 : {"name" : "viv actual value conditioning max interface", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6140 : {"name" : "viv actual value conditioning resolution", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6141 : {"name" : "viv actual value conditioning position offset", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6142 : {"name" : "viv actual value conditioning zero shift", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6143 : {"name" : "viv actual value conditioning bit size", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6144 : {"name" : "viv actual value conditioning C", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6145 : {"name" : "viv actual value conditioning start stop type", "struct" : var, "need" : False, "values" :
+                [{"name" : "viv actual value conditioning start stop type", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6200 : {"name" : "drv actual value conditioning max interface", "struct" : var, "need" : False, "values" :
+                [{"name" : "drv actual value conditioning max interface", "type" : 0x05, "access" : 'ro', "pdo" : True}]},
+
+    0x6201 : {"name" : "drv actual value conditioning interface number", "struct" : var, "need" : False, "values" :
+                [{"name" : "drv actual value conditioning interface number", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6202 : {"name" : "drv actual value conditioning type", "struct" : var, "need" : False, "values" :
+                [{"name" : "drv actual value conditioning type", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6203 : {"name" : "drv actual value conditioning sign", "struct" : var, "need" : False, "values" :
+                [{"name" : "drv actual value conditioning sign", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6204 : {"name" : "drv actual value conditioning actual value", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6210 : {"name" : "drv actual value conditioning actual value 1", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6211 : {"name" : "drv actual value conditioning actual value 2", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6212 : {"name" : "drv actual value conditioning actual value 3", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6213 : {"name" : "drv actual value conditioning actual value 4", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6214 : {"name" : "drv actual value conditioning actual value 5", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6215 : {"name" : "drv actual value conditioning actual value 6", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6216 : {"name" : "drv actual value conditioning actual value 7", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6217 : {"name" : "drv actual value conditioning actual value 8", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6220 : {"name" : "drv actual value conditioning min pressure", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6221 : {"name" : "drv actual value conditioning max pressure", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6222 : {"name" : "drv actual value conditioning area", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6223 : {"name" : "drv actual value conditioning pressure offset", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6224 : {"name" : "drv actual value conditioning min transducer signal", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6225 : {"name" : "drv actual value conditioning max transducer signal", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6230 : {"name" : "drv actual value conditioning min referance", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6231 : {"name" : "drv actual value conditioning max referance", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6232 : {"name" : "drv actual value conditioning T1", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6233 : {"name" : "drv actual value conditioning min interface", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6234 : {"name" : "drv actual value conditioning max interface", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6240 : {"name" : "drv actual value conditioning resolution", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6241 : {"name" : "drv actual value conditioning position offset", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6242 : {"name" : "drv actual value conditioning zero shift", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6243 : {"name" : "drv actual value conditioning bit size", "struct" : var, "need" : False, "values" :
+                [{"name" : "drv actual value conditioning bit size", "type" : 0x05, "access" : 'rw', "pdo" : True}]},
+
+    0x6244 : {"name" : "drv actual value conditioning C", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6245 : {"name" : "drv actual value conditioning start stop type", "struct" : var, "need" : False, "values" :
+                [{"name" : "drv actual value conditioning bit size", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6280 : {"name" : "drv controller output", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6281 : {"name" : "drv controller output interface min", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6282 : {"name" : "drv controller output interface max", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6290 : {"name" : "drv controler output filter type", "struct" : var, "need" : False, "values" :
+                [{"name" : "drv controler output filter type", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6291 : {"name" : "drv controller output filter T1", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6292 : {"name" : "drv controller output filter D", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6293 : {"name" : "drv controller output filter f0", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x62A0 : {"name" : "drv controller output directional dependant gain type", "struct" : var, "need" : False, "values" :
+                [{"name" : "drv controler output directional dependant gain type", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x62A1 : {"name" : "drv controller output directional dependant gain factor", "struct" : var, "need" : False, "values" :
+                [{"name" : "drv controler output directional dependant gain factor", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x62A2 : {"name" : "drv controller output characteristic compensation type", "struct" : var, "need" : False, "values" :
+                [{"name" : "drv controler output characteristic compensation type", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x62B0 : {"name" : "drv controller output dead band compensation type", "struct" : var, "need" : False, "values" :
+                [{"name" : "drv controler output dead band compensation type", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x62B1 : {"name" : "drv controller output dead band compensation A side", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x62B2 : {"name" : "drv controller output dead band compensation B side", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x62C0 : {"name" : "drv controller output zero correction offset", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x62D0 : {"name" : "drv controller output dither type", "struct" : var, "need" : False, "values" :
+                [{"name" : "drv controler output dither type", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x62D1 : {"name" : "drv controller output dither amplitude", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x62D2 : {"name" : "drv controller output dither frequency", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x62E0 : {"name" : "drv controller output upper limit", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x62E1 : {"name" : "drv controller output lower limit", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x62F0 : {"name" : "drv controller output inverting sign", "struct" : var, "need" : False, "values" :
+                [{"name" : "drv controler output inverting sign", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6300 : {"name" : "vpoc set point", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6301 : {"name" : "vpoc actual value", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6302 : {"name" : "vpoc interface referance", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6310 : {"name" : "vpoc demand value generator demand value", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6311 : {"name" : "vpoc demand value generator referance value", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6314 : {"name" : "vpoc demand value generator hold set point", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6320 : {"name" : "vpoc demand value generator upper limit", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6321 : {"name" : "vpoc demand value generator lower limit", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6322 : {"name" : "vpoc demand value generator scaling factor", "struct" : var, "need" : False, "values" :
+                [{"name" : "vpoc demand value generator scaling factor", "type" : 0x07, "access" : 'rw', "pdo" : True}]},
+
+    0x6323 : {"name" : "vpoc demand value generator scaling offset", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6324 : {"name" : "vpoc demand value generator zero correction offset", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6330 : {"name" : "vpoc demand value generator ramp type", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6331 : {"name" : "vpoc demand value generator ramp acceleration time", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6332 : {"name" : "vpoc demand value generator ramp acceleration time positive", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6333 : {"name" : "vpoc demand value generator ramp acceleration time negative", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6334 : {"name" : "vpoc demand value generator ramp deceleration time", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6335 : {"name" : "vpoc demand value generator ramp deceleration", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6336 : {"name" : "vpoc demand value generator ramp deceleration time negative", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6340 : {"name" : "vpoc demand value generator directional dependent gain type", "struct" : var, "need" : False, "values" :
+                [{"name" : "vpoc demand value generator directional dependent gain type", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6341 : {"name" : "vpoc demand value generator directional dependent gain factor", "struct" : var, "need" : False, "values" :
+                [{"name" : "vpoc demand value generator directional dependent gain factor", "type" : 0x07, "access" : 'rw', "pdo" : True}]},
+
+    0x6342 : {"name" : "vpoc demand value generator dead band compensation type", "struct" : var, "need" : False, "values" :
+                [{"name" : "vpoc demand value generator dead band compensation type", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6343 : {"name" : "vpoc demand value generator dead band compensation A side", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6344 : {"name" : "vpoc demand value generator dead band compensation B side", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6345 : {"name" : "vpoc demand value generator dead band compensation threshold", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6346 : {"name" : "vpoc demand value generator characteristic compensation type", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6350 : {"name" : "vpoc control deviation", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6351 : {"name" : "vpoc control monitoring type", "struct" : var, "need" : False, "values" :
+                [{"name" : "vpoc control monitoring type", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6352 : {"name" : "vpoc control monitoring delay time", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x06, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6353 : {"name" : "vpoc control monitoring threshold", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6354 : {"name" : "vpoc control monitoring upper threshold", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6355 : {"name" : "vpoc control monitoring lower threshold", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6360 : {"name" : "vpoc dither type", "struct" : var, "need" : False, "values" :
+                [{"name" : "vpoc dither type", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6361 : {"name" : "vpoc dither amplitude", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6362 : {"name" : "vpoc dither frequency", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x06, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6371 : {"name" : "vpoc target window monitoring type", "struct" : var, "need" : False, "values" :
+                [{"name" : "vpoc target window monitoring type", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6362 : {"name" : "vpoc target window monitoring switch on time", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x06, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6363 : {"name" : "vpoc target window monitoring switch off time", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x06, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6373 : {"name" : "vpoc target window monitoring threshold", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6374 : {"name" : "vpoc target window monitoring upper threshold", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6375 : {"name" : "vpoc target window monitoring lower threshold", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6380 : {"name" : "vprc set point", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6381 : {"name" : "vprc actual value", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6382 : {"name" : "vprc interface referance", "struct" : var, "need" : False, "values" :
+                [{"name" : "vprc interface referance", "type" : 0x05, "access" : 'rw', "pdo" : True}]},
+
+    0x6390 : {"name" : "vprc demand value generator demand value", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6391 : {"name" : "vprc demand value generator referance value", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6394 : {"name" : "vprc demand value generator hold set point", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x63A0 : {"name" : "vprc demand value generator upper limit", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x63A1 : {"name" : "vprc demand value generator lower limit", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x63A2 : {"name" : "vprc demand value generator scaling factor", "struct" : var, "need" : False, "values" :
+                [{"name" : "vprc demand value generator scaling factor", "type" : 0x07, "access" : 'rw', "pdo" : True}]},
+
+    0x63A3 : {"name" : "vprc demand value generator scaling offset", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x63A4 : {"name" : "vprc demand value generator zero correction offset", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x63B0 : {"name" : "vprc demand value generator ramp type", "struct" : var, "need" : False, "values" :
+                [{"name" : "vprc demand value generator ramp type", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x63B1 : {"name" : "vprc demand value generator ramp acceleration time", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x06, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x63B2 : {"name" : "vprc demand value generator ramp acceleration time positive", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x06, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x63B3 : {"name" : "vprc demand value generator ramp acceleration time negative", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x06, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x63B4 : {"name" : "vprc demand value generator ramp deceleration time", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x06, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x63B5 : {"name" : "vprc demand value generator ramp deceleration time positive", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x06, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x63B5 : {"name" : "vprc demand value generator ramp deceleration time negative", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x06, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x63C0 : {"name" : "vprc demand value generator directional dependent gain type", "struct" : var, "need" : False, "values" :
+                [{"name" : "vprc demand value generator directional dependent gain type", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x63C1 : {"name" : "vprc demand value generator directional dependent gain factor", "struct" : var, "need" : False, "values" :
+                [{"name" : "vprc demand value generator directional dependent gain factor", "type" : 0x07, "access" : 'rw', "pdo" : True}]},
+
+    0x63C2 : {"name" : "vprc demand value generator dead band compensation type", "struct" : var, "need" : False, "values" :
+                [{"name" : "vprc demand value generator dead band compensation type", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x63C3 : {"name" : "vprc demand value generator dead band compensation A side", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x63C4 : {"name" : "vprc demand value generator dead band compensation B side", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x63C5 : {"name" : "vprc demand value generator dead band compensation threshold", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x63D0 : {"name" : "vprc control deviation", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x63D1 : {"name" : "vprc control monitoring type", "struct" : var, "need" : False, "values" :
+                [{"name" : "vprc control monitoring type", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x63D2 : {"name" : "vprc control monitoring delay time", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x06, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x63D3 : {"name" : "vprc control monitoring treshold", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x63D4 : {"name" : "vprc control monitoring upper treshold", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x63D5 : {"name" : "vprc control monitoring lower treshold", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x63E0 : {"name" : "vprc dither type", "struct" : var, "need" : False, "values" :
+                [{"name" : "vprc dither type", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x63E1 : {"name" : "vprc dither amplitude", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x06, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x63E2 : {"name" : "vprc dither frequency", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x06, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x63F0 : {"name" : "vprc target window monitoring type", "struct" : var, "need" : False, "values" :
+                [{"name" : "vprc target window monitoring type", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x63F1 : {"name" : "vprc target window monitoring switch on time", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x06, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x63F2 : {"name" : "vprc target window monitoring switch off time", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x06, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x63F3 : {"name" : "vprc target window monitoring treshold", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x06, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x63F4 : {"name" : "vprc target window monitoring upper treshold", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x63F5 : {"name" : "vprc target window monitoring lower treshold", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x640D : {"name" : "vpqc power limit factor", "struct" : var, "need" : False, "values" :
+                [{"name" : "vprc power limit factor", "type" : 0x07, "access" : 'rw', "pdo" : True}]},
+
+    0x640E : {"name" : "vpqc hydrostatic actual power", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6460 : {"name" : "vpqc dither type", "struct" : var, "need" : False, "values" :
+                [{"name" : "vprc dither type", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6461 : {"name" : "vpqc dither amplitude", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x06, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6462 : {"name" : "vpqc dither frequency", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x06, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6470 : {"name" : "vpqc target window monitoring type", "struct" : var, "need" : False, "values" :
+                [{"name" : "vprc target window monitoring type", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6471 : {"name" : "vpqc target window monitoring switch on time", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x06, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6472 : {"name" : "vpqc target window monitoring switch off time", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x06, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6473 : {"name" : "vpqc target window monitoring threshold", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6474 : {"name" : "vpqc target window monitoring upper threshold", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6475 : {"name" : "vpqc target window monitoring lower threshold", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x03, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6480 : {"name" : "dcol set point", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6490 : {"name" : "dcol demand value generator demand value", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6492 : {"name" : "dcol demand value generator reference A value", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6493 : {"name" : "dcol demand value generator reference B value", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6494 : {"name" : "dcol demand value generator hold set point", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x64A0 : {"name" : "dcol demand value generator upper limit", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x64A1 : {"name" : "dcol demand value generator lower limit", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x64B0 : {"name" : "dcol demand value generator ramp type", "struct" : var, "need" : False, "values" :
+                [{"name" : "dcol demand value generator ramp type", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x64B1 : {"name" : "dcol demand value generator ramp acceleration time", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x64B2 : {"name" : "dcol demand value generator ramp acceleration time positive", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x64B3 : {"name" : "dcol demand value generator ramp acceleration time negative", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x64B4 : {"name" : "dcol demand value generator ramp deceleration time", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x64B5 : {"name" : "dcol demand value generator ramp deceleration time positive", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x64B6 : {"name" : "dcol demand value generator ramp deceleration time negative", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6500 : {"name" : "dsc set point", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6501 : {"name" : "dsc actual value", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6502 : {"name" : "dsc interface referance", "struct" : var, "need" : False, "values" :
+                [{"name" : "dsc interface referance", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6503 : {"name" : "dsc Kp", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6504 : {"name" : "dsc Ti", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6510 : {"name" : "dsc demand value generator demand value", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6512 : {"name" : "dsc demand value generator referance A value", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6513 : {"name" : "dsc demand value generator referance B value", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6514 : {"name" : "dsc demand value generator hold set point", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6520 : {"name" : "dsc demand value generator upper limit", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6521 : {"name" : "dsc demand value generator lower limit", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6530 : {"name" : "dsc demand value generator ramp type", "struct" : var, "need" : False, "values" :
+                [{"name" : "dsc demand value generator ramp type", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6531 : {"name" : "dsc demand value generator ramp acceleration time", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6532 : {"name" : "dsc demand value generator ramp acceleration time positive", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6533 : {"name" : "dsc demand value generator ramp acceleration time negative", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6534 : {"name" : "dsc demand value generator ramp deceleration time", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6535 : {"name" : "dsc demand value generator ramp deceleration time positive", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6536 : {"name" : "dsc demand value generator ramp deceleration time negative", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6550 : {"name" : "dsc control deviation", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6551 : {"name" : "dsc control monitoring type", "struct" : var, "need" : False, "values" :
+                [{"name" : "dsc control monitoring type", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6552 : {"name" : "dsc control monitoring delay time", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6553 : {"name" : "dsc control monitoring threshold", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6554 : {"name" : "dsc control monitoring upper threshold", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6555 : {"name" : "dsc control monitoring lower threshold", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6556 : {"name" : "dsc control monitoring threshold Vmax", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6557 : {"name" : "dsc control monitoring upper threshold Vmax positive", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6558 : {"name" : "dsc control monitoring lower threshold Vmax negative", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6570 : {"name" : "dsc target window monitoring type", "struct" : var, "need" : False, "values" :
+                [{"name" : "dsc target window monitoring type", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6571 : {"name" : "dsc target window monitoring switch on time", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6572 : {"name" : "dsc target window monitoring switch off time", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6573 : {"name" : "dsc target window monitoring threshold", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6574 : {"name" : "dsc target window monitoring upper threshold", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6575 : {"name" : "dsc target window monitoring lower threshold", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6580 : {"name" : "dfpc set point", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6581 : {"name" : "dfpc actual value", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6582 : {"name" : "dfpc interface referance", "struct" : var, "need" : False, "values" :
+                [{"name" : "dfpc interface referance", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6583 : {"name" : "dfpc Kp", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6584 : {"name" : "dfpc Td", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6585 : {"name" : "dfpc T1", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6586 : {"name" : "dfpc Ti", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6587 : {"name" : "dfpc pressure sample time", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6590 : {"name" : "dfpc demand value generator demand value", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6592 : {"name" : "dfpc demand value generator referance A value", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6593 : {"name" : "dfpc demand value generator referance B value", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6594 : {"name" : "dfpc demand value generator hold set point", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x65A0 : {"name" : "dfpc demand value generator upper limit", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x65A1 : {"name" : "dfpc demand value generator lower limit", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x65B0 : {"name" : "dfpc demand value generator ramp type", "struct" : var, "need" : False, "values" :
+                [{"name" : "dfpc demand value generator ramp type", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x65B1 : {"name" : "dfpc demand value generator ramp acceleration time", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x65B2 : {"name" : "dfpc demand value generator ramp acceleration time positive", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x65B3 : {"name" : "dfpc demand value generator ramp acceleration time negative", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x65B4 : {"name" : "dfpc demand value generator ramp deceleration time", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x65B5 : {"name" : "dfpc demand value generator ramp deceleration time positive", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x65B6 : {"name" : "dfpc demand value generator ramp deceleration time negative", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x65D0 : {"name" : "dfpc control deviation", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x65D1 : {"name" : "dfpc control monitoring type", "struct" : var, "need" : False, "values" :
+                [{"name" : "dfpc control monitoring type", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x65D2 : {"name" : "dfpc control monitoring delay time", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x65D3 : {"name" : "dfpc control monitoring threshold", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x65D4 : {"name" : "dfpc control monitoring upper threshold", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x65D5 : {"name" : "dfpc control monitoring lower threshold", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x65D6 : {"name" : "dfpc control monitoring threshold Vmax", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x65D7 : {"name" : "dfpc control monitoring upper threshold Vmax positive", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x65D8 : {"name" : "dfpc control monitoring lower threshold Vmax negative", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x65F0 : {"name" : "dfpc target window monitoring type", "struct" : var, "need" : False, "values" :
+                [{"name" : "dfpc target window monitoring type", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x65F1 : {"name" : "dfpc target window monitoring switch on time", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x02, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x65F2 : {"name" : "dfpc target window monitoring switch off time", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x65F3 : {"name" : "dfpc target window monitoring threshold", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x65F4 : {"name" : "dfpc target window monitoring upper threshold", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x65F5 : {"name" : "dfpc target window monitoring lower threshold", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6600 : {"name" : "dpc set point", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6601 : {"name" : "dpc actual value", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6602 : {"name" : "dpc interface referance", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6603 : {"name" : "dpc Kp", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6604 : {"name" : "dpc Td", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6605 : {"name" : "dpc T1", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6608 : {"name" : "dpc switched integrator type", "struct" : var, "need" : False, "values" :
+                [{"name" : "dpc switched integrator type", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6609 : {"name" : "dpc switched integrator Ti", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x660A : {"name" : "dpc switched integrator dX", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x660C : {"name" : "dpc condition feedback Kv", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x660D : {"name" : "dpc condition feedback Kc", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x660E : {"name" : "dpc condition feedback Kpp", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x660F : {"name" : "dpc condition feedback T1pp", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6610 : {"name" : "dpc demand value generator demand value", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'ro', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6612 : {"name" : "dpc demand value generator referance A value", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6613 : {"name" : "dpc demand value generator referance B value", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6614 : {"name" : "dpc demand value generator hold set point", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6620 : {"name" : "dpc demand value generator upper limit", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6621 : {"name" : "dpc demand value generator lower limit", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6630 : {"name" : "dpc demand value generator ramp type", "struct" : var, "need" : False, "values" :
+                [{"name" : "dpc demand value generator ramp type", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6631 : {"name" : "dpc demand value generator ramp acceleration time", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6632 : {"name" : "dpc demand value generator ramp acceleration time positive", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6633 : {"name" : "dpc demand value generator ramp acceleration time negative", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6634 : {"name" : "dpc demand value generator ramp deceleration time", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6635 : {"name" : "dpc demand value generator ramp deceleration time positive", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6636 : {"name" : "dpc demand value generator ramp deceleration time negative", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6637 : {"name" : "dpc demand value generator ramp velocity", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6638 : {"name" : "dpc demand value generator ramp acceleration", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6639 : {"name" : "dpc demand value generator ramp deceleration", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6650 : {"name" : "dpc control deviation", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6651 : {"name" : "dpc control monitoring type", "struct" : var, "need" : False, "values" :
+                [{"name" : "dpc control monitoring type", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6652 : {"name" : "dpc control monitoring delay time", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6653 : {"name" : "dpc control monitoring threshold", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6654 : {"name" : "dpc control monitoring upper threshold", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6655 : {"name" : "dpc control monitoring lower threshold", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6656 : {"name" : "dpc control monitoring threshold Vmax", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6657 : {"name" : "dpc control monitoring upper threshold Vmax positive", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6658 : {"name" : "dpc control monitoring lower threshold Vmax negative", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6670 : {"name" : "dpc window monitoring type", "struct" : var, "need" : False, "values" :
+                [{"name" : "dpc window monitoring type", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6671 : {"name" : "dpc target window monitoring switch on time", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6672 : {"name" : "dpc target window monitoring switch off time", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x07, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6673 : {"name" : "dpc target window monitoring threshold", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6674 : {"name" : "dpc target window monitoring upper threshold", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]},
+
+    0x6675 : {"name" : "dpc target window monitoring lower threshold", "struct" : array, "need" : False, "values" :
+                [{"name" : "Number of entries", "type" : 0x07, "access" : 'ro', "pdo" : False},
+                 {"name" : "Value", "type" : 0x04, "access" : 'rw', "pdo" : True},
+                 {"name" : "SI unit", "type" : 0x05, "access" : 'rw', "pdo" : True},
+                 {"name" : "Prefix", "type" : 0x02, "access" : 'rw', "pdo" : True}]}
+}
+
+AddMenuEntries  = []

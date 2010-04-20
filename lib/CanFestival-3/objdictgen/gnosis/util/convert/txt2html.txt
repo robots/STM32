@@ -1,0 +1,135 @@
+DMTXT2HTML.PY
+Convert ASCII source files for HTML presentation
+
+David Mertz (mertz@gnosis.cx)
+version 0.1 (May 2000)
+
+    This file is released to the public domain.  I (dqm) would
+    appreciate it if you choose to keep derived works under terms
+    that promote freedom, but obviously am giving up any rights
+    to compel such.
+
+
+
+  This program is not yet particularly smart, and will produce
+  undefined output (or even traceback) if the source file does
+  not meet expected format.  With time, it may get better about
+  this.
+
+      #------------------- Shell Usage -----------------------#
+      Usage: python dmTxt2Html.py [options] [filename]    (or)
+             txt2html.cgi [options] [filename]
+
+          -h, /h, -?, /?, ?:   Show this help screen
+          -type:<type>:        Set conversion type
+                               (see discussion of types)
+          -REBUILD_DOCS:       Generate 'txt2html.txt'
+          -out:<out>:          Output filename (default STDOUT)
+          -proxy:<mode>:       Use proxy element(s) in output
+          <STDIN>, -, /:       Input from STDIN (default)
+
+      Proxy modes are:  NAVIGATOR, TRAP_LINKS, ALL, NONE.
+      Elements are "navigation bar" at top of pages and
+      virtualization of in-page links.  Shell default in NONE.
+
+      Note: CGI is detected by the absence of arguments;, if
+            all defaults are wanted, specify STDIN explicitly:
+
+          python txt2html.py - < MyArticle.txt > MyArticle.html
+-
+      #-------------------- CGI Usage ------------------------#
+      Usage: A URL string may be composed manually, but the
+             normal usage will be to call txt2html.cgi from an
+             HTML form with the fields:  'source', 'preface,
+             'type', 'proxy'.  'preface' allows explicit
+             overriding of HTTP headers in the returned page,
+             normally as a hidden field.  Use with caution (or
+             don't use at all, the default is sensible).
+
+      Example: <form method="get" action="http://gnosis.cx/cgi/txt2html.cgi">
+               URL: <input type="text" name="source" size=40>
+               <input type="submit" name="go" value="Display!"></form>
+
+------------------------------------------------------------------------
+Expected input format for [HTML]
+
+  Source HTML is presented unmodified except for the inclusion
+  of the Txt2HTML proxy at the top of each page.
+
+Expected input format for [PYTHON]
+
+   Source Python code is marked up with syntax highlighting, but
+   no other HTML elements are introduced (no headers, no bold, no
+   URLs, etc)
+
+Expected input format for [SMART_ASCII]
+
+      #--- Paragraph rules: ---#
+      - Title occurs on first line of document, unindented and in
+        all caps.
+      - Subtitle occurs on second line, unindented and in mixed
+        case.
+      - Name, affiliation, date occur, unindented and in mixed
+        case, on lines 4-6.
+      - Section headings are preceded by two blank lines,
+        unindented, in all caps, followed by one line of 72
+        dashes and one blank line.
+      - Regular text paragraphs are block style, and are indented
+        two spaces.
+      - Block quotations are indented four spaces, rather than
+        the two of original text.
+      - Code samples are indented six spaces (with internal
+        indentation of code lines in the proper relative
+        position).
+      - Code samples may begin with a line indicating a title for
+        that block.  If present, this title is indented the same
+        six spaces as the rest of the block, and begins and ends
+        with a pound sign ('#').  Dashes are used to fill space
+        within the title for ASCII asthetics.
+-
+      #--- Character rules: ---#
+      - All character markup has the pattern:
+            whitespace-symbol-words(s)-symbol-whitespace
+        Examples are given, and this can be searched for
+        programmatically.  The use of character markup applies
+        *only* to text paragraphs, *not* to code samples!
+      - Asterisks are used for an inflectional emphasis.  For
+        example, "All good boys *deserve* fudge."  This would
+        typically be indicated typographically with boldface or
+        italics.
+      - Underscores are used for book/journal citation.  For
+        example, "Knuth's _Art of Computer Programming_ is
+        essential."  This would typically be indicated
+        typographically with italics or underline.
+      - Single-stroke is used to indicate filenames and function
+        names.  For example, "Every C program has a 'main()'
+        function."  This might be indicated typographically by a
+        fixed font, by boldface, or simply by single-quotes.
+      - Braces are used to indicate a module, package or library.
+        For example, "The [cre] module will replace [re] in
+        Python 1.6."  This will probably be indicated
+        typographically as a fixed font.
+      - Double-stroke is used as either inline quotation or scare
+        quotes.  For example, "It may not be as "easy" as
+        suggested."  In either case, typographic quotes are
+        probably the best format; italics would make some sense
+        also.
+      - Parenthesis are used, and should be preserved as is.
+      - Angle brackets and curly brackets have no special meaning
+        yet.  I may choose to use those if there is something I
+        think the above forms do not capture.
+      - Em-dashes, diacritics, ligatures, and typographic
+        quotations are not available, and standard ASCII
+        approximations are used.
+-
+      #--- Miscellany: ---#
+      - URL's are automatically transformed into a hotlink.
+        Basically, anything that starts with 'http://', 'ftp://',
+        'file://' or 'gopher://' looks like a URL to the program.
+
+
+  This script utilizes the services of the Marc-Andre Lemburg's Python
+  Highlighter for HTML (v0.5+) [py2html].  [py2html] in turn relies on
+  Just van Rossum's [PyFontify] (v.0.3.1+) If these are not present,
+  Txt2HTML hopes to degrade gracefully, but will not provide syntax
+  highlighting for Python source code.

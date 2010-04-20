@@ -1,0 +1,8 @@
+element patron {
+  element name { text }
+  & element id-num { text }
+  & element book {
+      attribute isbn { text }
+      | attribute title { text }
+    }*
+}

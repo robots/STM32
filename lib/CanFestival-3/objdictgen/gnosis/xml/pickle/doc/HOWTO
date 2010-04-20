@@ -1,0 +1,71 @@
+Store Python objects to (pickle-like) XML Documents
+
+Note 0:
+
+    See [...]/gnosis/doc/xml_matters_1.txt for a detailed
+    discussion of this module.  An updated discussion of changes
+    in the module is at [...]/gnosis/doc/xml_matters_11.txt.
+    These articles may also be found (with pretty formatting) at
+    <http://gnosis.cx/publish/>.
+
+    Some enhancements have been contributed by various users,
+    please see [...]/gnosis/xml/pickle/doc/HISTORY for details.
+    Some enhancements may go beyond what is discussed in the
+    referenced article.
+
+Usage:
+
+    xml_pickle offers quite a few ways to perform pickling, so
+    you can pick and choose at your convenience.
+
+      # By inheritence
+      from gnosis.xml.pickle import XML_Pickler
+      class MyClass(XML_Pickler):
+      # create some behavior and attributes for MyClass...
+      o1 = MyClass()
+      # o1 knows how to dump itself
+      xml_str = o1.dumps()
+      o2 = o1.loads(xml_str)
+
+      # With inline instantiation
+      # NOTE: some borderline cases, like builtin types, are
+      #       incompatible with this style (use below style)
+      from gnosis.xml.pickle import XML_Pickler
+      o1 = DataClass()
+      # ...assign attribute values to o1...
+      o1 = XML_Pickler(o1)
+      # this o1 also knows how to dump itself
+      xml_str = o1.dumps()
+      o2 = XML_Pickler().loads(xml_str)
+
+      # Another way to do inline instantiation
+      from gnosis.xml.pickle import XML_Pickler
+      o1 = DataClass()
+      # ...assign attribute values to o1...
+      xml_str = XML_Pickler().dumps(o1)
+      o2 = XML_Pickler().loads(xml_str)
+
+      # Or, inline, the way pickle does it
+      import gnosis.xml.pickle
+      xml_str = gnosis.xml.pickle.dumps(obj)
+      o2 = gnosis.xml.pickle.loads(xml_str)
+
+Security:
+
+    The file [...]/gnosis/xml/pickle/doc/SECURITY contains
+    details of the [xml_pickle] security model and options.  For
+    the impatient, the following code will give decent security
+    with the "expected" pickle behavior:
+
+       from gnosis.xml.pickle import setParanoia
+       setParanoia(0)
+
+Compatibility:
+
+    Requires Python 2.0 and up, however, the PyXML package
+    included in Python 2.0 is too old.  You'll have to install a
+    newer version (at least 0.6.1) from:
+
+      http://pyxml.sourceforge.net/topics/download.html
+
+

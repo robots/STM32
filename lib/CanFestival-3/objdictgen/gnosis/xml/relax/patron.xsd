@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="1.0">
+  <xs:element name="patron">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="name"/>
+        <xs:element ref="id-num"/>
+        <xs:element ref="book"/>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="name">
+    <xs:complexType mixed="true"/>
+  </xs:element>
+  <xs:element name="id-num">
+    <xs:complexType mixed="true"/>
+  </xs:element>
+  <xs:element name="book">
+    <xs:complexType>
+      <xs:attribute name="isbn"/>
+      <xs:attribute name="title"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

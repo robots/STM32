@@ -1,0 +1,32 @@
+All of the files in the "Gnosis XML/Utilities" package may be
+distributed on unlimited terms in unaltered form; and may be used in
+their entirety without restriction as to purpose.  No warranty is made
+to the suitability of any content of this package for any purpose, and
+no liability is assumed by Gnosis Software, Inc, David Mertz, nor by any
+other contributor to the package.
+
+Most of the files in the package are additionally released to the public
+domain, and no copyright claim is made to their content whatsoever.  In
+other words, for that majority of files that are public domain, you may
+chop them up as you like, derive works from them, incorporate them into
+projects/products with other licenses, and in fact do anything you could
+do with content of your own creation.  Giving credit and promoting
+freedom shows good manners, but are not legal obligations.
+
+A few of the files in the package are contractually mandated to remain
+under copyright.  These include, but are not necessarily limited to,
+articles published about the Gnosis XML/Utilities package or components
+thereof.  Conceivably--but not at the moment of this writing--files
+such as test cases, data files, or other documentation, will be included
+that retains a copyright.  In general, I would rather simply release
+these all to the public domain; but anything included that retains
+copyright may still be used and distributed freely, just not altered (if
+anyone want to pay me for my time in negotiating releases, let me know).
+
+Any files retaining copyright will indicate this within the file itself,
+in some form appropriate for the file type (e.g. as comments in source
+code files; in a header line in text files).
+
+David Mertz
+Gnosis Software, Inc.
+mertz@gnosis.cx

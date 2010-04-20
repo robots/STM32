@@ -1,0 +1,47 @@
+Subject: [Announce] Gnosis Utils 1.1.1
+
+This release adds gnosis.xml.relax to the package.
+
+Miscellaneous speedups and bugfixes to gnosis.xml.objectify.
+
+ - addChild() convenience function
+
+Improvements to floating point handling in gnosis.xml.pickle.
+
+Little used gnosis.trigramlib updated per needs of my personal
+spam filter.
+
+Minor fixes in gnosis.util.introspect.
+
+It may be obtained at:
+    http://gnosis.cx/download/Gnosis_Utils-1.1.1.tar.gz
+
+The current release is always available as:
+    http://gnosis.cx/download/Gnosis_Utils-current.tar.gz
+
+Try it out, have fun, send feedback!
+
+David Mertz (mertz@gnosis.cx)
+Frank McIngvale (frankm@hiwaay.net)
+
+------------------------------------------------------------------------
+
+BACKGROUND:  Gnosis Utilities contains a number of Python libraries, most
+(but not all) related to working with XML.  These include:
+
+    gnosis.indexer          (Full-text indexing/searching)
+    gnosis.xml.pickle       (XML pickling of Python objects)
+    gnosis.xml.objectify    (Any XML to "native" Python objects)
+    gnosis.xml.validity     (Enforce validity constraints)
+    gnosis.xml.relax        (Tools for working with RelaxNG)
+    gnosis.xml.indexer      (XPATH indexing of XML documents)
+    [...].convert.txt2html  (Convert ASCII source files to HTML)
+    gnosis.util.dtd2sql     (DTD -> SQL 'CREATE TABLE' statements)
+    gnosis.util.sql2dtd     (SQL query -> DTD for query results)
+    gnosis.util.xml2sql     (XML -> SQL 'INSERT INTO' statements)
+    gnosis.util.combinators (Combinatorial higher-order functions)
+    gnosis.util.introspect  (Introspect Python objects)
+    gnosis.magic            (Multimethods, metaclasses, etc)
+
+...and so much more! :-)
+

@@ -1,0 +1,19 @@
+para	       := (plain / markup)+
+plain 	       := (word / whitespace / punctuation)+
+whitespace     := [ \t\r\n]+
+alphanums      := [a-zA-Z0-9]+
+word   	       := alphanums, (wordpunct, alphanums)*, contraction?
+wordpunct      := [-_]
+contraction    := "'", ('am'/'clock'/'d'/'ll'/'m'/'re'/'s'/'t'/'ve')
+markup	       := emph / strong / module / code / title
+emph	       := '-', plain, '-'
+strong	       := '*', plain, '*'
+module	       := '[', plain, ']'
+code	       := "'", plain, "'"
+title	       := '_', plain, '_'
+punctuation    := (safepunct / mdash)
+mdash	       := '--'
+safepunct      := [!@#$%^&()+=|\{}:;<>,.?/"]
+
+
+

@@ -1,0 +1,97 @@
+#! gmake
+
+#
+# Copyright (C) 2006 Laurent Bessard
+# 
+# This file is part of canfestival, a library implementing the canopen
+# stack
+# 
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+# 
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+# 
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# 
+
+CC = SUB_CC
+CXX = SUB_CXX
+LD = SUB_LD
+OPT_CFLAGS = -O2
+CFLAGS = SUB_OPT_CFLAGS
+PROG_CFLAGS = SUB_PROG_CFLAGS
+EXE_CFLAGS = SUB_EXE_CFLAGS
+OS_NAME = SUB_OS_NAME
+ARCH_NAME = SUB_ARCH_NAME
+PREFIX = SUB_PREFIX
+TARGET = SUB_TARGET
+CAN_DRIVER = SUB_CAN_DRIVER
+TIMERS_DRIVER = SUB_TIMERS_DRIVER
+TESTMASTERSLAVELSS = "TestMasterSlaveLSS"
+
+INCLUDES = -I../../include -I../../include/$(TARGET) -I../../include/$(CAN_DRIVER) -I../../include/$(TIMERS_DRIVER)
+
+MASTER_OBJS = TestSlaveA.o TestSlaveB.o TestMaster.o TestMasterSlaveLSS.o SlaveA.o SlaveB.o Master.o
+
+OBJS = $(MASTER_OBJS) ../../src/libcanfestival.a ../../drivers/$(TARGET)/libcanfestival_$(TARGET).a
+
+ifeq ($(TARGET),win32)
+	TESTMASTERSLAVELSS = "TestMasterSlaveLSS.exe"
+endif
+
+ifeq ($(TIMERS_DRIVER),timers_win32)
+	EXE_CFLAGS =
+endif
+
+#ifeq ($(TIMERS_DRIVER),timers_xeno)
+#	PROGDEFINES = -DUSE_XENO
+#endif
+
+all: $(TESTMASTERSLAVELSS)
+../../drivers/$(TARGET)/libcanfestival_$(TARGET).a:
+	$(MAKE) -C ../../drivers/$(TARGET) libcanfestival_$(TARGET).a
+
+
+$(TESTMASTERSLAVELSS): $(OBJS)
+	$(LD) $(CFLAGS) $(PROG_CFLAGS) ${PROGDEFINES} $(INCLUDES) -o $@ $(OBJS) $(EXE_CFLAGS)
+	
+TestSlaveA.c: TestSlaveA.od
+	$(MAKE) -C ../../objdictgen gnosis
+	python ../../objdictgen/objdictgen.py TestSlaveA.od TestSlaveA.c
+
+TestSlaveB.c: TestSlaveB.od
+	$(MAKE) -C ../../objdictgen gnosis
+	python ../../objdictgen/objdictgen.py TestSlaveB.od TestSlaveB.c
+	
+TestMaster.c: TestMaster.od
+	$(MAKE) -C ../../objdictgen gnosis
+	python ../../objdictgen/objdictgen.py TestMaster.od TestMaster.c
+
+%o: %c
+	$(CC) $(CFLAGS) $(PROG_CFLAGS) ${PROGDEFINES} $(INCLUDES) -o $@ -c $<
+
+clean:
+	rm -f $(MASTER_OBJS)
+	rm -f $(TESTMASTERSLAVELSS)
+		
+mrproper: clean
+	rm -f TestSlaveA.c
+	rm -f TestSlaveB.c
+	rm -f TestMaster.c
+	
+install: TestMasterSlaveLSS
+	mkdir -p $(PREFIX)/bin/
+	cp $< $(PREFIX)/bin/
+	
+uninstall:
+	rm -f $(PREFIX)/bin/TestMasterSlaveLSS
+
+
+

@@ -1,0 +1,71 @@
+WHY I CREATED TXT2HTML
+
+David Mertz
+mertz@gnosis.cx
+Tue 05-16-2000
+
+
+THE ITCH TO SCRATCH
+------------------------------------------------------------------------
+
+  The idea for this still-little project started out as a few
+  lines of single-purpose script.  I started writing articles for
+  a publisher who uses a particular HTML template for articles.
+  It is nice enough looking, and not too cumbersome.
+  Nonetheless, I really like writing in a plain text editor,
+  without bothering with spending keystrokes on tags that you
+  might mistype... and especially without writing in a
+  word-processor or "WYSINWYG" HTML editor.  Nothing between me
+  and the words, as god intended (don't get me started on the
+  missing function keys to the left of my keyboard...  I am just
+  full of theological convictions).
+
+  Yes I know about macros in various editors.  Yes I know about
+  folding away the markup, and syntax-highlighting it to focus on
+  the actual text.  And I even hear that editors can help make
+  sure that tags get spelled correctly, are auto-completed, and
+  so on.  But it is all ways of partially making up for what was
+  lost in the introduction of the markup.
+
+  In terms of markup, it seems like email and Usenet conventions
+  have it right.  An ASCII *boldface* here and there, an
+  _Underlined_ book title every once in a while.  These things
+  are unobtrusive to type, and look good without depending on
+  proprietary formats that cannot be read without special tools,
+  and plain ASCII remains easy to process with programming tools.
+  A few minor conventions about capitalization and spacing added
+  to the mix are enough to represent quite a bit of semantic
+  variation without appearing unnatural to, say, 'less'.  So
+  that's how I started writing my articles.
+
+
+HOW IT GREW OUT OF CONTROL
+------------------------------------------------------------------------
+
+  A few lines of Python were enough to transform my basic ASCII
+  markup into the desired HTML template.  But then, the few lines
+  were awfully fragile about variations from the desired mold.  I
+  got tracebacks for a few mistyped characters.  Oh my!  And
+  wouldn't it be nice to use the wonderful [py2html] module to
+  syntax-highlight the snippets of Python code I am writing
+  *about*?  But just how can I be sure that a snippet is a
+  snippet, and that it is in Python?
+
+  Well now that I've made my script a little less fragile, and a
+  bit more capable, maybe the code should be organized in a
+  better fashion.  And good documentation is essential.  Hey, why
+  not a form of *self*-documentation?
+
+  Hmmm... this nicely documented, reasonably robust tool might be
+  of use to some other people.  But how would they use it?  Well,
+  most of the documents they are likely to want to prettify are
+  probably out there at the end of a http:// or ftp:// somewhere
+  in the world.  Wouldn't it be handy to have the tool run as a
+  CGI (but still as a shell tool also)?  Still, even though a CGI
+  is nice, as soon as you run it, you lose all the context of
+  where you ran from.  It sure would be handy to have a little
+  "navigation agent" that stayed around while you looked at
+  different not-yet-pretty documents.
+
+  And now that I think of it...
+

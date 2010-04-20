@@ -1,0 +1,138 @@
+; This file is part of CanFestival, a library implementing CanOpen Stack. 
+;
+; CanFestival Copyright (C): Edouard TISSERANT and Francis DUPIN
+; CanFestival Win32 port Copyright (C) 2007 Leonid Tochinski, ChattenAssociates, Inc.
+;
+; See COPYING file for copyrights details.
+; 
+; This library is free software; you can redistribute it and/or
+; modify it under the terms of the GNU Lesser General Public
+; License as published by the Free Software Foundation; either
+; version 2.1 of the License, or (at your option) any later version.
+;
+; This library is distributed in the hope that it will be useful,
+; but WITHOUT ANY WARRANTY; without even the implied warranty of
+; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+; Lesser General Public License for more details.
+;
+; You should have received a copy of the GNU Lesser General Public
+; License along with this library; if not, write to the Free Software
+; Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+; CanFestival-3.def : Declares DLL exports.
+
+LIBRARY      "CanFestival-3.DLL"
+
+EXPORTS
+
+        ; dcf.h
+        send_consise_dcf
+
+        ; lifegrd.h
+        _heartbeatError
+        _post_SlaveBootup
+        getNodeState
+        heartbeatInit
+        heartbeatStop
+        proceedNODE_GUARD
+        
+        ; nmtMaster.h
+        masterSendNMTstateChange
+        masterSendNMTnodeguard
+        masterRequestNodeState
+        
+        ; nmtSlave.h
+        proceedNMTstateChange
+        slaveSendBootUp
+        
+        ; objacces.h
+        _storeODSubIndex
+        accessDictionaryError
+        _getODentry
+        _setODentry
+        scanIndexOD
+        RegisterSetODentryCallBack
+        
+        ; pdo.h
+        buildPDO
+        sendPDOrequest
+        proceedPDO
+        sendPDOevent
+        _sendPDOevent
+		PDOInit
+		PDOStop
+		PDOEventTimerAlarm
+		PDOInhibitTimerAlarm
+		CopyBits
+
+        ; sdo.h
+        SDOTimeoutAlarm
+        resetSDO
+        SDOlineToObjdict
+        objdictToSDOline
+        lineToSDO
+        SDOtoLine
+        failedSDO
+        resetSDOline
+        initSDOline
+        getSDOfreeLine
+        getSDOlineOnUse
+        closeSDOtransfer
+        getSDOlineRestBytes
+        setSDOlineRestBytes
+        sendSDO
+        sendSDOabort
+        proceedSDO
+        writeNetworkDict
+        writeNetworkDictCallBack
+        readNetworkDict
+        readNetworkDictCallback
+        getReadResultNetworkDict
+        getWriteResultNetworkDict
+        
+        ; states.h
+        _operational
+        _preOperational
+        _initialisation
+        _stopped
+        canDispatch
+        getState
+        setState
+        getNodeId
+        setNodeId
+        ;initPreOperationalMode
+
+        ; sync.h
+        startSYNC
+        stopSYNC
+        _post_sync
+        _post_TPDO
+        sendSYNC
+        proceedSYNC
+        
+        ; emcy.h
+        emergencyInit
+        emergencyStop
+        EMCY_setError
+        EMCY_errorRecovered
+        _post_emcy
+        
+        ; timer.h
+        SetAlarm
+        DelAlarm
+        TimeDispatch
+        setTimer
+        getElapsedTime
+        
+        ; timers_driver.h
+        TimerInit
+        TimerCleanup
+        StartTimerLoop
+        StopTimerLoop
+        CreateReceiveTask
+        
+        ; win32/canfestival.h
+		LoadCanDriver
+		canSend
+		canOpen
+		canClose
