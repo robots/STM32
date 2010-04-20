@@ -30,16 +30,9 @@
 #define LED_OFF               0xFF
 
 /* Exported functions ------------------------------------------------------- */
-void Set_System(void);
-void Set_USBClock(void);
 void Enter_LowPowerMode(void);
 void Leave_LowPowerMode(void);
-void USB_Interrupts_Config(void);
 void USB_Cable_Config (FunctionalState NewState);
-void USART_Config_Default(void);
-bool USART_Config(void);
-void USB_To_USART_Send_Data(uint8_t* data_buffer, uint8_t Nb_bytes);
-void USART_To_USB_Send_Data(void);
 void Get_SerialNum(void);
 
 /* External variables --------------------------------------------------------*/

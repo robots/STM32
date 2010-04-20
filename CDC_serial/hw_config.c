@@ -27,10 +27,6 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* Extern variables ----------------------------------------------------------*/
-uint8_t buffer_in[VIRTUAL_COM_PORT_DATA_SIZE];
-extern uint32_t count_in;
-extern LINE_CODING linecoding;
-
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
@@ -42,8 +38,8 @@ extern LINE_CODING linecoding;
 *******************************************************************************/
 void Enter_LowPowerMode(void)
 {
-  /* Set the device state to suspend */
-  bDeviceState = SUSPENDED;
+	/* Set the device state to suspend */
+	bDeviceState = SUSPENDED;
 }
 
 /*******************************************************************************
@@ -54,18 +50,15 @@ void Enter_LowPowerMode(void)
 *******************************************************************************/
 void Leave_LowPowerMode(void)
 {
-  DEVICE_INFO *pInfo = &Device_Info;
+	DEVICE_INFO *pInfo = &Device_Info;
 
-  /* Set the device state to the correct state */
-  if (pInfo->Current_Configuration != 0)
-  {
-    /* Device configured */
-    bDeviceState = CONFIGURED;
-  }
-  else
-  {
-    bDeviceState = ATTACHED;
-  }
+	/* Set the device state to the correct state */
+	if (pInfo->Current_Configuration != 0) {
+		/* Device configured */
+		bDeviceState = CONFIGURED;
+	} else {
+		bDeviceState = ATTACHED;
+	}
 }
 
 /*******************************************************************************
@@ -76,43 +69,11 @@ void Leave_LowPowerMode(void)
 *******************************************************************************/
 void USB_Cable_Config (FunctionalState NewState)
 {
-  if (NewState != DISABLE)
-  {
-    GPIO_ResetBits(GPIOC, GPIO_Pin_11);
-  }
-  else
-  {
-    GPIO_SetBits(GPIOC, GPIO_Pin_11);
-  }
-}
-
-void USART_Config_Default(void)
-{
-}
-
-bool USART_Config(void)
-{
-  return (TRUE);
-}
-
-void USB_To_USART_Send_Data(uint8_t* data_buffer, uint8_t Nb_bytes)
-{
-  uint32_t i;
-/*
-  for (i = 0; i < Nb_bytes; i++)
-  {
-    USART_SendData(USART1, *(data_buffer + i));
-    while(USART_GetFlagStatus(USART1, USART_FLAG_TXE) == RESET); 
-  }*/
-}
-
-void USART_To_USB_Send_Data(void)
-{
-	buffer_in[count_in] = 'a';
-  count_in++;
-  UserToPMABufferCopy(buffer_in, ENDP1_TXADDR, count_in);
-  SetEPTxCount(ENDP1, count_in);
-  SetEPTxValid(ENDP1);
+	if (NewState != DISABLE) {
+		GPIO_ResetBits(GPIOC, GPIO_Pin_11);
+	} else {
+		GPIO_SetBits(GPIOC, GPIO_Pin_11);
+	}
 }
 
 /*******************************************************************************
@@ -124,7 +85,7 @@ void USART_To_USB_Send_Data(void)
 *******************************************************************************/
 void Get_SerialNum(void)
 {
-  uint32_t Device_Serial0, Device_Serial1, Device_Serial2;
+	uint32_t Device_Serial0, Device_Serial1, Device_Serial2;
 /*
   Device_Serial0 = *(__IO uint32_t*)(0x1FFFF7E8);
   Device_Serial1 = *(__IO uint32_t*)(0x1FFFF7EC);

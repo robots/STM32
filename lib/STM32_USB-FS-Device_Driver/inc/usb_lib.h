@@ -1,8 +1,8 @@
-/******************** (C) COPYRIGHT 2009 STMicroelectronics ********************
+/******************** (C) COPYRIGHT 2010 STMicroelectronics ********************
 * File Name          : usb_lib.h
 * Author             : MCD Application Team
-* Version            : V3.0.1
-* Date               : 04/27/2009
+* Version            : V3.1.1
+* Date               : 04/07/2010
 * Description        : USB library include files
 ********************************************************************************
 * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
@@ -24,8 +24,20 @@
 #include "usb_def.h"
 #include "usb_core.h"
 #include "usb_init.h"
-#include "usb_mem.h"
-#include "usb_int.h"
+#ifndef STM32F10X_CL
+ #include "usb_mem.h"
+ #include "usb_int.h"
+#endif /* STM32F10X_CL */
+
+#include "usb_sil.h"
+
+#ifdef STM32F10X_CL
+ #include "otgd_fs_cal.h"
+ #include "otgd_fs_pcd.h"
+ #include "otgd_fs_dev.h"
+ #include "otgd_fs_int.h"
+#endif /* STM32F10X_CL */
+
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
@@ -35,4 +47,4 @@
 
 #endif /* __USB_LIB_H */
 
-/******************* (C) COPYRIGHT 2009 STMicroelectronics *****END OF FILE****/
+/******************* (C) COPYRIGHT 2010 STMicroelectronics *****END OF FILE****/

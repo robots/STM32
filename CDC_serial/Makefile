@@ -122,6 +122,7 @@ SRC += $(STMSPDSRCDIR)/misc.c
 #SRC += $(STMEEEMULSRCDIR)/eeprom.c
 
 # usb 
+SRC += $(STMUSBSRCDIR)/usb_sil.c
 SRC += $(STMUSBSRCDIR)/usb_init.c
 SRC += $(STMUSBSRCDIR)/usb_int.c
 SRC += $(STMUSBSRCDIR)/usb_mem.c

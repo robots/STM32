@@ -1,8 +1,8 @@
-/******************** (C) COPYRIGHT 2009 STMicroelectronics ********************
+/******************** (C) COPYRIGHT 2010 STMicroelectronics ********************
 * File Name          : usb_prop.c
 * Author             : MCD Application Team
-* Version            : V3.0.1
-* Date               : 04/27/2009
+* Version            : V3.1.1
+* Date               : 04/07/2010
 * Description        : All processing related to Virtual Com Port Demo
 ********************************************************************************
 * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
@@ -116,15 +116,12 @@ void Virtual_Com_Port_init(void)
 
   /* Connect the device */
   PowerOn();
-  /* USB interrupts initialization */
-  /* clear pending interrupts */
-  _SetISTR(0);
-  wInterrupt_Mask = IMR_MSK;
-  /* set interrupts mask */
-  _SetCNTR(wInterrupt_Mask);
 
-  /* configure the USART 1 to the default settings */
-  USART_Config_Default();
+  /* Perform basic device initialization operations */
+  USB_SIL_Init();
+
+  /* configure the USART to the default settings */
+  //USART_Config_Default();
 
   bDeviceState = UNCONNECTED;
 }
@@ -146,6 +143,20 @@ void Virtual_Com_Port_Reset(void)
 
   /* Set Virtual_Com_Port DEVICE with the default Interface*/
   pInformation->Current_Interface = 0;
+
+#ifdef STM32F10X_CL     
+  /* EP0 is already configured by USB_SIL_Init() function */
+  
+  /* Init EP1 IN as Bulk endpoint */
+  OTG_DEV_EP_Init(EP1_IN, OTG_DEV_EP_TYPE_BULK, VIRTUAL_COM_PORT_DATA_SIZE);
+  
+  /* Init EP2 IN as Interrupt endpoint */
+  OTG_DEV_EP_Init(EP2_IN, OTG_DEV_EP_TYPE_INT, VIRTUAL_COM_PORT_INT_SIZE);
+
+  /* Init EP3 OUT as Bulk endpoint */
+  OTG_DEV_EP_Init(EP3_OUT, OTG_DEV_EP_TYPE_BULK, VIRTUAL_COM_PORT_DATA_SIZE);  
+#else 
+
   SetBTABLE(BTABLE_ADDRESS);
 
   /* Initialize Endpoint 0 */
@@ -178,6 +189,7 @@ void Virtual_Com_Port_Reset(void)
 
   /* Set this device to response on default address */
   SetDeviceAddress(0);
+#endif /* STM32F10X_CL */
 
   bDeviceState = ATTACHED;
 }
@@ -223,7 +235,7 @@ void Virtual_Com_Port_Status_In(void)
 {
   if (Request == SET_LINE_CODING)
   {
-    USART_Config();
+    //USART_Config();
     Request = 0;
   }
 }
@@ -403,5 +415,5 @@ uint8_t *Virtual_Com_Port_SetLineCoding(uint16_t Length)
   return(uint8_t *)&linecoding;
 }
 
-/******************* (C) COPYRIGHT 2009 STMicroelectronics *****END OF FILE****/
+/******************* (C) COPYRIGHT 2010 STMicroelectronics *****END OF FILE****/
 

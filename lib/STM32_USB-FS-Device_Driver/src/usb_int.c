@@ -1,8 +1,8 @@
-/******************** (C) COPYRIGHT 2009 STMicroelectronics ********************
+/******************** (C) COPYRIGHT 2010 STMicroelectronics ********************
 * File Name          : usb_int.c
 * Author             : MCD Application Team
-* Version            : V3.0.1
-* Date               : 04/27/2009
+* Version            : V3.1.1
+* Date               : 04/07/2010
 * Description        : Endpoint CTR (Low and High) interrupt's service routines
 ********************************************************************************
 * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
@@ -12,6 +12,7 @@
 * CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE CODING
 * INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
 *******************************************************************************/
+#ifndef STM32F10X_CL
 
 /* Includes ------------------------------------------------------------------*/
 #include "usb_lib.h"
@@ -20,8 +21,8 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-uint16_t SaveRState;
-uint16_t SaveTState;
+__IO uint16_t SaveRState;
+__IO uint16_t SaveTState;
 
 /* Extern variables ----------------------------------------------------------*/
 extern void (*pEpInt_IN[7])(void);    /*  Handles IN  interrupts   */
@@ -40,11 +41,10 @@ extern void (*pEpInt_OUT[7])(void);   /*  Handles OUT interrupts   */
 *******************************************************************************/
 void CTR_LP(void)
 {
-  uint32_t wEPVal = 0;
+  __IO uint16_t wEPVal = 0;
   /* stay in loop while pending ints */
   while (((wIstr = _GetISTR()) & ISTR_CTR) != 0)
   {
-    _SetISTR((uint16_t)CLR_CTR); /* clear CTR flag */
     /* extract highest priority endpoint number */
     EPindex = (uint8_t)(wIstr & ISTR_EP_ID);
     if (EPindex == 0)
@@ -55,11 +55,13 @@ void CTR_LP(void)
 
       /* save RX & TX status */
       /* and set both to NAK */
-      SaveRState = _GetEPRxStatus(ENDP0);
-      SaveTState = _GetEPTxStatus(ENDP0);
-      _SetEPRxStatus(ENDP0, EP_RX_NAK);
-      _SetEPTxStatus(ENDP0, EP_TX_NAK);
 
+
+	    SaveRState = _GetENDPOINT(ENDP0);
+	    SaveTState = SaveRState & EPTX_STAT;
+	    SaveRState &=  EPRX_STAT;	
+
+	    _SetEPRxTxStatus(ENDP0,EP_RX_NAK,EP_TX_NAK);
 
       /* DIR bit = origin of the interrupt */
 
@@ -75,9 +77,9 @@ void CTR_LP(void)
         In0_Process();
 
            /* before terminate set Tx & Rx status */
-          _SetEPRxStatus(ENDP0, SaveRState);
-          _SetEPTxStatus(ENDP0, SaveTState);
-          return;
+
+            _SetEPRxTxStatus(ENDP0,SaveRState,SaveTState);
+		  return;
       }
       else
       {
@@ -87,22 +89,14 @@ void CTR_LP(void)
         /* DIR = 1 & (CTR_TX | CTR_RX) => 2 int pending */
 
         wEPVal = _GetENDPOINT(ENDP0);
-        if ((wEPVal & EP_CTR_TX) != 0)
-        {
-          _ClearEP_CTR_TX(ENDP0);
-          In0_Process();
-          /* before terminate set Tx & Rx status */
-          _SetEPRxStatus(ENDP0, SaveRState);
-          _SetEPTxStatus(ENDP0, SaveTState);
-          return;
-        }
-        else if ((wEPVal &EP_SETUP) != 0)
+        
+        if ((wEPVal &EP_SETUP) != 0)
         {
           _ClearEP_CTR_RX(ENDP0); /* SETUP bit kept frozen while CTR_RX = 1 */
           Setup0_Process();
           /* before terminate set Tx & Rx status */
-          _SetEPRxStatus(ENDP0, SaveRState);
-          _SetEPTxStatus(ENDP0, SaveTState);
+
+		      _SetEPRxTxStatus(ENDP0,SaveRState,SaveTState);
           return;
         }
 
@@ -111,8 +105,8 @@ void CTR_LP(void)
           _ClearEP_CTR_RX(ENDP0);
           Out0_Process();
           /* before terminate set Tx & Rx status */
-          _SetEPRxStatus(ENDP0, SaveRState);
-          _SetEPTxStatus(ENDP0, SaveTState);
+     
+		     _SetEPRxTxStatus(ENDP0,SaveRState,SaveTState);
           return;
         }
       }
@@ -189,4 +183,6 @@ void CTR_HP(void)
   }/* while(...) */
 }
 
-/******************* (C) COPYRIGHT 2009 STMicroelectronics *****END OF FILE****/
+#endif  /* STM32F10X_CL */
+
+/******************* (C) COPYRIGHT 2010 STMicroelectronics *****END OF FILE****/

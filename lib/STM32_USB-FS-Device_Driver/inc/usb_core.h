@@ -1,8 +1,8 @@
-/******************** (C) COPYRIGHT 2009 STMicroelectronics ********************
+/******************** (C) COPYRIGHT 2010 STMicroelectronics ********************
 * File Name          : usb_core.h
 * Author             : MCD Application Team
-* Version            : V3.0.1
-* Date               : 04/27/2009
+* Version            : V3.1.1
+* Date               : 04/07/2010
 * Description        : Standard protocol processing functions prototypes
 ********************************************************************************
 * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
@@ -235,9 +235,9 @@ extern  DEVICE  Device_Table;
 extern DEVICE_INFO Device_Info;
 
 /* cells saving status during interrupt servicing */
-extern uint16_t SaveRState;
-extern uint16_t SaveTState;
+extern __IO uint16_t SaveRState;
+extern __IO uint16_t SaveTState;
 
 #endif /* __USB_CORE_H */
 
-/******************* (C) COPYRIGHT 2009 STMicroelectronics *****END OF FILE****/
+/******************* (C) COPYRIGHT 2010 STMicroelectronics *****END OF FILE****/

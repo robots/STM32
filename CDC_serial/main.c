@@ -14,7 +14,9 @@
 #include "usb_pwr.h"
 
 
+extern uint32_t count_in;
 extern __IO uint32_t count_out;
+extern uint8_t buffer_in[VIRTUAL_COM_PORT_DATA_SIZE];
 extern uint8_t buffer_out[VIRTUAL_COM_PORT_DATA_SIZE];
 
 
@@ -34,15 +36,15 @@ void bli(void) {
 extern uint32_t _isr_vectorsram_offs;
 void NVIC_Configuration(void)
 {
-  /* Set the Vector Table base location at 0x20000000+_isr_vectorsram_offs */
-  NVIC_SetVectorTable(NVIC_VectTab_RAM, (uint32_t)&_isr_vectorsram_offs);
+	/* Set the Vector Table base location at 0x20000000+_isr_vectorsram_offs */
+	NVIC_SetVectorTable(NVIC_VectTab_RAM, (uint32_t)&_isr_vectorsram_offs);
 }
 #else
 extern uint32_t _isr_vectorsflash_offs;
 void NVIC_Configuration(void)
 {
-  /* Set the Vector Table base location at 0x08000000+_isr_vectorsflash_offs */
-  NVIC_SetVectorTable(NVIC_VectTab_FLASH, (uint32_t)&_isr_vectorsflash_offs);
+	/* Set the Vector Table base location at 0x08000000+_isr_vectorsflash_offs */
+	NVIC_SetVectorTable(NVIC_VectTab_FLASH, (uint32_t)&_isr_vectorsflash_offs);
 }
 #endif /* VECT_TAB_RAM */
 
@@ -118,12 +120,12 @@ void GPIO_Configuration(void)
 	GPIO_InitStructure.GPIO_Speed = 0;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN; // analog input
 	GPIO_Init (GPIOC, &GPIO_InitStructure);
-	
-  // Configure USB pull-up pin
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_OD;
-  GPIO_Init(GPIOC, &GPIO_InitStructure);
+
+	// Configure USB pull-up pin
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_OD;
+	GPIO_Init(GPIOC, &GPIO_InitStructure);
 
 	NRF_CS_WRITE(Bit_SET);
 	NRF_CE_WRITE(Bit_RESET);
@@ -135,7 +137,7 @@ void GPIO_Configuration(void)
 int main(void)
 {
 	uint32_t count = 0;
-  NVIC_InitTypeDef NVIC_InitStructure;
+	NVIC_InitTypeDef NVIC_InitStructure;
 
 	/* System Clocks Configuration */
 	RCC_Configuration();
@@ -143,39 +145,42 @@ int main(void)
 	/* NVIC configuration */
 	NVIC_Configuration();
 
-  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
+	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
 
-  NVIC_InitStructure.NVIC_IRQChannel = USB_LP_CAN1_RX0_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
-  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
-  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-  NVIC_Init(&NVIC_InitStructure);
+	NVIC_InitStructure.NVIC_IRQChannel = USB_LP_CAN1_RX0_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_Init(&NVIC_InitStructure);
 
 	/* Configure the GPIO ports */
 	GPIO_Configuration();
 
-  USB_Init();
+	USB_Init();
 
-  while (1)
-  {
-    if ((count_out != 0) && (bDeviceState == CONFIGURED))
-    {
+	while (1) {
+		if ((count_out != 0) && (bDeviceState == CONFIGURED)) {
+			uint8_t i;
 			bli();
-      //USB_To_USART_Send_Data(&buffer_out[0], count_out);
-      count_out = 0;
-    }
+
+//			USB_SIL_Write(EP1_IN, buffer_out, count_out);
+			for (i = 0; i<count_out; i++) {
+				buffer_in[(count_in+i)%64] = buffer_out[i];
+			}
+			count_in += count_out;
+			count_out = 0;
+			count = 0;
+		}
 
 		count++;
-		count%=10000000;
-		if (count == 0) {
+		count%=10000000/2;
+		if (count == 0 && count_in > 0) {
 			bli();
-			UserToPMABufferCopy(buffer_out, ENDP1_TXADDR, count_out);
-			SetEPTxCount(ENDP1, count_out);
+			USB_SIL_Write(EP1_IN, buffer_in, count_in);
 			SetEPTxValid(ENDP1);
-			//USART_To_USB_Send_Data();
 		}
-  }
-	
+	}
+
 	while (1);
 }
 
