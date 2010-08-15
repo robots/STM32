@@ -5,12 +5,12 @@
 INTFUNC void RTC_IRQHandler(void)
 {
 	// Blinking
-	if((GPIOC->IDR)&(0x00001000)) {
-		// clear
-		GPIOC->BRR |= 0x00001000;
+	if (GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_15) == Bit_RESET) {
+		GPIO_WriteBit(GPIOA, GPIO_Pin_15, Bit_SET);
+		GPIO_WriteBit(GPIOA, GPIO_Pin_13, Bit_RESET);
 	} else {
-		// set
-		GPIOC->BSRR |= 0x00001000;
+		GPIO_WriteBit(GPIOA, GPIO_Pin_15, Bit_RESET);
+		GPIO_WriteBit(GPIOA, GPIO_Pin_13, Bit_SET);
 	}
 
 	RTC_ClearFlag(RTC_IT_SEC);
@@ -28,13 +28,13 @@ void RTCInit(void) {
 	BKP_DeInit();
 
 	// Enable the LSE OSC
-	RCC_LSEConfig(RCC_LSE_ON);
+//	RCC_LSEConfig(RCC_LSE_ON);
 
 	// Disable the LSI OSC
-	RCC_LSICmd(DISABLE);
+	RCC_LSICmd(ENABLE);
 
 	// Select the RTC Clock Source
-	RCC_RTCCLKConfig(RCC_RTCCLKSource_LSE);
+	RCC_RTCCLKConfig(RCC_RTCCLKSource_LSI); //RCC_RTCCLKSource_LSE);
 
 	// Enable the RTC Clock
 	RCC_RTCCLKCmd(ENABLE);

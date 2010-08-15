@@ -28,6 +28,8 @@ void RCC_Configuration(void)
 
 	/* Enable GPIO for led */
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOC, ENABLE);
+	// Enable GPIO for led
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO | RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOB, ENABLE);
 
 	// CK_RTC clock selection
 }
@@ -36,17 +38,21 @@ void GPIO_Configuration(void)
 {
 	GPIO_InitTypeDef GPIO_InitStructure;
 
-	GPIO_WriteBit(GPIOC,GPIO_Pin_12,Bit_SET);
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12;
+	GPIO_PinRemapConfig(GPIO_Remap_SWJ_Disable, ENABLE);
+
+
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-	GPIO_Init(GPIOC, &GPIO_InitStructure);
+	GPIO_Init(GPIOB, &GPIO_InitStructure);
+	GPIO_WriteBit(GPIOB, GPIO_Pin_4, Bit_RESET);
 
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_13;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_13 | GPIO_Pin_15;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
-	GPIO_Init(GPIOC, &GPIO_InitStructure);
-
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
+	
+	GPIO_WriteBit(GPIOB, GPIO_Pin_4, Bit_SET);
 }
 
 int main(void)
@@ -63,14 +69,6 @@ int main(void)
 	GPIO_Configuration();
 	RTCInit();
 
-
-	while(GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_13) == Bit_RESET);
-
-	RCC_RTCCLKCmd(DISABLE);
-
-
-
-//	GPIO_SetBits(GPIOC, GPIO_Pin_12);
 	while (1);
 }
 
