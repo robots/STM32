@@ -1,6 +1,0 @@
-usr/include/canfestival/*
-usr/lib/libcanfestival.a
-usr/lib/libcanfestival_unix.a
-usr/share/CanFestival-3/src/*
-usr/share/CanFestival-3/include/*
-usr/share/CanFestival-3/drivers/*

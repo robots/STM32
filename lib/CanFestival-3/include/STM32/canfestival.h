@@ -1,7 +1,8 @@
 /*
-This file is part of CanFestival, a library implementing CanOpen Stack. 
+This file is part of CanFestival, a library implementing CanOpen Stack.
 
 Copyright (C): Edouard TISSERANT and Francis DUPIN
+AVR Port: Andreas GLAUSER and Peter CHRISTEN
 
 See COPYING file for copyrights details.
 
@@ -20,23 +21,16 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#ifndef __TIMERSCFG_H__
-#define __TIMERSCFG_H__
 
-#include <native/task.h>
-#include <native/timer.h>
-#include <native/mutex.h>
-#include <native/cond.h>
-#include <native/sem.h>
-#include <native/alarm.h>
+#ifndef __CAN_CANFESTIVAL__
+#define __CAN_CANFESTIVAL__
 
-// Time unit : ns
-// Time resolution : 64bit (~584 years)
-#define TIMEVAL RTIME
-#define TIMEVAL_MAX ~(RTIME)0
-#define MS_TO_TIMEVAL(ms)  rt_timer_ns2ticks((RTIME)ms*1000000)
-#define US_TO_TIMEVAL(us)  rt_timer_ns2ticks((RTIME)us*1000)
+#include "applicfg.h"
+#include "data.h"
 
-#define TASK_HANDLE RT_TASK
+// ---------  to be called by user app ---------
+//UNS8 canSend(CAN_PORT notused, Message *m);
+//UNS8 canChangeBaudRate(CAN_PORT port, char* baud);
+TIMEVAL getTimerPeriod(void);
 
 #endif

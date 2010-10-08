@@ -1,2 +1,0 @@
-Ici, on met ce qui est spécifique à la carte et au type de processeur :
-l'organisation de la mémoire

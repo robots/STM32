@@ -19,6 +19,15 @@ You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
+
+/*
+ * MD: Timer scheduling was modified to support periodic calling from
+ * Systick handler on STM32.
+ *
+ * getElapsedTime semantic was changed to return timer period, instead of 
+ * difference between consequent calls.
+ */
+
 /*!
 ** @file   timer.c
 ** @author Edouard TISSERANT and Francis DUPIN
@@ -70,20 +79,22 @@ TIMER_HANDLE SetAlarm(CO_Data* d, UNS32 id, TimerCallback_t callback, TIMEVAL va
 
 			if (row_number == last_timer_raw + 1) last_timer_raw++;
 
-			elapsed_time = getElapsedTime();
+//			elapsed_time = getElapsedTime();
 			/* set next wakeup alarm if new entry is sooner than others, or if it is alone */
 			real_timer_value = value;
 			real_timer_value = min_val(real_timer_value, TIMEVAL_MAX);
 
+/* MD: no need to reschedule system timer
 			if (total_sleep_time > elapsed_time && total_sleep_time - elapsed_time > real_timer_value)
 			{
 				total_sleep_time = elapsed_time + real_timer_value;
 				setTimer(real_timer_value);
 			}
+*/
 			row->callback = callback;
 			row->d = d;
 			row->id = id;
-			row->val = value + elapsed_time;
+			row->val = real_timer_value;// + elapsed_time;
 			row->interval = period;
 			row->state = TIMER_ARMED;
 			return row_number;
@@ -121,12 +132,8 @@ int tdcount=0;
 void TimeDispatch(void)
 {
 	TIMER_HANDLE i;
-	TIMEVAL next_wakeup = TIMEVAL_MAX; /* used to compute when should normaly occur next wakeup */
-	/* First run : change timer state depending on time */
-	/* Get time since timer signal */
-	TIMEVAL overrun = getElapsedTime();
 
-	TIMEVAL real_total_sleep_time = total_sleep_time + overrun;
+	TIMEVAL period = getTimerPeriod();
 
 	s_timer_entry *row;
 
@@ -134,7 +141,7 @@ void TimeDispatch(void)
 	{
 		if (row->state & TIMER_ARMED) /* if row is active */
 		{
-			if (row->val <= real_total_sleep_time) /* to be trigged */
+			if (1/*row->val <= real_total_sleep_time*/) /* to be trigged */
 			{
 				if (!row->interval) /* if simply outdated */
 				{
@@ -143,31 +150,37 @@ void TimeDispatch(void)
 				else /* or period have expired */
 				{
 					/* set val as interval, with overrun correction */
-					row->val = row->interval - (overrun % row->interval);
+					row->val = row->interval - (period % row->interval);
 					row->state = TIMER_TRIG_PERIOD; /* ask for trig, periodic */
 					/* Check if this new timer value is the soonest */
+/*MD: no need to reschedule
 					if(row->val < next_wakeup)
 						next_wakeup = row->val;
+*/
 				}
 			}
 			else
 			{
 				/* Each armed timer value in decremented. */
-				row->val -= real_total_sleep_time;
+				row->val -= period;
 
 				/* Check if this new timer value is the soonest */
+/*MD: no need to reschedule
 				if(row->val < next_wakeup)
 					next_wakeup = row->val;
+*/
 			}
 		}
 	}
 
 	/* Remember how much time we should sleep. */
+/*MD: no need to reschedule
 	total_sleep_time = next_wakeup;
-
+*/
 	/* Set timer to soonest occurence */
+/*MD: no need to reschedule
 	setTimer(next_wakeup);
-
+*/
 	/* Then trig them or not. */
 	for(i=0, row = timers; i<=last_timer_raw; i++, row++)
 	{

@@ -19,6 +19,10 @@ You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
+/*
+ * MD: setNodeId - added canfilter setting according to nodeId
+ *
+ */
 /*!
 ** @file   states.c
 ** @author Edouard TISSERANT and Francis DUPIN
@@ -261,6 +265,10 @@ void setNodeId(CO_Data* d, UNS8 nodeId)
       /* cob_id_client = 0x600 + nodeId; */
       *(UNS32*)d->objdict[offset].pSubindex[1].pObject = 0x600 + nodeId;
     }
+
+		/* MD add can filter */
+		canFilterAddMask(*(UNS32*)d->objdict[offset].pSubindex[1].pObject, 0x7FF, 0);
+
     /* Adjust COB-ID Server -> Client (tx) only id already set to default value or id not valid (id==0xFF)*/
     if((*(UNS32*)d->objdict[offset].pSubindex[2].pObject == 0x580 + *d->bDeviceNodeId)||(*d->bDeviceNodeId==0xFF)){
       /* cob_id_server = 0x580 + nodeId; */
@@ -284,6 +292,8 @@ void setNodeId(CO_Data* d, UNS8 nodeId)
     if( offset ) while( (offset <= lastIndex) && (i < 4)) {
       if((*(UNS32*)d->objdict[offset].pSubindex[1].pObject == cobID[i] + *d->bDeviceNodeId)||(*d->bDeviceNodeId==0xFF))
 	      *(UNS32*)d->objdict[offset].pSubindex[1].pObject = cobID[i] + nodeId;
+			/* MD add can filter */
+			canFilterAddMask(*(UNS32*)d->objdict[offset].pSubindex[1].pObject, 0x7FF, 0);
       i ++;
       offset ++;
     }
@@ -306,6 +316,12 @@ void setNodeId(CO_Data* d, UNS8 nodeId)
   /* Update EMCY COB-ID if already set to default*/
   if((*d->error_cobid == *d->bDeviceNodeId + 0x80)||(*d->bDeviceNodeId==0xFF))
     *d->error_cobid = nodeId + 0x80;
+
+	/* MD add filter for NMT */
+	canFilterAddMask(0x000, 0x7FF, 0); /* FIXME ? */
+
+	/* MD add filter for SYNC */
+	canFilterAddMask(0x080, 0x780, 0); /* FIXME ? is this correct for all emcy and sync ? */
 
   /* bDeviceNodeId is defined in the object dictionary. */
   *d->bDeviceNodeId = nodeId;

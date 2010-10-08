@@ -26,33 +26,41 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <stdint.h>
 
+#ifndef NULL
+#define NULL 0l
+#endif
+
 // Integers
 #define INTEGER8 int8_t
 #define INTEGER16 int16_t
 #define INTEGER24
 #define INTEGER32 int32_t
-#define INTEGER40
-#define INTEGER48
-#define INTEGER56
-#define INTEGER64
+#define INTEGER40 int64_t
+#define INTEGER48 int64_t
+#define INTEGER56 int64_t
+#define INTEGER64 int64_t
 
 // Unsigned integers
 #define UNS8   uint8_t
 #define UNS16  uint16_t
 #define UNS32  uint32_t
-/*
-#define UNS24
-#define UNS40
-#define UNS48
-#define UNS56
-#define UNS64
-*/ 
+
+#define UNS24 uint32_t
+#define UNS40 uint64_t
+#define UNS48 uint64_t
+#define UNS56 uint64_t
+#define UNS64 uint64_t
+ 
 
 
 // Reals
 #define REAL32	float
 #define REAL64 double
 #include "can.h"
+
+typedef void* CAN_HANDLE;
+typedef void* CAN_PORT;
+
 
 // MSG functions
 // not finished, the strings have to be placed to the flash and printed out 
