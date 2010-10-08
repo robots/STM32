@@ -1,6 +1,6 @@
 
 
-file FLASH_RUN/stm32_bb.elf
+file FLASH_RUN/stm32_can_encoders.elf
 
 target remote localhost:3333
 

@@ -8,7 +8,12 @@
 #ifndef CANCONTROLLER_H_
 #define CANCONTROLLER_H_
 
+#include "canfestival.h"
+
+extern uint32_t CAN_Error;
+
 struct can_timing_t {
+	const char *baud;
 	uint16_t brp; // brp[0:9]
 	uint16_t ts; // res[15] lbkm[14] res[13:10] swj[9:8] res[7] ts2[6:4] ts1[3:0]
 } __attribute__ ((packed));
@@ -24,7 +29,15 @@ struct can_message_t {
 	uint8_t data[8];
 } __attribute__ ((packed));
 
-void CANController_Init(void);
+uint8_t canChangeBaudRate( CAN_HANDLE fd, char* baud);
+void canInit(char *baud);
+void canHWReinit(void );
+uint8_t canReceive(Message *m);
+uint8_t canSend(CAN_PORT notused, Message *m);
+
+void canFilterClear();
+void canFilterAddMask(uint16_t cobid, uint16_t cobid_mask, uint8_t prio);
+void canFilterApply();
 
 #endif
 

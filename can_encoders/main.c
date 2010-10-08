@@ -12,11 +12,20 @@
 #include "platform.h"
 #include "can.h"
 #include "enc1.h"
+#include "enc2.h"
+#include "STM32Encoders.h"
 
-uint32_t DEBUG_ON = 0;
+/* fixme - to be configurable */
+#define NODE_ID 0x18
 
+#define TIMER_PERIOD 500 /*us*/
+#define CF_TIMER_SCALE 2
 
 static Message m = Message_Initializer;
+uint32_t timerCnt = 0;
+uint32_t DEBUG_ON = 1;
+
+static void TestAlarm(CO_Data* d, UNS32 id);
 
 #ifdef VECT_TAB_RAM
 /* vector-offset (TBLOFF) from bottom of SRAM. defined in linker script */
@@ -73,6 +82,9 @@ void GPIO_Configuration(void)
 
 int main(void)
 {
+	// TODO read from somewhere 
+	uint8_t nodeId = NODE_ID;
+
 	// System Clocks Configuration
 	RCC_Configuration();
 
@@ -83,20 +95,40 @@ int main(void)
 	// Configure the GPIO ports
 	GPIO_Configuration();
 
-	/* Enable SysTick - 500 usec */
-	if (SysTick_Config(SystemFrequency / 500)) {
+	// Enable SysTick - 500 usec 
+	if (SysTick_Config(SystemFrequency / TIMER_PERIOD)) {
 		while (1);
 	}
 
-	CANController_Init();
+	// initialize encoders
+	Enc1_Init();
+	Enc2_Init();
 
-	setNodeId(&STM32Encoders_Data, node_id);
+
+	// initialize can engine
+	canInit("1M");
+
+	// clear filter store (this does not apply the change)
+	canFilterClear();
+
+	// CanFestival initialize state
+	setNodeId(&STM32Encoders_Data, nodeId);
 	setState(&STM32Encoders_Data, Initialisation);  
 
+	// filters should have been added by Canfestival, let's apply changes
+	canFilterApply();
+
+	// blink led, using timer framework in canfestival
+	SetAlarm(0, 0, &TestAlarm, MS_TO_TIMEVAL(500), MS_TO_TIMEVAL(500));
+
 	while (1) {
-		if (CANController_Received > 0) {
-			canReceive(&m);
-			canDispatch(&m);
+		if (canReceive(&m)) {
+			canDispatch(&STM32Encoders_Data, &m);
+		}
+		if (CAN_Error) {
+			CAN_Error = 0;
+			EMCY_setError(&STM32Encoders_Data, 0x5100, 0x08, 0x0000);
+			EMCY_errorRecovered(&STM32Encoders_Data, 0x5100);
 		}
 	}
 
@@ -104,36 +136,35 @@ int main(void)
 
 void SysTick_Handler(void)
 {
-	static uint16_t cnt=0;
-	static uint16_t cnt1=0;
-	static uint8_t flip=0;
+	uint32_t tmp;
 
-	if( cnt++ >= 1000 ) {
-		cnt = 0;
-		if ( flip ) {
-			LED_GREEN(Bit_RESET);
-		} else {
-			LED_GREEN(Bit_SET);
-		}
-		flip = !flip;
-	}
+	// process encoders every TIMER_PERIOD usec, put value into ODict
+	Position_Value = Enc1_GetCount();
+	tmp = Enc2_GetCount();
 
-	/* process encoders every 500usec */
-	Enc1_Count();	
+	Position_Value_for_Multi_Sensor_Device[0] = (int32_t)Position_Value;
+	Position_Value_for_Multi_Sensor_Device[1] = (int32_t)tmp;
 
-	if (cnt1++ >= 1) {
-		cnt1 = 0;
-		TimeDispatch();
-	}
+	// CanFestival hook
+	TimeDispatch();
 }
 
 /* CanFestival Hooks */
-void setTimer(TIMEVAL value) {
-	// bla bla :)
+// the system timer is set to TIMER_PERIOD usec
+TIMEVAL getTimerPeriod(void) {
+	return US_TO_TIMEVAL(TIMER_PERIOD);
 }
 
-/* the system timer is set to 500usec */
-TIMEVAL getElapsedTime(void) {
-	return 500;
+static void TestAlarm(CO_Data* d, UNS32 id)
+{
+	(void)d;
+	(void)id;
+	static uint8_t flip=0;
+	if ( flip ) {
+		LED_GREEN(Bit_RESET);
+	} else {
+		LED_GREEN(Bit_SET);
+	}
+	flip = !flip;
 }
 
