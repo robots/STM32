@@ -74,22 +74,25 @@ STMEEEMULINCDIR = $(STMEEEMULDIR)/include
 # use file-extension c for "c-only"-files
 
 ## Application:
-SRC = fault_handlers.c main.c hw_config.c usb_desc.c usb_endp.c usb_istr.c usb_prop.c usb_pwr.c
-#rtc_bkp.c spi.c adc.c lcd.c input.c menu.c i2c.c lisXXX.c ADIS1625x.c timertest.c mems.c
+SRC = main.c 
+SRC += hw_config.c usb_desc.c usb_endp.c usb_istr.c usb_prop.c usb_pwr.c
+SRC += i2c.c lisXXX.c ADIS1625x.c
+#rtc_bkp.c spi.c adc.c lcd.c input.c menu.c i2c.c lisXXX.c timertest.c mems.c
 
 ## compiler-specific sources
-SRC += startup_stm32f10x.c
+SRC += $(APPLIBDIR)/gcc/startup_stm32f10x.c
 
 ## CMSIS for STM32
 SRC += $(CMSISDIR)/core_cm3.c
 SRC += $(CMSISDIR)/system_stm32f10x.c
+SRC += $(APPLIBDIR)/gcc/fault_handlers.c
 
 ## used parts of the STM-Library
 #SRC += $(STMSPDSRCDIR)/stm32f10x_usart.c
 #SRC += $(STMSPDSRCDIR)/stm32f10x_flash.c
 SRC += $(STMSPDSRCDIR)/stm32f10x_gpio.c
 SRC += $(STMSPDSRCDIR)/stm32f10x_rcc.c
-#SRC += $(STMSPDSRCDIR)/stm32f10x_spi.c
+SRC += $(STMSPDSRCDIR)/stm32f10x_spi.c
 #SRC += $(STMSPDSRCDIR)/stm32f10x_rtc.c
 #SRC += $(STMSPDSRCDIR)/stm32f10x_bkp.c
 #SRC += $(STMSPDSRCDIR)/stm32f10x_pwr.c
@@ -178,7 +181,7 @@ EXTRA_LIBDIRS =
 EXTRA_LIBS =
 
 # Path to Linker-Scripts
-LINKERSCRIPTPATH = .
+LINKERSCRIPTPATH = ../lib/gcc
 
 # Optimization level, can be [0, 1, 2, 3, s]. 
 # 0 = turn off optimization. s = optimize for size.
@@ -445,9 +448,8 @@ flash_load: $(OUTDIR)/$(TARGET).elf
 .PRECIOUS : $(ALLOBJ)
 %.elf:  $(ALLOBJ)
 	@echo
-	@echo $(MSG_LINKING) $@
+	@echo $(MSG_LINKING) $@ && $(CC) $(THUMB) $(CFLAGS) $(ALLOBJ) --output $@ $(LDFLAGS)
 # use $(CC) for C-only projects or $(CPP) for C++-projects:
-	$(CC) $(THUMB) $(CFLAGS) $(ALLOBJ) --output $@ $(LDFLAGS)
 #	$(CPP) $(THUMB) $(CFLAGS) $(ALLOBJ) --output $@ $(LDFLAGS)
 
 
@@ -455,8 +457,7 @@ flash_load: $(OUTDIR)/$(TARGET).elf
 define ASSEMBLE_TEMPLATE
 $(OUTDIR)/$(notdir $(basename $(1))).o : $(1)
 ##	@echo
-	@echo $(MSG_ASSEMBLING) $$< "->" $$@
-	$(CC) -c $(THUMB) $$(ASFLAGS) $$< -o $$@ 
+	@echo $(MSG_ASSEMBLING) $$< "->" $$@ && $(CC) -c $(THUMB) $$(ASFLAGS) $$< -o $$@ 
 endef
 $(foreach src, $(ASRC), $(eval $(call ASSEMBLE_TEMPLATE, $(src)))) 
 
@@ -464,8 +465,7 @@ $(foreach src, $(ASRC), $(eval $(call ASSEMBLE_TEMPLATE, $(src))))
 define ASSEMBLE_ARM_TEMPLATE
 $(OUTDIR)/$(notdir $(basename $(1))).o : $(1)
 ##	@echo
-	@echo $(MSG_ASSEMBLING_ARM) $$< "->" $$@
-	$(CC) -c $$(ASFLAGS) $$< -o $$@ 
+	@echo $(MSG_ASSEMBLING_ARM) $$< "->" $$@ && $(CC) -c $$(ASFLAGS) $$< -o $$@ 
 endef
 $(foreach src, $(ASRCARM), $(eval $(call ASSEMBLE_ARM_TEMPLATE, $(src)))) 
 
@@ -474,8 +474,7 @@ $(foreach src, $(ASRCARM), $(eval $(call ASSEMBLE_ARM_TEMPLATE, $(src))))
 define COMPILE_C_TEMPLATE
 $(OUTDIR)/$(notdir $(basename $(1))).o : $(1)
 ##	@echo
-	@echo $(MSG_COMPILING) $$< "->" $$@
-	$(CC) -c $(THUMB) $$(CFLAGS) $$(CONLYFLAGS) $$< -o $$@ 
+	@echo $(MSG_COMPILING) $$< "->" $$@ && 	$(CC) -c $(THUMB) $$(CFLAGS) $$(CONLYFLAGS) $$< -o $$@ 
 endef
 $(foreach src, $(SRC), $(eval $(call COMPILE_C_TEMPLATE, $(src)))) 
 
@@ -483,8 +482,7 @@ $(foreach src, $(SRC), $(eval $(call COMPILE_C_TEMPLATE, $(src))))
 define COMPILE_C_ARM_TEMPLATE
 $(OUTDIR)/$(notdir $(basename $(1))).o : $(1)
 ##	@echo
-	@echo $(MSG_COMPILING_ARM) $$< "->" $$@
-	$(CC) -c $$(CFLAGS) $$(CONLYFLAGS) $$< -o $$@ 
+	@echo $(MSG_COMPILING_ARM) $$< "->" $$@ && $(CC) -c $$(CFLAGS) $$(CONLYFLAGS) $$< -o $$@ 
 endef
 $(foreach src, $(SRCARM), $(eval $(call COMPILE_C_ARM_TEMPLATE, $(src)))) 
 
@@ -493,8 +491,7 @@ $(foreach src, $(SRCARM), $(eval $(call COMPILE_C_ARM_TEMPLATE, $(src))))
 define COMPILE_CPP_TEMPLATE
 $(OUTDIR)/$(notdir $(basename $(1))).o : $(1)
 ##	@echo
-	@echo $(MSG_COMPILINGCPP) $$< "->" $$@
-	$(CC) -c $(THUMB) $$(CFLAGS) $$(CPPFLAGS) $$< -o $$@ 
+	@echo $(MSG_COMPILINGCPP) $$< "->" $$@ && $(CC) -c $(THUMB) $$(CFLAGS) $$(CPPFLAGS) $$< -o $$@ 
 endef
 $(foreach src, $(CPPSRC), $(eval $(call COMPILE_CPP_TEMPLATE, $(src)))) 
 
@@ -502,8 +499,7 @@ $(foreach src, $(CPPSRC), $(eval $(call COMPILE_CPP_TEMPLATE, $(src))))
 define COMPILE_CPP_ARM_TEMPLATE
 $(OUTDIR)/$(notdir $(basename $(1))).o : $(1)
 ##	@echo
-	@echo $(MSG_COMPILINGCPP_ARM) $$< "->" $$@
-	$(CC) -c $$(CFLAGS) $$(CPPFLAGS) $$< -o $$@ 
+	@echo $(MSG_COMPILINGCPP_ARM) $$< "->" $$@ && $(CC) -c $$(CFLAGS) $$(CPPFLAGS) $$< -o $$@ 
 endef
 $(foreach src, $(CPPSRCARM), $(eval $(call COMPILE_CPP_ARM_TEMPLATE, $(src)))) 
 

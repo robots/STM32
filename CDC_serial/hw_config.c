@@ -18,7 +18,7 @@
 #include "usb_prop.h"
 #include "usb_desc.h"
 #include "hw_config.h"
-#include "platform_config.h"
+#include "platform.h"
 #include "usb_pwr.h"
 
 /* Private typedef -----------------------------------------------------------*/
@@ -69,11 +69,11 @@ void Leave_LowPowerMode(void)
 *******************************************************************************/
 void USB_Cable_Config (FunctionalState NewState)
 {
-	if (NewState != DISABLE) {
-		GPIO_ResetBits(GPIOC, GPIO_Pin_11);
-	} else {
-		GPIO_SetBits(GPIOC, GPIO_Pin_11);
-	}
+  if (NewState != DISABLE) {
+    GPIO_ResetBits(USB_DISCONNECT, USB_DISCONNECT_PIN);
+  } else {
+    GPIO_SetBits(USB_DISCONNECT, USB_DISCONNECT_PIN);
+  }
 }
 
 /*******************************************************************************
@@ -85,8 +85,9 @@ void USB_Cable_Config (FunctionalState NewState)
 *******************************************************************************/
 void Get_SerialNum(void)
 {
-	uint32_t Device_Serial0, Device_Serial1, Device_Serial2;
 /*
+	uint32_t Device_Serial0, Device_Serial1, Device_Serial2;
+
   Device_Serial0 = *(__IO uint32_t*)(0x1FFFF7E8);
   Device_Serial1 = *(__IO uint32_t*)(0x1FFFF7EC);
   Device_Serial2 = *(__IO uint32_t*)(0x1FFFF7F0);

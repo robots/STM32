@@ -13,6 +13,8 @@
 #include "hw_config.h"
 #include "usb_pwr.h"
 
+#include "ADIS1625x.h"
+#include "lisXXX.h"
 
 extern uint32_t count_in;
 extern __IO uint32_t count_out;
@@ -70,7 +72,7 @@ void RCC_Configuration(void)
 void GPIO_Configuration(void)
 {
 	GPIO_InitTypeDef GPIO_InitStructure;
-	
+/*	
 	// PA1 - MIC
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
 	GPIO_InitStructure.GPIO_Speed = 0;
@@ -89,9 +91,9 @@ void GPIO_Configuration(void)
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 
-
+*/
 	// PB2 - LCD_DC, PB10 - ADIS_CS
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2 | GPIO_Pin_10;
+	GPIO_InitStructure.GPIO_Pin = /*GPIO_Pin_2 |*/ GPIO_Pin_10;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP; // output push-pull
 	GPIO_Init(GPIOB, &GPIO_InitStructure);
@@ -101,7 +103,7 @@ void GPIO_Configuration(void)
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPD; // input pull-down
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOB, &GPIO_InitStructure);
-
+/*
 	// PC12 - LED, PC7 - LCD_RES, PC8 - nRF CE, PC10 - LCD_E
 	GPIO_WriteBit(GPIOC,GPIO_Pin_12,Bit_SET);
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12 | GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_10;
@@ -120,22 +122,23 @@ void GPIO_Configuration(void)
 	GPIO_InitStructure.GPIO_Speed = 0;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN; // analog input
 	GPIO_Init (GPIOC, &GPIO_InitStructure);
-
+*/
 	// Configure USB pull-up pin
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_OD;
 	GPIO_Init(GPIOC, &GPIO_InitStructure);
-
+/*
 	NRF_CS_WRITE(Bit_SET);
 	NRF_CE_WRITE(Bit_RESET);
-
+*/
 	ADIS_CS_WRITE(Bit_SET);
 	ADIS_RESET_WRITE(Bit_SET);
 }
 
 int main(void)
 {
+	uint8_t state = 0;
 	uint32_t count = 0;
 	NVIC_InitTypeDef NVIC_InitStructure;
 
@@ -157,27 +160,58 @@ int main(void)
 	GPIO_Configuration();
 
 	USB_Init();
+	LisXXX_Init();
+	ADIS_Init();
+
+
 
 	while (1) {
 		if ((count_out != 0) && (bDeviceState == CONFIGURED)) {
-			uint8_t i;
 			bli();
-
-//			USB_SIL_Write(EP1_IN, buffer_out, count_out);
-			for (i = 0; i<count_out; i++) {
-				buffer_in[(count_in+i)%64] = buffer_out[i];
-			}
-			count_in += count_out;
+			state = buffer_out[0];
 			count_out = 0;
-			count = 0;
 		}
 
-		count++;
-		count%=10000000/2;
-		if (count == 0 && count_in > 0) {
-			bli();
-			USB_SIL_Write(EP1_IN, buffer_in, count_in);
-			SetEPTxValid(ENDP1);
+		if (state == 'a' && count_in == 0) {
+			if ((GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_5)) == Bit_SET) {
+				uint16_t rate;
+				uint16_t temp;
+				uint16_t angle;
+
+				count_in = 0;
+
+				buffer_in[count_in] = 'a';
+				count_in++;
+
+				LisXXX_GetData((struct lisxxx_data_t *)&buffer_in[count_in]);
+				count_in += 6;
+
+				rate = ADIS_ReadReg(GYRO_OUT) & ADIS_DATA;
+/*			
+				temp = ADIS_ReadReg(STATUS) & ADIS_DATA;
+				angle = ADIS_ReadReg(ANGL_OUT)& ADIS_DATA;
+*/
+				buffer_in[count_in] = (rate >> 8) & 0xff;
+				count_in++;
+				buffer_in[count_in] = rate & 0xff;
+				count_in++;
+				buffer_in[count_in] = (temp >> 8) & 0xff;
+				count_in++;
+				buffer_in[count_in] = temp & 0xff;
+				count_in++;
+				buffer_in[count_in] = (angle >> 8) & 0xff;
+				count_in++;
+				buffer_in[count_in] = angle & 0xff;
+				count_in++;
+
+				buffer_in[count_in] = 'b';
+				count_in++;
+
+
+				bli();
+				USB_SIL_Write(EP1_IN, buffer_in, count_in);
+				SetEPTxValid(ENDP1);
+			}
 		}
 	}
 

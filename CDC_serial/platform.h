@@ -37,6 +37,9 @@
 #define ADIS_RESET_PIN     GPIO_Pin_3
 #define ADIS_RESET_GPIO    GPIOA
 
+#define USB_DISCONNECT_PIN GPIO_Pin_11
+#define USB_DISCONNECT     GPIOC
+
 #define LED_WRITE(x)       GPIO_WriteBit(LED_GPIO, LED_PIN, x)
 
 #define LCD_DC_WRITE(x)    GPIO_WriteBit(LCD_DC_GPIO, LCD_DC_PIN, x)
