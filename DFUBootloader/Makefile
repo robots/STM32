@@ -74,12 +74,13 @@ STMEEEMULINCDIR = $(STMEEEMULDIR)/include
 # use file-extension c for "c-only"-files
 
 ## Application:
-SRC = fault_handlers.c main.c hw_config.c usb_desc.c usb_istr.c usb_prop.c usb_pwr.c
+SRC = main.c hw_config.c usb_desc.c usb_istr.c usb_prop.c usb_pwr.c
 SRC += dfu_mal.c flash_if.c
 
 
 ## compiler-specific sources
 SRC += $(APPLIBDIR)/gcc/startup_stm32f10x.c
+SRC += $(APPLIBDIR)/gcc/fault_handlers.c
 
 ## CMSIS for STM32
 SRC += $(CMSISDIR)/core_cm3.c
