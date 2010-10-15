@@ -1,8 +1,8 @@
 /******************** (C) COPYRIGHT 2010 STMicroelectronics ********************
 * File Name          : usb_sil.c
 * Author             : MCD Application Team
-* Version            : V3.1.1
-* Date               : 04/07/2010
+* Version            : V3.2.1
+* Date               : 07/05/2010
 * Description        : Simplified Interface Layer for Global Initialization and 
 *                      Endpoint Rea/Write operations.
 ********************************************************************************
@@ -76,7 +76,7 @@ uint32_t USB_SIL_Write(uint8_t bEpAddr, uint8_t* pBufferPointer, uint32_t wBuffe
 #else
   
    /* Use the PCD interface layer function to write to the selected endpoint */
-   OTGD_FS_PCD_EP_Write (bEpAddr, pBufferPointer, wBufferSize); 
+   PCD_EP_Write (bEpAddr, pBufferPointer, wBufferSize); 
    
 #endif /* STM32F10X_CL */
 
@@ -109,13 +109,13 @@ uint32_t USB_SIL_Read(uint8_t bEpAddr, uint8_t* pBufferPointer)
   USB_OTG_EP *ep;
 
   /* Get the structure pointer of the selected Endpoint */
-  ep = OTGD_FS_PCD_GetOutEP(bEpAddr);
+  ep = PCD_GetOutEP(bEpAddr);
   
   /* Get the number of received data */
   DataLength = ep->xfer_len;
   
   /* Use the PCD interface layer function to read the selected endpoint */
-  OTGD_FS_PCD_EP_Read (bEpAddr, pBufferPointer, DataLength);
+  PCD_EP_Read (bEpAddr, pBufferPointer, DataLength);
   
 #endif /* STM32F10X_CL */
 

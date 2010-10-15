@@ -1,8 +1,8 @@
 /******************** (C) COPYRIGHT 2010 STMicroelectronics ********************
 * File Name          : usb_regs.h
 * Author             : MCD Application Team
-* Version            : V3.1.1
-* Date               : 04/07/2010
+* Version            : V3.2.1
+* Date               : 07/05/2010
 * Description        : Interface prototype functions to USB cell registers
 ********************************************************************************
 * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
@@ -607,6 +607,7 @@ void SetCNTR(uint16_t /*wRegValue*/);
 void SetISTR(uint16_t /*wRegValue*/);
 void SetDADDR(uint16_t /*wRegValue*/);
 void SetBTABLE(uint16_t /*wRegValue*/);
+//void SetBTABLE(uint16_t /*wRegValue*/);
 uint16_t GetCNTR(void);
 uint16_t GetISTR(void);
 uint16_t GetFNR(void);

@@ -1,8 +1,8 @@
 /******************** (C) COPYRIGHT 2010 STMicroelectronics ********************
 * File Name          : otgd_fs_pcd.h
 * Author             : MCD Application Team
-* Version            : V3.1.1
-* Date               : 04/07/2010
+* Version            : V3.2.1
+* Date               : 07/05/2010
 * Description        : Header file of the High Layer device mode interface and 
 *                      wrapping layer
 ********************************************************************************
@@ -58,30 +58,33 @@ typedef struct USB_OTG_USBF
 {
 
   USB_OTG_EP ep0;
-  uint8_t     ep0state;
-  USB_OTG_EP in_ep[ MAX_TX_FIFOS - 1];
-  USB_OTG_EP out_ep[ MAX_TX_FIFOS - 1];
+  USB_OTG_EP in_ep[ NUM_TX_FIFOS - 1];
+  USB_OTG_EP out_ep[ NUM_TX_FIFOS - 1];
 }
 USB_OTG_PCD_DEV , *USB_OTG_PCD_PDEV;
 /********************************************************************************
                      EXPORTED FUNCTION FROM THE USB_OTG LAYER
 ********************************************************************************/
-void  OTGD_FS_PCD_Init(void);
-void  OTGD_FS_PCD_DevConnect (void);
-void  OTGD_FS_PCD_DevDisconnect (void);
-void  OTGD_FS_PCD_EP_SetAddress (uint8_t address);
-uint32_t   OTGD_FS_PCD_EP_Open(EP_DESCRIPTOR *epdesc);
-uint32_t   OTGD_FS_PCD_EP_Close  ( uint8_t  ep_addr);
-uint32_t   OTGD_FS_PCD_EP_Read  ( uint8_t  ep_addr, uint8_t  *pbuf, uint32_t   buf_len);
-uint32_t   OTGD_FS_PCD_EP_Write ( uint8_t  ep_addr, uint8_t  *pbuf, uint32_t   buf_len);
-uint32_t   OTGD_FS_PCD_EP_Stall (uint8_t   epnum);
-uint32_t   OTGD_FS_PCD_EP_ClrStall (uint8_t epnum);
-uint32_t   OTGD_FS_PCD_EP_Flush (uint8_t epnum);
-uint32_t   OTGD_FS_PCD_Handle_ISR(void);
+void        PCD_Init(void);
+void        PCD_DevConnect (void);
+void        PCD_DevDisconnect (void);
+void        PCD_EP_SetAddress (uint8_t address);
+uint32_t    PCD_EP_Open(EP_DESCRIPTOR *epdesc);
+uint32_t    PCD_EP_Close  ( uint8_t  ep_addr);
+uint32_t    PCD_EP_Read  ( uint8_t  ep_addr, 
+                           uint8_t  *pbuf, 
+                           uint32_t   buf_len);
+uint32_t    PCD_EP_Write ( uint8_t  ep_addr, 
+                           uint8_t  *pbuf, 
+                           uint32_t   buf_len);
+uint32_t    PCD_EP_Stall (uint8_t   epnum);
+uint32_t    PCD_EP_ClrStall (uint8_t epnum);
+uint32_t    PCD_EP_Flush (uint8_t epnum);
+uint32_t    PCD_Handle_ISR(void);
 
-USB_OTG_EP* OTGD_FS_PCD_GetOutEP(uint32_t ep_num) ;
-USB_OTG_EP* OTGD_FS_PCD_GetInEP(uint32_t ep_num);
-void OTGD_FS_PCD_EP0_OutStart(void);
+USB_OTG_EP* PCD_GetOutEP(uint32_t ep_num) ;
+USB_OTG_EP* PCD_GetInEP(uint32_t ep_num);
+void        PCD_EP0_OutStart(void);
 
 #endif
 /******************* (C) COPYRIGHT 2010 STMicroelectronics *****END OF FILE****/

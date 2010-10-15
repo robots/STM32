@@ -1,8 +1,8 @@
 /******************** (C) COPYRIGHT 2010 STMicroelectronics ********************
 * File Name          : otgd_fs_int.h
 * Author             : MCD Application Team
-* Version            : V3.1.1
-* Date               : 04/07/2010
+* Version            : V3.2.1
+* Date               : 07/05/2010
 * Description        : Endpoint interrupt's service routines prototypes.
 ********************************************************************************
 * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
@@ -26,10 +26,8 @@
 #ifdef STM32F10X_CL
 
 /* Interrupt Handlers functions */
-uint32_t OTGD_FS_Handle_ModeMismatch_ISR(void);
 uint32_t OTGD_FS_Handle_Sof_ISR(void);
 uint32_t OTGD_FS_Handle_RxStatusQueueLevel_ISR(void);
-uint32_t OTGD_FS_Handle_NPTxFE_ISR(void);
 uint32_t OTGD_FS_Handle_GInNakEff_ISR(void);
 uint32_t OTGD_FS_Handle_GOutNakEff_ISR(void);
 uint32_t OTGD_FS_Handle_EarlySuspend_ISR(void);

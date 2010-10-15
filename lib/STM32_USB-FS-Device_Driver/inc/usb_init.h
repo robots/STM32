@@ -1,8 +1,8 @@
 /******************** (C) COPYRIGHT 2010 STMicroelectronics ********************
 * File Name          : usb_init.h
 * Author             : MCD Application Team
-* Version            : V3.1.1
-* Date               : 04/07/2010
+* Version            : V3.2.1
+* Date               : 07/05/2010
 * Description        : Initialization routines & global variables
 ********************************************************************************
 * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS

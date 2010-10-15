@@ -1,8 +1,8 @@
 /******************** (C) COPYRIGHT 2010 STMicroelectronics ********************
 * File Name          : otgd_fs_dev.c
 * Author             : STMicroelectronics
-* Version            : V3.1.1
-* Date               : 04/07/2010
+* Version            : V3.2.1
+* Date               : 07/05/2010
 * Description        : High Layer device mode interface and wrapping layer.
 ********************************************************************************
 * THE PRESENT SOFTWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
@@ -40,39 +40,24 @@
 void OTG_DEV_Init(void)
 {
   EP_DESCRIPTOR ep_descriptor;
-  USB_OTG_EP *ep;
   
-  /* Set the OTG_USB base registers address */
-  OTGD_FS_SetAddress(USB_OTG_FS1_BASE_ADDR);
-  
-  /* Disable all global interrupts */
-  OTGD_FS_DisableGlobalInt();
-
-  /*Init the Core (common init.) */
-  OTGD_FS_CoreInit();
-
-  /* Init Device */
-  OTGD_FS_CoreInitDev();
-
-  /* Init internal driver structure */
-  OTGD_FS_PCD_Init();
+  /* Init peripheral driver */
+  PCD_Init();
   
   /* Configure and open the IN control EP0 */ 
   ep_descriptor.bEndpointAddress = 0x80;
   ep_descriptor.wMaxPacketSize = 64;  
   ep_descriptor.bmAttributes = USB_ENDPOINT_XFER_CONTROL; 
-  OTGD_FS_PCD_EP_Open(&ep_descriptor);
+  PCD_EP_Open(&ep_descriptor);
   
   /* Configure and open the OUT control EP0 */ 
   ep_descriptor.bEndpointAddress = 0x00;
-  OTGD_FS_PCD_EP_Open(&ep_descriptor);    
+  PCD_EP_Open(&ep_descriptor);    
 
-
-  ep = OTGD_FS_PCD_GetOutEP(0);
-  OTGD_FS_EPStartXfer(ep);
+  OTGD_FS_EPStartXfer(PCD_GetOutEP(0));
   
   /* Enable EP0 to start receiving setup packets */  
-  OTGD_FS_PCD_EP0_OutStart();  
+  PCD_EP0_OutStart();  
   
   /* Enable USB Global interrupt */
   OTGD_FS_EnableGlobalInt();     
@@ -100,20 +85,20 @@ void OTG_DEV_EP_Init(uint8_t bEpAdd, uint8_t bEpType, uint16_t wEpMaxPackSize)
   ep_descriptor.bmAttributes = bEpType; 
   ep_descriptor.wMaxPacketSize = wEpMaxPackSize;
 
-  OTGD_FS_PCD_EP_Flush(bEpAdd);
+  PCD_EP_Flush(bEpAdd);
   
   /* Open the EP with entered parameters */   
-  OTGD_FS_PCD_EP_Open(&ep_descriptor); 
+  PCD_EP_Open(&ep_descriptor); 
   
   /* Activate the EP if it is an OUT EP */
   if ((bEpAdd & 0x80) == 0)
   {
-    ep = OTGD_FS_PCD_GetOutEP(bEpAdd & 0x7F);
+    ep = PCD_GetOutEP(bEpAdd & 0x7F);
     OTGD_FS_EPStartXfer(ep);
   } 
   else
   {
-    ep = OTGD_FS_PCD_GetInEP(bEpAdd & 0x7F);
+    ep = PCD_GetInEP(bEpAdd & 0x7F);
     ep->even_odd_frame = 0;    
     OTG_DEV_SetEPTxStatus(bEpAdd, DEV_EP_TX_NAK);
   }
@@ -132,9 +117,9 @@ uint32_t OTG_DEV_GetEPTxStatus(uint8_t bEpnum)
   USB_OTG_EP *ep;
   uint32_t status = 0;
   
-  ep = OTGD_FS_PCD_GetInEP(bEpnum & 0x7F); 
+  ep = PCD_GetInEP(bEpnum & 0x7F); 
   
-  status = OTGD_FS_Dev_GetEPStatus(ep); 
+  status = OTGD_FS_GetEPStatus(ep); 
   
   return status; 
 }
@@ -151,9 +136,9 @@ uint32_t OTG_DEV_GetEPRxStatus(uint8_t bEpnum)
   USB_OTG_EP *ep;
   uint32_t status = 0;
   
-  ep = OTGD_FS_PCD_GetOutEP(bEpnum & 0x7F); 
+  ep = PCD_GetOutEP(bEpnum & 0x7F); 
   
-  status = OTGD_FS_Dev_GetEPStatus(ep); 
+  status = OTGD_FS_GetEPStatus(ep); 
   
   return status;
 }
@@ -172,14 +157,14 @@ void OTG_DEV_SetEPTxStatus(uint8_t bEpnum, uint32_t Status)
 {
   USB_OTG_EP *ep;
    
-  ep = OTGD_FS_PCD_GetInEP(bEpnum & 0x7F); 
+  ep = PCD_GetInEP(bEpnum & 0x7F); 
   
   if ((bEpnum == 0x80) && (Status == DEV_EP_TX_STALL))
   {
     ep->is_in = 1;
   }
   
-  OTGD_FS_Dev_SetEPStatus(ep, Status); 
+  OTGD_FS_SetEPStatus(ep, Status); 
 }
 
 /*******************************************************************************
@@ -196,9 +181,9 @@ void OTG_DEV_SetEPRxStatus(uint8_t bEpnum, uint32_t Status)
 {
   USB_OTG_EP *ep;
  
-  ep = OTGD_FS_PCD_GetOutEP(bEpnum & 0x7F); 
+  ep = PCD_GetOutEP(bEpnum & 0x7F); 
   
-  OTGD_FS_Dev_SetEPStatus(ep, Status); 
+  OTGD_FS_SetEPStatus(ep, Status); 
 }
 
 /*******************************************************************************
@@ -211,7 +196,7 @@ void OTG_DEV_SetEPRxStatus(uint8_t bEpnum, uint32_t Status)
 *******************************************************************************/
 void USB_DevDisconnect(void)
 {
-  OTGD_FS_PCD_DevDisconnect();
+  PCD_DevDisconnect();
 }
 
 /*******************************************************************************
@@ -224,7 +209,7 @@ void USB_DevDisconnect(void)
 *******************************************************************************/
 void USB_DevConnect(void)
 {
-  OTGD_FS_PCD_DevConnect();
+  PCD_DevConnect();
 }
 
 /*-*-*-*-*-*-*-*-*-* Replace the usb_regs.h defines -*-*-*-*-*-*-*-*-*-*-*-*-*/

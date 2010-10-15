@@ -1,8 +1,8 @@
 /******************** (C) COPYRIGHT 2010 STMicroelectronics ********************
 * File Name          : usb_core.h
 * Author             : MCD Application Team
-* Version            : V3.1.1
-* Date               : 04/07/2010
+* Version            : V3.2.1
+* Date               : 07/05/2010
 * Description        : Standard protocol processing functions prototypes
 ********************************************************************************
 * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
@@ -173,7 +173,10 @@ typedef struct _DEVICE_PROP
   uint8_t* (*GetConfigDescriptor)(uint16_t Length);
   uint8_t* (*GetStringDescriptor)(uint16_t Length);
 
-  uint8_t* RxEP_buffer;
+  /* This field is not used in current library version. It is kept only for 
+   compatibility with previous versions */
+  void* RxEP_buffer;
+   
   uint8_t MaxPacketSize;
 
 }DEVICE_PROP;

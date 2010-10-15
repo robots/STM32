@@ -1,8 +1,8 @@
 /******************** (C) COPYRIGHT 2010 STMicroelectronics ********************
 * File Name          : usb_core.c
 * Author             : MCD Application Team
-* Version            : V3.1.1
-* Date               : 04/07/2010
+* Version            : V3.2.1
+* Date               : 07/05/2010
 * Description        : Standard protocol processing (USB v2.0)
 ********************************************************************************
 * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
@@ -22,7 +22,7 @@
 #define ClrBit(VAR,Place)    (VAR &= ((1 << Place) ^ 255))
 
 #ifdef STM32F10X_CL
- #define Send0LengthData()  {OTGD_FS_PCD_EP_Write (0, 0, 0) ; vSetEPTxStatus(EP_TX_VALID);}
+ #define Send0LengthData()  {PCD_EP_Write (0, 0, 0) ; vSetEPTxStatus(EP_TX_VALID);}
 #else
 #define Send0LengthData() { _SetEPTxCount(ENDP0, 0); \
     vSetEPTxStatus(EP_TX_VALID); \
@@ -459,7 +459,7 @@ void DataStageOut(void)
     pEPinfo->Usb_rOffset += Length;
 
   #ifdef STM32F10X_CL  
-    OTGD_FS_PCD_EP_Read(ENDP0, Buffer, Length); 
+    PCD_EP_Read(ENDP0, Buffer, Length); 
   #else  
     PMAToUserBufferCopy(Buffer, GetEPRxAddr(ENDP0), Length);
   #endif  /* STM32F10X_CL */
@@ -521,7 +521,7 @@ void DataStageIn(void)
       ControlState = WAIT_STATUS_OUT;
 
     #ifdef STM32F10X_CL      
-      OTGD_FS_PCD_EP_Read (ENDP0, 0, 0);
+      PCD_EP_Read (ENDP0, 0, 0);
     #endif  /* STM32F10X_CL */ 
     
     #ifndef STM32F10X_CL 
@@ -543,7 +543,7 @@ void DataStageIn(void)
   DataBuffer = (*pEPinfo->CopyData)(Length);
 
 #ifdef STM32F10X_CL
-  OTGD_FS_PCD_EP_Write (ENDP0, DataBuffer, Length);
+  PCD_EP_Write (ENDP0, DataBuffer, Length);
 #else   
   UserToPMABufferCopy(DataBuffer, GetEPTxAddr(ENDP0), Length);
 #endif /* STM32F10X_CL */ 
@@ -887,10 +887,8 @@ uint8_t Setup0_Process(void)
   USB_OTG_EP *ep;
   uint16_t offset = 0;
  
-  ep = OTGD_FS_PCD_GetOutEP(ENDP0);
+  ep = PCD_GetOutEP(ENDP0);
   pBuf.b = ep->xfer_buff;
-  
-  OTGD_FS_EP0StartXfer(ep);
 #else  
   uint16_t offset = 1;
   
@@ -1031,7 +1029,7 @@ uint8_t Post0_Process(void)
   else if ((pInformation->ControlState == OUT_DATA) ||
       (pInformation->ControlState == WAIT_STATUS_OUT))
   {
-    ep = OTGD_FS_PCD_GetInEP(0);
+    ep = PCD_GetInEP(0);
     ep->is_in = 0;
     OTGD_FS_EP0StartXfer(ep);
     
@@ -1041,7 +1039,7 @@ uint8_t Post0_Process(void)
   else if ((pInformation->ControlState == IN_DATA) || 
       (pInformation->ControlState == WAIT_STATUS_IN))
   {
-    ep = OTGD_FS_PCD_GetInEP(0);
+    ep = PCD_GetInEP(0);
     ep->is_in = 1;
     OTGD_FS_EP0StartXfer(ep);    
   }  
@@ -1060,7 +1058,7 @@ uint8_t Post0_Process(void)
 void SetDeviceAddress(uint8_t Val)
 {
 #ifdef STM32F10X_CL 
-  OTGD_FS_PCD_EP_SetAddress ((uint8_t)Val);
+  PCD_EP_SetAddress ((uint8_t)Val);
 #else 
   uint32_t i;
   uint32_t nEP = Device_Table.Total_Endpoint;

@@ -1,8 +1,8 @@
 /******************** (C) COPYRIGHT 2010 STMicroelectronics ********************
 * File Name          : otgd_fs_cal.h
 * Author             : STMicroelectronics
-* Version            : V3.1.1
-* Date               : 04/07/2010
+* Version            : V3.2.1
+* Date               : 07/05/2010
 * Description        : Header of OTG FS Device Core Access Layer interface.
 ********************************************************************************
 * THE PRESENT SOFTWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
@@ -51,6 +51,7 @@
 #define DEV_EP_RX_NAK       0x2000
 #define DEV_EP_RX_VALID     0x3000
 
+#define USB_OTG_TIMEOUT     200000
 /*****************          GLOBAL DEFINES          ***************************/
 
 #define GAHBCFG_TXFEMPTYLVL_EMPTY              1
@@ -70,9 +71,6 @@
 #define GRXSTS_PKTSTS_IN_XFER_COMP             3
 #define GRXSTS_PKTSTS_DATA_TOGGLE_ERR          5
 #define GRXSTS_PKTSTS_CH_HALTED                7
-
-#define DEVICE_MODE                            0
-#define HOST_MODE                              1
 
 /*****************           DEVICE DEFINES         ***************************/
 
@@ -114,23 +112,8 @@ typedef enum {
   USB_OTG_OK,
   USB_OTG_FAIL
 
-}USB_OTG_Status;
-
-typedef struct USB_OTG_hc
-{
-  uint8_t       hc_num;
-  uint8_t       dev_addr ;
-  uint8_t        ep_num;
-  uint8_t       ep_is_in;
-  uint8_t       speed;
-  uint8_t       ep_type;
-  uint16_t       max_packet;
-  uint8_t       data_pid;
-  uint16_t       multi_count;
-  uint8_t        *xfer_buff;
-  uint32_t       xfer_len;
 }
-USB_OTG_HC , *PUSB_OTG_HC;
+USB_OTG_Status;
 
 typedef struct USB_OTG_ep
 {
@@ -138,14 +121,12 @@ typedef struct USB_OTG_ep
   uint8_t        is_in;
   uint32_t       tx_fifo_num;
   uint32_t       type;
-  uint8_t        data_pid_start;
   uint8_t        even_odd_frame;
   uint32_t       maxpacket;
   uint8_t        *xfer_buff;
   uint32_t       xfer_len;
   uint32_t       xfer_count;
 }
-
 USB_OTG_EP , *PUSB_OTG_EP;
 
 /********************************************************************************
@@ -155,44 +136,32 @@ USB_OTG_EP , *PUSB_OTG_EP;
 #define CLEAR_IN_EP_INTR(epnum,intr) \
   diepint.d32=0; \
   diepint.b.intr = 1; \
-  WRITE_REG32(&core_regs.inep_regs[epnum]->dev_in_ep_int,diepint.d32);
+  USB_OTG_WRITE_REG32(&USB_OTG_FS_regs.DINEPS[epnum]->DIEPINTx,diepint.d32);
 
 #define CLEAR_OUT_EP_INTR(epnum,intr) \
   doepint.d32=0; \
   doepint.b.intr = 1; \
-  WRITE_REG32(&core_regs.outep_regs[epnum]->dev_out_ep_int,doepint.d32);
+  USB_OTG_WRITE_REG32(&USB_OTG_FS_regs.DOUTEPS[epnum]->DOEPINTx,doepint.d32);
 
 
-#define READ_REG32(reg)  (*(__IO uint32_t *)reg)
+#define USB_OTG_READ_REG32(reg)  (*(__IO uint32_t *)reg)
 
-#define WRITE_REG32(reg,value) (*(__IO uint32_t *)reg = value)
+#define USB_OTG_WRITE_REG32(reg,value) (*(__IO uint32_t *)reg = value)
 
-#define MODIFY_REG32(reg,clear_mask,set_mask) \
-  WRITE_REG32(reg, (((READ_REG32(reg)) & ~clear_mask) | set_mask ) )
+#define USB_OTG_MODIFY_REG32(reg,clear_mask,set_mask) \
+  USB_OTG_WRITE_REG32(reg, (((USB_OTG_READ_REG32(reg)) & ~clear_mask) | set_mask ) )
 
 
-#define uDELAY(usec)  udelay(usec)
-#define mDELAY(msec)  uDELAY(msec * 1000)
+#define uDELAY(usec)  USB_OTG_BSP_uDelay(usec)
+#define mDELAY(msec)  USB_OTG_BSP_uDelay(1000 * msec)
 
 #define _OTGD_FS_GATE_PHYCLK     *(__IO uint32_t*)(0x50000E00) = 0x03
 #define _OTGD_FS_UNGATE_PHYCLK   *(__IO uint32_t*)(0x50000E00) = 0x00
 
 /*******************************************************************************
-                   this can be changed for real time base
+                   USB OTG INTERNAL TIME BASE
 *******************************************************************************/
-static void udelay (const uint32_t usec)
-{
-  uint32_t count = 0;
-  const uint32_t utime = usec * 10;
-  do
-  {
-    if ( ++count > utime )
-    {
-      return ;
-    }
-  }
-  while (1);
-}
+void USB_OTG_BSP_uDelay (const uint32_t usec);
 /********************************************************************************
                      EXPORTED FUNCTIONS FROM THE OTGD_FS_CAL LAYER
 ********************************************************************************/
@@ -200,56 +169,32 @@ USB_OTG_Status  OTGD_FS_CoreInit(void);
 USB_OTG_Status  OTGD_FS_SetAddress(uint32_t BaseAddress);
 USB_OTG_Status  OTGD_FS_EnableGlobalInt(void);
 USB_OTG_Status  OTGD_FS_DisableGlobalInt(void);
-
-USB_OTG_Status  USB_OTG_CoreInitHost(void);
-USB_OTG_Status  USB_OTG_EnableHostInt(void);
-USB_OTG_Status  USB_OTG_DisableHostInt(void);
-
-void*  OTGD_FS_ReadPacket(uint8_t *dest, uint16_t bytes);
-USB_OTG_Status OTGD_FS_WritePacket(uint8_t *src, uint8_t ch_ep_num, uint16_t bytes);
-
-USB_OTG_Status  USB_OTG_HcInit(USB_OTG_HC *hc);
-USB_OTG_Status  USB_OTG_StartXfer(USB_OTG_HC *hc);
-
-uint32_t USB_OTG_ResetPort( void);
-
-uint32_t USB_OTG_ReadHPRT0(void);
-uint32_t OTGD_FS_ReadDevAllInEPItr(void);
-uint32_t OTGD_FS_ReadCoreItr(void);
-uint32_t OTGD_FS_ReadOtgItr (void);
-uint32_t USB_OTG_ReadHostAllChannels_intr (void);
-uint8_t IsHostMode(void);
-uint8_t IsDeviceMode(void);
-USB_OTG_Status USB_OTG_HcInit(USB_OTG_HC *hc);
-USB_OTG_Status USB_OTG_HcHalt(uint8_t hc_num);
-
 USB_OTG_Status  OTGD_FS_FlushTxFifo (uint32_t num);
 USB_OTG_Status  OTGD_FS_FlushRxFifo (void);
-USB_OTG_Status  OTGD_FS_SetHostMode (void);
-
-USB_OTG_Status OTGD_FS_PhyInit(void);
-USB_OTG_Status USB_OTG_HcStartXfer(USB_OTG_HC *hc);
-
-USB_OTG_Status OTGD_FS_CoreInitDev (void);
+USB_OTG_Status  OTGD_FS_CoreInitDev (void);
 USB_OTG_Status  OTGD_FS_EnableDevInt(void);
 USB_OTG_Status  OTGD_FS_EP0Activate(void);
 USB_OTG_Status  OTGD_FS_EPActivate(USB_OTG_EP *ep);
 USB_OTG_Status  OTGD_FS_EPDeactivate(USB_OTG_EP *ep);
-
 USB_OTG_Status  OTGD_FS_EPStartXfer(USB_OTG_EP *ep);
-USB_OTG_Status OTGD_FS_EP0StartXfer(USB_OTG_EP *ep);
-
+USB_OTG_Status  OTGD_FS_EP0StartXfer(USB_OTG_EP *ep);
 USB_OTG_Status  OTGD_FS_EPSetStall(USB_OTG_EP *ep);
 USB_OTG_Status  OTGD_FS_EPClearStall(USB_OTG_EP *ep);
-uint32_t OTGD_FS_ReadDevAllOutEp_itr(void);
-uint32_t OTGD_FS_ReadDevOutEP_itr(USB_OTG_EP *ep);
-uint32_t OTGD_FS_ReadDevAllInEPItr(void);
+uint32_t        OTGD_FS_ReadDevAllOutEp_itr(void);
+uint32_t        OTGD_FS_ReadDevOutEP_itr(USB_OTG_EP *ep);
+uint32_t        OTGD_FS_ReadDevAllInEPItr(void);
+uint32_t        OTGD_FS_GetEPStatus(USB_OTG_EP *ep);
+uint32_t        USBD_FS_IsDeviceMode(void);
+uint32_t        OTGD_FS_ReadCoreItr(void);
+USB_OTG_Status  OTGD_FS_WritePacket(uint8_t *src, 
+                                    uint8_t ep_num, 
+                                    uint16_t bytes);
+void*           OTGD_FS_ReadPacket(uint8_t *dest, 
+                                   uint16_t bytes);
 
-
-uint32_t OTGD_FS_Dev_GetEPStatus(USB_OTG_EP *ep);
-void OTGD_FS_Dev_SetEPStatus(USB_OTG_EP *ep, uint32_t Status);
-void OTGD_FS_Dev_SetRemoteWakeup(void);
-void OTGD_FS_Dev_ResetRemoteWakeup(void);
+void            OTGD_FS_SetEPStatus(USB_OTG_EP *ep, uint32_t Status);
+void            OTGD_FS_SetRemoteWakeup(void);
+void            OTGD_FS_ResetRemoteWakeup(void);
 
 #endif /* STM32F10X_CL */
 
