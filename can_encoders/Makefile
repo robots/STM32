@@ -184,7 +184,7 @@ LINKERSCRIPTPATH = $(APPLIBDIR)/gcc
 # 0 = turn off optimization. s = optimize for size.
 # (Note: 3 is not always the best optimization level. See avr-libc FAQ.)
 #OPT = s
-OPT = 1
+OPT = s
 #OPT = 3
 #OPT = 0
 

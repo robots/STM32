@@ -18,14 +18,12 @@
 /* fixme - to be configurable */
 #define NODE_ID 0x18
 
-#define TIMER_PERIOD 500 /*us*/
-#define CF_TIMER_SCALE 2
-
 static Message m = Message_Initializer;
 uint32_t timerCnt = 0;
-uint32_t DEBUG_ON = 1;
+uint32_t DEBUG_ON = 0;
 
 static void TestAlarm(CO_Data* d, UNS32 id);
+static void RedLedOffAlarm(CO_Data* d, UNS32 id);
 
 #ifdef VECT_TAB_RAM
 /* vector-offset (TBLOFF) from bottom of SRAM. defined in linker script */
@@ -96,7 +94,7 @@ int main(void)
 	GPIO_Configuration();
 
 	// Enable SysTick - 500 usec 
-	if (SysTick_Config(SystemFrequency / TIMER_PERIOD)) {
+	if (SysTick_Config(SystemFrequency / 2000)) {
 		while (1);
 	}
 
@@ -104,6 +102,8 @@ int main(void)
 	Enc1_Init();
 	Enc2_Init();
 
+	Enc1_SetCount(0);
+	Enc2_SetCount(0);
 
 	// initialize can engine
 	canInit("1M");
@@ -123,10 +123,21 @@ int main(void)
 
 	while (1) {
 		if (canReceive(&m)) {
+			static uint8_t flip=0;
+			if ( flip ) {
+				LED_GREEN(Bit_SET);
+			} else {
+				LED_GREEN(Bit_RESET);
+			}
+			flip = !flip;
+
 			canDispatch(&STM32Encoders_Data, &m);
 		}
+
 		if (CAN_Error) {
 			CAN_Error = 0;
+			LED_RED(Bit_RESET);
+			SetAlarm(0, 0, &RedLedOffAlarm, MS_TO_TIMEVAL(2500), 0);
 			EMCY_setError(&STM32Encoders_Data, 0x5100, 0x08, 0x0000);
 			EMCY_errorRecovered(&STM32Encoders_Data, 0x5100);
 		}
@@ -150,9 +161,9 @@ void SysTick_Handler(void)
 }
 
 /* CanFestival Hooks */
-// the system timer is set to TIMER_PERIOD usec
+// the system timer is set to 500  usec
 TIMEVAL getTimerPeriod(void) {
-	return US_TO_TIMEVAL(TIMER_PERIOD);
+	return 500;
 }
 
 static void TestAlarm(CO_Data* d, UNS32 id)
@@ -161,10 +172,17 @@ static void TestAlarm(CO_Data* d, UNS32 id)
 	(void)id;
 	static uint8_t flip=0;
 	if ( flip ) {
-		LED_GREEN(Bit_RESET);
+		LED_YELLOW(Bit_SET);
 	} else {
-		LED_GREEN(Bit_SET);
+		LED_YELLOW(Bit_RESET);
 	}
 	flip = !flip;
+}
+
+static void RedLedOffAlarm(CO_Data* d, UNS32 id)
+{
+	(void)d;
+	(void)id;
+	LED_RED(Bit_SET);
 }
 

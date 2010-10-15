@@ -22,7 +22,7 @@ void Enc2_Init(void)
 	NVIC_Int.NVIC_IRQChannelPreemptionPriority = 5;
 	NVIC_Int.NVIC_IRQChannelSubPriority = 0;
 	NVIC_Int.NVIC_IRQChannelCmd = ENABLE;
-	NVIC_Int.NVIC_IRQChannel = TIM2_IRQn;
+	NVIC_Int.NVIC_IRQChannel = TIM3_IRQn;
 	NVIC_Init(&NVIC_Int);
 
 	TIM_EncoderInterfaceConfig(TIM3, TIM_EncoderMode_TI12, TIM_ICPolarity_Rising, TIM_ICPolarity_Rising);
@@ -35,7 +35,7 @@ void Enc2_SetCount(uint32_t in)
 {
 	TIM_Cmd(TIM3, DISABLE);
 	Enc2_TotalCount = in;
-	TIM2->CNT = 0;
+	TIM3->CNT = 0;
 	TIM_Cmd(TIM3, ENABLE);
 }
 

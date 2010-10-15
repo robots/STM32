@@ -19,8 +19,8 @@ static const struct can_timing_t CAN_Timings[] = {
 
 #define FILTER_NUM	14
 static CAN_FilterInitTypeDef CAN_Filters[FILTER_NUM] = {
-// IdHigh, IdLow, MaskIdHigh, MaxkIdLow, FIFO, FilterNum, Mode, scale, Active 
-	{ 0x0000, 0x0000, 0x0000, 0x0000, 0, 0, CAN_FilterMode_IdMask, CAN_FilterScale_32bit, ENABLE},
+	// Id_H,  Id_L    MskIdH  MskIdL  FIFO Filt# Mode                   Scale                  Active 
+	{ 0x0000, 0x0000, 0x0000, 0x0000, 0,   0,    CAN_FilterMode_IdMask, CAN_FilterScale_32bit, ENABLE },
 };
 
 
@@ -86,7 +86,7 @@ void canHWReinit()
 	//CAN1->IER = 0x00008F13; // enable all interrupts (except FIFOx full/overrun, sleep/wakeup)
 	CAN1->IER = CAN_IER_TMEIE ;//| CAN_IER_FMPIE0;
 	CAN1->IER |= CAN_IER_EWGIE | CAN_IER_EPVIE | CAN_IER_BOFIE | CAN_IER_LECIE;
-//	CAN1->IER |= CAN_IER_ERRIE; 
+//	CAN1->IER |= CAN_IER_ERRIE; // FIXME 
 
 	// enter the init mode
 	CAN1->MCR &= ~CAN_MCR_SLEEP;
@@ -137,8 +137,6 @@ void canFilterApply()
 void canFilterAddMask(uint16_t cobid, uint16_t cobid_mask, uint8_t prio)
 {
 	uint8_t i = 0;
-	uint32_t fId;
-	uint32_t fMsk;
 
 	for (i = 0; i < FILTER_NUM; i++) {
 		if (CAN_Filters[i].CAN_FilterActivation == DISABLE)
@@ -149,21 +147,18 @@ void canFilterAddMask(uint16_t cobid, uint16_t cobid_mask, uint8_t prio)
 	if (i >= FILTER_NUM) 
 		return;
 
-	fId = cobid << 21;
-	fMsk = cobid_mask << 21 | 0x04; // 0x04 - check IDE bit (no extended frames)
-
 	CAN_Filters[i].CAN_FilterActivation = ENABLE;
 	CAN_Filters[i].CAN_FilterNumber = i;
 	CAN_Filters[i].CAN_FilterScale = CAN_FilterScale_32bit;
 	CAN_Filters[i].CAN_FilterMode = CAN_FilterMode_IdMask;
 	CAN_Filters[i].CAN_FilterFIFOAssignment = (prio > 0)? 1: 0;
-  CAN_Filters[i].CAN_FilterIdHigh = (fId >> 16) & 0xFFFF;
-	CAN_Filters[i].CAN_FilterIdLow = fId & 0xFFFF;
-	CAN_Filters[i].CAN_FilterMaskIdHigh = (fMsk >> 16) & 0xFFFF;
-  CAN_Filters[i].CAN_FilterMaskIdLow = fMsk & 0xFFFF;
+  CAN_Filters[i].CAN_FilterIdHigh = cobid << 5;
+	CAN_Filters[i].CAN_FilterIdLow = 0x0000;
+	CAN_Filters[i].CAN_FilterMaskIdHigh = cobid_mask << 5;
+  CAN_Filters[i].CAN_FilterMaskIdLow = 0x0004;
 }
 
-/* TODO: priority mail scheduling for emcy */
+/* TODO: priority scheduling */
 uint8_t canSend(CAN_PORT notused, Message *m)
 {
 	(void)notused;
@@ -203,7 +198,7 @@ uint8_t canSend(CAN_PORT notused, Message *m)
 /* TX interrupt */
 void USB_HP_CAN1_TX_IRQHandler(void) {
 	if (CAN1->TSR & CAN_TSR_RQCP0) {
-		CAN1->TSR |= CAN_TSR_RQCP2;
+		CAN1->TSR |= CAN_TSR_RQCP0;
 	}
 	if (CAN1->TSR & CAN_TSR_RQCP1) {
 		CAN1->TSR |= CAN_TSR_RQCP1;
@@ -212,7 +207,7 @@ void USB_HP_CAN1_TX_IRQHandler(void) {
 /*		CANController_Status |= (CAN1->TSR & CAN_TSR_ALST2)?CAN_STAT_ALST:0;
 		CANController_Status |= (CAN1->TSR & CAN_TSR_TERR2)?CAN_STAT_TERR:0;
 		CANController_Status |= (CAN1->TSR & CAN_TSR_TXOK2)?CAN_STAT_TXOK:0;*/
-		CAN1->TSR |= CAN_TSR_RQCP0;
+		CAN1->TSR |= CAN_TSR_RQCP2;
 	}
 
 }
@@ -225,44 +220,43 @@ void USB_HP_CAN1_TX_IRQHandler(void) {
 /*void USB_LP_CAN1_RX0_IRQHandler(void)*/
 uint8_t canReceive(Message *m)
 {
-	// check FIFO1 for pending message - Higher prio TODO 
-/*
+	uint8_t fifo = 0;
+
 	if (CAN1->RF1R&0x03) {
-		return 2;
+		fifo = 1;
+	} else if (CAN1->RF0R&0x03) {
+		fifo = 0;
+	} else {
+		return 0;
 	}
-*/
-	// check FIFO0 for pending message
-  if (CAN1->RF0R&0x03) {
 
-		if (CAN1->sFIFOMailBox[0].RIR & 0x04) {
-			// extended id we do not support
-			// release fifo
-			CAN1->RF0R = CAN_RF0R_RFOM0;
-			return 0;
-		}
 
-		m->rtr = CAN1->sFIFOMailBox[0].RIR & 0x02 ? 1 : 0;
-		m->len = CAN1->sFIFOMailBox[0].RDTR & CAN_MSG_SIZE;
-
-		// standard id
-		m->cob_id = (uint32_t)0x000007FF & (CAN1->sFIFOMailBox[0].RIR >> 21);
-		// copy data bytes
-		m->data[0] = (uint8_t)0xFF & (CAN1->sFIFOMailBox[0].RDLR);
-		m->data[1] = (uint8_t)0xFF & (CAN1->sFIFOMailBox[0].RDLR >> 8);
-		m->data[2] = (uint8_t)0xFF & (CAN1->sFIFOMailBox[0].RDLR >> 16);
-		m->data[3] = (uint8_t)0xFF & (CAN1->sFIFOMailBox[0].RDLR >> 24);
-		m->data[4] = (uint8_t)0xFF & (CAN1->sFIFOMailBox[0].RDHR);
-		m->data[5] = (uint8_t)0xFF & (CAN1->sFIFOMailBox[0].RDHR >> 8);
-		m->data[6] = (uint8_t)0xFF & (CAN1->sFIFOMailBox[0].RDHR >> 16);
-		m->data[7] = (uint8_t)0xFF & (CAN1->sFIFOMailBox[0].RDHR >> 24);
-		
+	if (CAN1->sFIFOMailBox[fifo].RIR & 0x04) {
+		// extended id we do not support
+		// release fifo
 		CAN1->RF0R = CAN_RF0R_RFOM0;
-		return 1;
+		return 0;
 	}
 
+	m->rtr = CAN1->sFIFOMailBox[fifo].RIR & 0x02 ? 1 : 0;
+	m->len = CAN1->sFIFOMailBox[fifo].RDTR & CAN_MSG_SIZE;
 
-	// no message pending
-	return 0;
+	// standard id
+	m->cob_id = (uint32_t)0x000007FF & (CAN1->sFIFOMailBox[0].RIR >> 21);
+
+	// copy data bytes
+	m->data[0] = (uint8_t)0xFF & (CAN1->sFIFOMailBox[fifo].RDLR);
+	m->data[1] = (uint8_t)0xFF & (CAN1->sFIFOMailBox[fifo].RDLR >> 8);
+	m->data[2] = (uint8_t)0xFF & (CAN1->sFIFOMailBox[fifo].RDLR >> 16);
+	m->data[3] = (uint8_t)0xFF & (CAN1->sFIFOMailBox[fifo].RDLR >> 24);
+	m->data[4] = (uint8_t)0xFF & (CAN1->sFIFOMailBox[fifo].RDHR);
+	m->data[5] = (uint8_t)0xFF & (CAN1->sFIFOMailBox[fifo].RDHR >> 8);
+	m->data[6] = (uint8_t)0xFF & (CAN1->sFIFOMailBox[fifo].RDHR >> 16);
+	m->data[7] = (uint8_t)0xFF & (CAN1->sFIFOMailBox[fifo].RDHR >> 24);
+	
+	CAN1->RF0R = CAN_RF0R_RFOM0;
+
+	return fifo+1;
 }
 
 /* status change and error
