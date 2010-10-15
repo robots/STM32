@@ -141,7 +141,7 @@ void TimeDispatch(void)
 	{
 		if (row->state & TIMER_ARMED) /* if row is active */
 		{
-			if (1/*row->val <= real_total_sleep_time*/) /* to be trigged */
+			if (row->val < period) /* to be trigged */
 			{
 				if (!row->interval) /* if simply outdated */
 				{
@@ -152,35 +152,16 @@ void TimeDispatch(void)
 					/* set val as interval, with overrun correction */
 					row->val = row->interval - (period % row->interval);
 					row->state = TIMER_TRIG_PERIOD; /* ask for trig, periodic */
-					/* Check if this new timer value is the soonest */
-/*MD: no need to reschedule
-					if(row->val < next_wakeup)
-						next_wakeup = row->val;
-*/
 				}
 			}
 			else
 			{
 				/* Each armed timer value in decremented. */
 				row->val -= period;
-
-				/* Check if this new timer value is the soonest */
-/*MD: no need to reschedule
-				if(row->val < next_wakeup)
-					next_wakeup = row->val;
-*/
 			}
 		}
 	}
 
-	/* Remember how much time we should sleep. */
-/*MD: no need to reschedule
-	total_sleep_time = next_wakeup;
-*/
-	/* Set timer to soonest occurence */
-/*MD: no need to reschedule
-	setTimer(next_wakeup);
-*/
 	/* Then trig them or not. */
 	for(i=0, row = timers; i<=last_timer_raw; i++, row++)
 	{
