@@ -77,7 +77,7 @@ void xPortSysTickHandler(void);
 #endif
 
 /* Private function prototypes -----------------------------------------------*/
-void Reset_Handler(void) __attribute__((__interrupt__));
+void Reset_Handler(void) __attribute__((__interrupt__, noreturn));
 extern int main(void);
 void __Init_Data(void);
 void Default_Handler(void);
