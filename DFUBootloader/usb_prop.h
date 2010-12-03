@@ -20,6 +20,9 @@
 /* Includes ------------------------------------------------------------------*/
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
+extern const DEVICE_PROP Device_Property;
+extern const USER_STANDARD_REQUESTS User_Standard_Requests;
+extern const DEVICE  Device_Table;
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
 void DFU_init(void);
@@ -42,15 +45,15 @@ void DFU_write_crc (void);
 
 /* External variables --------------------------------------------------------*/
 
-#define DFU_GetConfiguration          NOP_Process
-//#define DFU_SetConfiguration          NOP_Process
-#define DFU_GetInterface              NOP_Process
-#define DFU_SetInterface              NOP_Process
-#define DFU_GetStatus                 NOP_Process
-#define DFU_ClearFeature              NOP_Process
-#define DFU_SetEndPointFeature        NOP_Process
-#define DFU_SetDeviceFeature          NOP_Process
-//#define DFU_SetDeviceAddress          NOP_Process
+#define DFU_GetConfiguration          NOP_Proc
+//#define DFU_SetConfiguration          NOP_Proc
+#define DFU_GetInterface              NOP_Proc
+#define DFU_SetInterface              NOP_Proc
+#define DFU_GetStatus                 NOP_Proc
+#define DFU_ClearFeature              NOP_Proc
+#define DFU_SetEndPointFeature        NOP_Proc
+#define DFU_SetDeviceFeature          NOP_Proc
+//#define DFU_SetDeviceAddress          NOP_Proc
 
 /*---------------------------------------------------------------------*/
 /*  DFU definitions                                                    */

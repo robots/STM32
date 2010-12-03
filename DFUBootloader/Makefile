@@ -22,9 +22,9 @@ TCHAIN_PREFIX = arm-softfloat-elf-
 # - MCU used for compiler-option (-mcpu)
 # - SUBMDL used for linker-script name (-T) and passed as define
 MCU      = cortex-m3
-CHIP     = STM32F103VB
+CHIP     = STM32F103T6U6
 F_XTAL   = 8000000
-RAMSIZE  = 0x5000
+RAMSIZE  = 0x2800
 SYSCLOCK_CL = SYSCLK_FREQ_72MHz=72000000
 
 # *** This example only supports "FLASH_RUN" ***
@@ -79,7 +79,7 @@ SRC += dfu_mal.c flash_if.c
 
 
 ## compiler-specific sources
-SRC += $(APPLIBDIR)/gcc/startup_stm32f10x.c
+SRC += $(APPLIBDIR)/gcc/startup_stm32f10x_ld.c
 SRC += $(APPLIBDIR)/gcc/fault_handlers.c
 
 ## CMSIS for STM32

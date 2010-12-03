@@ -19,7 +19,13 @@
 #include "usb_pwr.h"
 #include "usb_istr.h"
 
-void NOP_Proc(void) {
+
+/*
+ * TODO: Callbacks into structure instead of DEFINES
+ * so this can be made part of the usb "stack"
+ */
+
+static void NOP_Proc(void) {
 }
 
 #define WEAK __attribute__ ((weak))
@@ -96,7 +102,8 @@ void (*pEpInt_OUT[7])(void) =
 * Output         :
 * Return         :
 *******************************************************************************/
-void USB_Istr(void)
+//void USB_Istr(void)
+void USB_LP_CAN1_RX0_IRQHandler(void)
 {
 
   wIstr = _GetISTR();

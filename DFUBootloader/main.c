@@ -115,16 +115,16 @@ int main(void)
 	/* potrebne ? */
 	USB_Cable_Config(ENABLE);
 	
-  USB_Init();
-
+  //USB_Init();
+	USB_Init(&Device_Table, &Device_Property, &User_Standard_Requests);
   /* Main loop */
   while (1)
   {}
 }
 
-void USB_LP_CAN1_RX0_IRQHandler(void)
-{
-  USB_Istr();
-}
+//void USB_LP_CAN1_RX0_IRQHandler(void)
+//{
+//  USB_Istr();
+//}
 
 /******************* (C) COPYRIGHT 2010 STMicroelectronics *****END OF FILE****/
