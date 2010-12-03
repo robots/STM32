@@ -21,23 +21,26 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 /*  The number of current endpoint, it will be used to specify an endpoint */
- uint8_t	EPindex;
+uint8_t	EPindex BOOTRAM;
 /*  The number of current device, it is an index to the Device_Table */
 /* uint8_t	Device_no; */
 /*  Points to the DEVICE_INFO structure of current device */
 /*  The purpose of this register is to speed up the execution */
-DEVICE_INFO *pInformation;
+DEVICE_INFO *pInformation BOOTRAM;
 /*  Points to the DEVICE_PROP structure of current device */
 /*  The purpose of this register is to speed up the execution */
-DEVICE_PROP *pProperty;
+DEVICE_PROP *pProperty BOOTRAM;
 /*  Temporary save the state of Rx & Tx status. */
 /*  Whenever the Rx or Tx state is changed, its value is saved */
 /*  in this variable first and will be set to the EPRB or EPRA */
 /*  at the end of interrupt process */
-uint16_t	SaveState ;
-uint16_t  wInterrupt_Mask;
-DEVICE_INFO	Device_Info;
-USER_STANDARD_REQUESTS  *pUser_Standard_Requests;
+
+DEVICE *pDevice_Table BOOTRAM;
+
+//uint16_t	SaveState ;
+uint16_t  wInterrupt_Mask BOOTRAM;
+DEVICE_INFO	Device_Info BOOTRAM;
+USER_STANDARD_REQUESTS  *pUser_Standard_Requests BOOTRAM;
 
 /* Extern variables ----------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
@@ -50,12 +53,20 @@ USER_STANDARD_REQUESTS  *pUser_Standard_Requests;
 * Output         : None.
 * Return         : None.
 *******************************************************************************/
-void USB_Init(void)
+//void USB_Init(void)
+void USB_Init(const DEVICE *dt, const DEVICE_PROP *dp, const USER_STANDARD_REQUESTS *usr, void* pEPin_cb, void* pEPout_cb)
 {
+	if (pEPout_cb)
+		memcpy(pEpInt_OUT, pEPout_cb, sizeof(pEpInt_OUT));
+
+	if (pEPin_cb)
+		memcpy(pEpInt_IN, pEPin_cb, sizeof(pEpInt_IN));
+
+	pDevice_Table = dt;
   pInformation = &Device_Info;
   pInformation->ControlState = 2;
-  pProperty = &Device_Property;
-  pUser_Standard_Requests = &User_Standard_Requests;
+  pProperty = dp;//&Device_Property;
+  pUser_Standard_Requests = usr;//&User_Standard_Requests;
   /* Initialize devices one by one */
   pProperty->Init();
 }

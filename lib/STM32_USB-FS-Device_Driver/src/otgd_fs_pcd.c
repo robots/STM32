@@ -19,7 +19,7 @@
 #include "otgd_fs_cal.h"
 #include "otgd_fs_pcd.h"
 
-USB_OTG_PCD_DEV USB_OTG_PCD_dev;
+USB_OTG_PCD_DEV USB_OTG_PCD_dev BOOTRAM;
 
 extern USB_OTG_CORE_REGS     USB_OTG_FS_regs;
 /*******************************************************************************

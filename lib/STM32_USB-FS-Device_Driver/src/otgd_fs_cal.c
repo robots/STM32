@@ -25,7 +25,7 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 
-USB_OTG_CORE_REGS     USB_OTG_FS_regs;
+USB_OTG_CORE_REGS     USB_OTG_FS_regs BOOTRAM;
 
 /* Private function prototypes -----------------------------------------------*/
 static USB_OTG_Status OTGD_FS_SetDeviceMode(void);

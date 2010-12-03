@@ -27,6 +27,8 @@ void CTR_LP(void);
 void CTR_HP(void);
 
 /* External variables --------------------------------------------------------*/
+extern void (*pEpInt_IN[7])(void);    /*  Handles IN  interrupts   */
+extern void (*pEpInt_OUT[7])(void);   /*  Handles OUT interrupts   */
 
 #endif /* __USB_INT_H */
 

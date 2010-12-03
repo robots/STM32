@@ -40,9 +40,9 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-uint16_t_uint8_t StatusInfo;
+uint16_t_uint8_t StatusInfo BOOTRAM;
 
-bool Data_Mul_MaxPacketSize = FALSE;
+bool Data_Mul_MaxPacketSize BOOTRAM = FALSE;
 /* Private function prototypes -----------------------------------------------*/
 static void DataStageOut(void);
 static void DataStageIn(void);
@@ -83,7 +83,7 @@ RESULT Standard_SetConfiguration(void)
 {
 
   if ((pInformation->USBwValue0 <=
-      Device_Table.Total_Configuration) && (pInformation->USBwValue1 == 0)
+      pDevice_Table->Total_Configuration) && (pInformation->USBwValue1 == 0)
       && (pInformation->USBwIndex == 0)) /*call Back usb spec 2.0*/
   {
     pInformation->Current_Configuration = pInformation->USBwValue0;
@@ -266,7 +266,7 @@ RESULT Standard_ClearFeature(void)
       return USB_UNSUPPORT;
     }
 
-    pDev = &Device_Table;
+    pDev = pDevice_Table;
     wIndex0 = pInformation->USBwIndex0;
     rEP = wIndex0 & ~0x80;
     Related_Endpoint = ENDP0 + rEP;
@@ -308,7 +308,7 @@ RESULT Standard_ClearFeature(void)
         if (Related_Endpoint == ENDP0)
         {
           /* After clear the STALL, enable the default endpoint receiver */
-          SetEPRxCount(Related_Endpoint, Device_Property.MaxPacketSize);
+          SetEPRxCount(Related_Endpoint, pProperty->MaxPacketSize);
           _SetEPRxStatus(Related_Endpoint, EP_RX_VALID);
         }
         else
@@ -357,7 +357,7 @@ RESULT Standard_SetEndPointFeature(void)
     Status = _GetEPRxStatus(Related_Endpoint);
   }
 
-  if (Related_Endpoint >= Device_Table.Total_Endpoint
+  if (Related_Endpoint >= pDevice_Table->Total_Endpoint
       || pInformation->USBwValue != 0 || Status == 0
       || pInformation->Current_Configuration == 0)
   {
@@ -415,7 +415,7 @@ RESULT Standard_SetDeviceFeature(void)
 *                  wOffset The buffer pointed by this address contains at least
 *                  Length bytes.
 *******************************************************************************/
-uint8_t *Standard_GetDescriptorData(uint16_t Length, ONE_DESCRIPTOR *pDesc)
+uint8_t *Standard_GetDescriptorData(uint16_t Length, const ONE_DESCRIPTOR *pDesc)
 {
   uint32_t  wOffset;
 
@@ -769,7 +769,7 @@ void Data_Setup0(void)
         Status = _GetEPRxStatus(Related_Endpoint);
       }
 
-      if ((Related_Endpoint < Device_Table.Total_Endpoint) && (Reserved == 0)
+      if ((Related_Endpoint < pDevice_Table->Total_Endpoint) && (Reserved == 0)
           && (Status != 0))
       {
         CopyRoutine = Standard_GetStatus;
@@ -1017,7 +1017,7 @@ uint8_t Post0_Process(void)
   USB_OTG_EP *ep;
 #endif /* STM32F10X_CL */
       
-  SetEPRxCount(ENDP0, Device_Property.MaxPacketSize);
+  SetEPRxCount(ENDP0, pProperty->MaxPacketSize);
 
   if (pInformation->ControlState == STALLED)
   {
@@ -1061,7 +1061,7 @@ void SetDeviceAddress(uint8_t Val)
   PCD_EP_SetAddress ((uint8_t)Val);
 #else 
   uint32_t i;
-  uint32_t nEP = Device_Table.Total_Endpoint;
+  uint32_t nEP = pDevice_Table->Total_Endpoint;
 
   /* set address in every used endpoint */
   for (i = 0; i < nEP; i++)

@@ -27,14 +27,14 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 
-uint8_t USBD_Data_Buffer  [RX_FIFO_SIZE];
-__IO uint8_t IsocBuff [(ISOC_BUFFER_SZE * NUM_SUB_BUFFERS)];
-__IO uint32_t IsocBufferIdx = 0;
+uint8_t USBD_Data_Buffer  [RX_FIFO_SIZE] BOOTRAM;
+__IO uint8_t IsocBuff [(ISOC_BUFFER_SZE * NUM_SUB_BUFFERS)] BOOTRAM;
+__IO uint32_t IsocBufferIdx = 0 BOOTRAM;
 
-extern USB_OTG_CORE_REGS  USB_OTG_FS_regs;
+extern USB_OTG_CORE_REGS  USB_OTG_FS_regs BOOTRAM;
 
-__IO uint16_t SaveRState;
-__IO uint16_t SaveTState;
+__IO uint16_t SaveRState BOOTRAM;
+__IO uint16_t SaveTState BOOTRAM;
 
 /* Extern variables ----------------------------------------------------------*/
 extern void (*pEpInt_IN[7])(void);    /*  Handles IN  interrupts   */

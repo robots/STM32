@@ -21,13 +21,69 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-__IO uint16_t SaveRState;
-__IO uint16_t SaveTState;
+__IO uint16_t wIstr;  /* ISTR register last read value */
+__IO uint16_t SaveRState BOOTRAM;
+__IO uint16_t SaveTState BOOTRAM;
 
 /* Extern variables ----------------------------------------------------------*/
-extern void (*pEpInt_IN[7])(void);    /*  Handles IN  interrupts   */
-extern void (*pEpInt_OUT[7])(void);   /*  Handles OUT interrupts   */
+//extern void (*pEpInt_IN[7])(void);    /*  Handles IN  interrupts   */
+//extern void (*pEpInt_OUT[7])(void);   /*  Handles OUT interrupts   */
+static void NOP_Proc(void) {
+}
 
+#define WEAK __attribute__ ((weak))
+void WEAK EP1_IN_Callback(void);
+void WEAK EP2_IN_Callback(void);
+void WEAK EP3_IN_Callback(void);
+void WEAK EP4_IN_Callback(void);
+void WEAK EP5_IN_Callback(void);
+void WEAK EP6_IN_Callback(void);
+void WEAK EP7_IN_Callback(void);
+
+void WEAK EP1_OUT_Callback(void);
+void WEAK EP2_OUT_Callback(void);
+void WEAK EP3_OUT_Callback(void);
+void WEAK EP4_OUT_Callback(void);
+void WEAK EP5_OUT_Callback(void);
+void WEAK EP6_OUT_Callback(void);
+void WEAK EP7_OUT_Callback(void);
+
+#pragma weak EP1_IN_Callback = NOP_Proc
+#pragma weak EP2_IN_Callback = NOP_Proc
+#pragma weak EP3_IN_Callback = NOP_Proc
+#pragma weak EP4_IN_Callback = NOP_Proc
+#pragma weak EP5_IN_Callback = NOP_Proc
+#pragma weak EP6_IN_Callback = NOP_Proc
+#pragma weak EP7_IN_Callback = NOP_Proc
+
+#pragma weak EP1_OUT_Callback = NOP_Proc
+#pragma weak EP2_OUT_Callback = NOP_Proc
+#pragma weak EP3_OUT_Callback = NOP_Proc
+#pragma weak EP4_OUT_Callback = NOP_Proc
+#pragma weak EP5_OUT_Callback = NOP_Proc
+#pragma weak EP6_OUT_Callback = NOP_Proc
+#pragma weak EP7_OUT_Callback = NOP_Proc
+void (*pEpInt_IN[7])(void) BOOTRAM =
+  {
+    EP1_IN_Callback,
+    EP2_IN_Callback,
+    EP3_IN_Callback,
+    EP4_IN_Callback,
+    EP5_IN_Callback,
+    EP6_IN_Callback,
+    EP7_IN_Callback,
+  };
+
+void (*pEpInt_OUT[7])(void) BOOTRAM =
+  {
+    EP1_OUT_Callback,
+    EP2_OUT_Callback,
+    EP3_OUT_Callback,
+    EP4_OUT_Callback,
+    EP5_OUT_Callback,
+    EP6_OUT_Callback,
+    EP7_OUT_Callback,
+  };
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
