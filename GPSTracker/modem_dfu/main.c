@@ -28,6 +28,8 @@
 typedef  void (*pFunction)(void);
 
 /* Private define ------------------------------------------------------------*/
+#define MAGIC_ADDR 0x200027FC
+#define MAGIC_KEY  0xDEADBEEF
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 /* Extern variables ----------------------------------------------------------*/
@@ -40,7 +42,7 @@ uint8_t DeviceStatus[6] = {
 pFunction Jump_To_Application;
 uint32_t JumpAddress;
 
-const NVIC_InitTypeDef NVIC_InitStructure = {
+const NVIC_InitTypeDef NVIC_Usb = {
 	.NVIC_IRQChannel = USB_LP_CAN1_RX0_IRQn,
 	.NVIC_IRQChannelPreemptionPriority = 0,
 	.NVIC_IRQChannelSubPriority = 0,
@@ -56,7 +58,7 @@ GPIO_InitTypeDef GPIO_InitStructure = {
 
 extern uint32_t _isr_vectorsflash_offs;
 
-void RCC_Configuration(void)
+void inline RCC_Configuration(void)
 {
 	SystemInit();
 	SysTick_CLKSourceConfig( SysTick_CLKSource_HCLK );
@@ -66,7 +68,7 @@ void RCC_Configuration(void)
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB | RCC_APB2Periph_GPIOA, ENABLE);
 }
 
-void GPIO_Configuration(void)
+void inline GPIO_Configuration(void)
 {
 	// Configure USB pull-up pin
 	GPIO_InitStructure.GPIO_Pin = USB_DISCONNECT_PIN;
@@ -93,23 +95,24 @@ void main(void) __attribute__ ((noreturn));
 void main(void)
 {
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB |RCC_APB2Periph_AFIO, ENABLE);
-	GPIO_PinRemapConfig(GPIO_Remap_SWJ_NoJTRST, ENABLE);
+	//GPIO_PinRemapConfig(GPIO_Remap_SWJ_NoJTRST, ENABLE);
+	AFIO->MAPR |= 0x01000000; 
 
 	// Button w/ pullup .. using default value, compiled in
 	GPIO_Init(GPIOB, &GPIO_InitStructure);
 
 	/* Check if the Key push-button on STM3210x-EVAL Board is pressed */
-	
-	 if (GPIOB->IDR & GPIO_Pin_4 == Bit_RESET) {
-//	if (0) {
-		/* Test if user code is programmed starting from address 0x8003000 */
-		if (((*(__IO uint32_t*)ApplicationAddress) & 0x2FFE0000 ) == 0x20000000) {
-			/* Jump to user application */
-			JumpAddress = *(__IO uint32_t*) (ApplicationAddress + 4);
-			Jump_To_Application = (pFunction) JumpAddress;
-			/* Initialize user application's Stack Pointer */
-			__set_MSP(*(__IO uint32_t*) ApplicationAddress);
-			Jump_To_Application();
+	if ((*(volatile uint32_t*)MAGIC_ADDR) != MAGIC_KEY) {
+		if (GPIOB->IDR & GPIO_Pin_4) {
+			/* Test if user code is programmed starting from address 0x8003000 */
+			if (((*(volatile uint32_t*)ApplicationAddress) & 0x2FFE0000 ) == 0x20000000) {
+				/* Jump to user application */
+				JumpAddress = *(volatile uint32_t*) (ApplicationAddress + 4);
+				Jump_To_Application = (pFunction) JumpAddress;
+				/* Initialize user application's Stack Pointer */
+				__set_MSP(*(volatile uint32_t*) ApplicationAddress);
+				Jump_To_Application();
+			}
 		}
 	}
 	/* Otherwise enters DFU mode to allow user to program his application */
@@ -117,16 +120,17 @@ void main(void)
 	RCC_Configuration();
 
 	NVIC_SetVectorTable(NVIC_VectTab_FLASH, (uint32_t)&_isr_vectorsflash_offs);
-	NVIC_Init((NVIC_InitTypeDef*)&NVIC_InitStructure); 
+	NVIC_Init((NVIC_InitTypeDef*)&NVIC_Usb); 
 
 	GPIO_Configuration();
+
 	/* light up led */
 	GPIO_ResetBits(GPIOB, GPIO_Pin_0);
 
 
 	USB_Init(&Device_Table, &Device_Property, &User_Standard_Requests, NULL, NULL);
-	while (1);
 
+	while (1);
 }
 
 /******************* (C) COPYRIGHT 2010 STMicroelectronics *****END OF FILE****/

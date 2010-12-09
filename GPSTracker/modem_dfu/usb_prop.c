@@ -247,7 +247,10 @@ void DFU_Status_Out (void)
           Pointer += MAL_Buffer[3] << 16;
           Pointer += MAL_Buffer[4] << 24;
           //MAL_Erase(Pointer);
-					FLASH_ErasePage(Pointer);
+					if (Pointer >= ApplicationAddress) {
+						FLASH_Unlock();
+						FLASH_ErasePage(Pointer);
+					}
         }
       }
 
@@ -255,7 +258,10 @@ void DFU_Status_Out (void)
       {
         Addr = ((wBlockNum - 2) * wTransferSize) + Pointer;
         //MAL_Write(Addr, wlength);
-				FLASH_If_Write(Addr, wlength);
+				if (Pointer >= ApplicationAddress) {
+					FLASH_Unlock();
+					FLASH_If_Write(Addr, wlength);
+				}
       }
       wlength = 0;
       wBlockNum = 0;
