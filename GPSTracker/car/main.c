@@ -32,37 +32,33 @@ void bli(void) {
 #ifdef VECT_TAB_RAM
 /* vector-offset (TBLOFF) from bottom of SRAM. defined in linker script */
 extern uint32_t _isr_vectorsram_offs;
-void inline NVIC_Configuration(void)
+void NVIC_Configuration(void)
 {
 	/* Set the Vector Table base location at 0x20000000+_isr_vectorsram_offs */
 	NVIC_SetVectorTable(NVIC_VectTab_RAM, (uint32_t)&_isr_vectorsram_offs);
 }
 #else
 extern uint32_t _isr_vectorsflash_offs;
-void inline NVIC_Configuration(void)
+void NVIC_Configuration(void)
 {
 	/* Set the Vector Table base location at 0x08000000+_isr_vectorsflash_offs */
 	NVIC_SetVectorTable(NVIC_VectTab_FLASH, (uint32_t)&_isr_vectorsflash_offs);
 }
 #endif /* VECT_TAB_RAM */
 
-void inline RCC_Configuration(void)
+void RCC_Configuration(void)
 {
 	SystemInit();
 	SysTick_CLKSourceConfig( SysTick_CLKSource_HCLK );
 
-	RCC_USBCLKConfig(RCC_USBCLKSource_PLLCLK_1Div5);
-
-	// enable usb 
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_USB, ENABLE);
-
 	// Enable GPIO modules 
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOB | RCC_APB2Periph_AFIO | RCC_APB2Periph_ADC1 | RCC_APB2Periph_SPI1, ENABLE);
 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_CRC | RCC_AHBPeriph_DMA1, ENABLE);
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR | RCC_APB1Periph_BKP, ENABLE);  
 	 	
 }
 
-void inline GPIO_Configuration(void)
+void GPIO_Configuration(void)
 {
 	GPIO_InitTypeDef GPIO_InitStructure = {
 		.GPIO_Speed = GPIO_Speed_50MHz;
@@ -71,56 +67,73 @@ void inline GPIO_Configuration(void)
 	//GPIO_PinRemapConfig(GPIO_Remap_SWJ_NoJTRST, ENABLE);
 	AFIO->MAPR |= 0x01000000; 
 
-	// sPI
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_7;
+	// sPI, Uart TX
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_7 | GPIO_Pin_9;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 
-	// PA0 - RSSI in 
+	// uart RX
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+  GPIO_Init(GPIOA, &GPIO_InitStructure);
+  
+
+	// PA0 - Analog input 
 	GPIO_InitStructure.GPIO_Pin =  GPIO_Pin_0;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
-/*
-	// PA3 - RFM reset, PA4 - RFM Chip Select 
-	GPIO_InitStructure.GPIO_Pin =  GPIO_Pin_2 | GPIO_Pin_4;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-	GPIO_Init(GPIOA, &GPIO_InitStructure);
-*/
+
 	//  RFM - IRQn
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU; //innput pullup 
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 
-	// RFM int
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING; // input floating
-	GPIO_Init(GPIOA, &GPIO_InitStructure);
-
 	// LEDs in Open-Drain mode 
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_2;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_OD;
-	GPIO_Init (GPIOB, &GPIO_InitStructure);
+	GPIO_Init (GPIOA, &GPIO_InitStructure);
 
-	// Configure USB pull-up pin
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9 | GPIO_Pin_4 | GPIO_Pin_2;
+	// RFM - RST, CS, GPSEN
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1 | GPIO_Pin_4 | GPIO_Pin_11;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 
+	// FLASH CS
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+	GPIO_Init(GPIOB, &GPIO_InitStructure);
+
+	RFM_CS(Bit_SET);
+	FLASH_CS(Bit_SET);
+	GPS_EN(Bit_RESET);
 	LED_GREEN(LED_OFF);
 	LED_RED(LED_OFF);
 	LED_YELLOW(LED_OFF);
 }
 
+void inline wdt_enable()
+{
+  /* IWDG timeout equal to 280 ms (the timeout may varies due to LSI frequency
+     dispersion) */
+  /* Enable write access to IWDG_PR and IWDG_RLR registers */
+  IWDG_WriteAccessCmd(IWDG_WriteAccess_Enable);
+
+  /* IWDG counter clock: 40KHz(LSI) / 32 = 1.25 KHz */
+  IWDG_SetPrescaler(IWDG_Prescaler_32);
+
+  /* Set counter reload value to 349 */
+  IWDG_SetReload(349);
+
+  /* Reload IWDG counter */
+  IWDG_ReloadCounter();
+
+  /* Enable IWDG (the LSI oscillator will be enabled by hardware) */
+  IWDG_Enable();
+}
+
 int main(void) __attribute__ ((noreturn));
 int main(void)
 {
-	NVIC_InitTypeDef NVIC_InitStructure = {
-		.NVIC_IRQChannel = USB_LP_CAN1_RX0_IRQn,
-		.NVIC_IRQChannelPreemptionPriority = 0,
-		.NVIC_IRQChannelSubPriority = 0,
-		.NVIC_IRQChannelCmd = ENABLE
-	};
-
 	/* System Clocks Configuration */
 	RCC_Configuration();
 
@@ -128,8 +141,6 @@ int main(void)
 	NVIC_Configuration();
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
 
-	// enable usb interrupt
-	NVIC_Init(&NVIC_InitStructure);
 
 	/* Configure the GPIO ports */
 	GPIO_Configuration();
@@ -143,16 +154,16 @@ int main(void)
 	RFM_RST(Bit_SET);
 
 	RFM_Init();
-	ADC_init();
 
-	USB_Init(&Device_Table, &Device_Property, &User_Standard_Requests, NULL, NULL);
+	UART_Init();
+	ADC_init();
 
 	while (1); /* _WFI() */
 }
 
 void SysTick_Handler(void)
 {
-	Mdm_Worker();
+  IWDG_ReloadCounter();
 }
 
 

@@ -9,9 +9,11 @@
 
 #include "spi.h"
 
+static SPI_InitTypeDef *SPI_ConfCur = NULL;
+
 void SPI_init(void)
 {
-	SPI_InitTypeDef SPIConf = {
+/*	SPI_InitTypeDef SPIConf = {
 		.SPI_Direction = SPI_Direction_2Lines_FullDuplex,
 		.SPI_Mode = SPI_Mode_Master,
 		.SPI_DataSize = SPI_DataSize_16b,
@@ -23,13 +25,20 @@ void SPI_init(void)
 		.SPI_CRCPolynomial = 7
 	};
 
+
 	SPI_Init(SPI1, &SPIConf);
-	SPI_Cmd(SPI1, ENABLE);
+	SPI_Cmd(SPI1, ENABLE);*/
 }
 
 /* Simple Byte transmit */
-uint16_t SPI_Xfer(uint16_t data)
+uint16_t SPI_Xfer(SPI_InitTypeDef *c, uint16_t data)
 {
+	if (SPI_ConfCur != c) {
+		SPI_Cmd(SPI1, DISABLE);
+		SPI_Init(SPI1, &SPIConf);
+		SPI_Cmd(SPI1, ENABLE);
+	}
+
 	while ((SPI1->SR & SPI_I2S_FLAG_TXE) == RESET);
 
 	// Send byte through the SPI1 peripheral

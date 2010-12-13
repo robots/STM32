@@ -7,6 +7,18 @@
 #include "modem.h"
 #include "rfm12.h"
 
+SPI_InitTypeDef RFM_SPIConf = {
+	.SPI_Direction = SPI_Direction_2Lines_FullDuplex,
+	.SPI_Mode = SPI_Mode_Master,
+	.SPI_DataSize = SPI_DataSize_16b,
+	.SPI_CPOL = SPI_CPOL_Low,
+	.SPI_CPHA = SPI_CPHA_1Edge,
+	.SPI_NSS = SPI_NSS_Soft,
+	.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_32,
+	.SPI_FirstBit = SPI_FirstBit_MSB,
+	.SPI_CRCPolynomial = 7
+};
+
 NVIC_InitTypeDef EXT_Int = {
 	.NVIC_IRQChannelPreemptionPriority = 15,
 	.NVIC_IRQChannelSubPriority = 0,
@@ -25,7 +37,7 @@ uint16_t RFM_xfer(uint16_t d)
 	uint16_t ret;
 	RFM_CS(Bit_RESET);
 
-	ret = SPI_Xfer(d);
+	ret = SPI_Xfer(&RFM_SPIConf, d);
 
 	RFM_CS(Bit_SET);
 	return ret;
@@ -147,32 +159,6 @@ void RFM_IdleMode()
 	state = RFM_STATE_IDLE;
 }
 
-void RFM_SniffMode(uint8_t a)
-{
-	if (a == 'a') {
-		// alwais fill fifo
-		RFM_xfer(0xca87);
-	}
-
-	// enter recv mode
-	RFM_xfer(RFM_RECV_MODE);
-
-	RFM_Idx = 0;
-
-	state = RFM_STATE_SNIFF;
-}
-
-void RFM_ScanMode()
-{
-	// alwais fill fifo
-	RFM_xfer(0xca87);
-
-	// enable recv mode
-	RFM_xfer(RFM_RECV_MODE);
-
-	state = RFM_STATE_SCAN;
-}
-
 void RFM_RecvMode()
 {
 	// enable recv mode
@@ -257,29 +243,13 @@ void EXTI1_IRQHandler(void)
 
 	// ignore LBD, EXT, WKUP, POR, FFOV 
 	if (status & 0x8000) {
-		if ((state == RFM_STATE_SCAN) || (state == RFM_STATE_IDLE)) {
+		if (state == RFM_STATE_IDLE) {
 			data = RFM_xfer(RFM_RX_REG);
-		} else if (state == RFM_STATE_SNIFF) {
-			RFM_Buffer[RFM_Idx] = RFM_xfer(RFM_RX_REG);
-			Buf_PushByte(RFM_Buffer[RFM_Idx]);
-			Buf_Send();
-
-			RFM_Idx ++;
-			if ((RFM_Idx > 2) && (3 + RFM_Buffer[2] + 1 == RFM_Idx)) {
-				// restart receive
-				RFM_xfer(RFM_IDLE_MODE);
-				RFM_xfer(RFM_RECV_MODE);
-				RFM_Idx = 0;
-			}
 		} else if (state == RFM_STATE_RX) {
 			RFM_Buffer[RFM_Idx] = RFM_xfer(RFM_RX_REG);
 			chksum += RFM_Buffer[RFM_Idx];
 			RFM_Idx ++;
 
-			if (RFM_Idx == 2) {
-				// get rssi
-				ADC_SoftwareStartConvCmd(ADC1, ENABLE);
-			}
 			if ((RFM_Idx > 2) && (3 + RFM_Buffer[2] + 1 == RFM_Idx)) {
 				uint8_t c = ~chksum;
 				if (c == RFM_Buffer[RFM_Idx]) {
@@ -295,8 +265,7 @@ void EXTI1_IRQHandler(void)
 			}
 		} else if (state == RFM_STATE_TX) {
 			if (RFM_Idx == RFM_Len) {
-				RFM_xfer(RFM_RECV_MODE);
-				state = RFM_STATE_RX;
+				RFM_IdleMode();
 				RFM_Idx = 0;
 				chksum = 0;
 
