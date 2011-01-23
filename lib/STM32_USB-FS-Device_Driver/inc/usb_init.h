@@ -22,8 +22,8 @@
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
-//void USB_Init(void);
-void USB_Init(const DEVICE *dt, const DEVICE_PROP *dp, const USER_STANDARD_REQUESTS *usr, void* pEPin_cb, void* pEPout_cb);
+void USB_Init(void);
+void USB_InitAlt(const DEVICE *dt, const DEVICE_PROP *dp, const USER_STANDARD_REQUESTS *usr, void* pEPin_cb, void* pEPout_cb);
 
 /* External variables --------------------------------------------------------*/
 /*  The number of current endpoint, it will be used to specify an endpoint */

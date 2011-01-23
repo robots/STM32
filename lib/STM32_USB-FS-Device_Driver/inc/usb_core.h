@@ -232,9 +232,9 @@ RESULT Standard_ClearFeature(void);
 void SetDeviceAddress(uint8_t);
 void NOP_Process(void);
 
-//extern const DEVICE_PROP Device_Property;
-//extern const USER_STANDARD_REQUESTS User_Standard_Requests;
-//extern const DEVICE  Device_Table;
+extern const DEVICE_PROP Device_Property;
+extern const USER_STANDARD_REQUESTS User_Standard_Requests;
+extern const DEVICE  Device_Table;
 extern DEVICE_INFO Device_Info;
 
 /* cells saving status during interrupt servicing */

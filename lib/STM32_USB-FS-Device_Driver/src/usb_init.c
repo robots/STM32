@@ -53,8 +53,18 @@ USER_STANDARD_REQUESTS  *pUser_Standard_Requests BOOTRAM;
 * Output         : None.
 * Return         : None.
 *******************************************************************************/
-//void USB_Init(void)
-void USB_Init(const DEVICE *dt, const DEVICE_PROP *dp, const USER_STANDARD_REQUESTS *usr, void* pEPin_cb, void* pEPout_cb)
+void USB_Init(void)
+{
+	pDevice_Table = &Device_Info;
+  pInformation = &Device_Info;
+  pInformation->ControlState = 2;
+  pProperty = &Device_Property;
+  pUser_Standard_Requests = &User_Standard_Requests;
+  /* Initialize devices one by one */
+  pProperty->Init();
+}
+
+void USB_InitAlt(const DEVICE *dt, const DEVICE_PROP *dp, const USER_STANDARD_REQUESTS *usr, void* pEPin_cb, void* pEPout_cb)
 {
 	if (pEPout_cb)
 		memcpy(pEpInt_OUT, pEPout_cb, sizeof(pEpInt_OUT));
