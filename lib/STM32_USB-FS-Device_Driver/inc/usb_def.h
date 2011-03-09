@@ -72,11 +72,6 @@ typedef enum _FEATURE_SELECTOR
 
 #define RECIPIENT         0x1F  /* Mask to get recipient */
 
-#ifdef BOOTLOADER
-#define BOOTRAM __attribute__ ((section(".bootram")))
-#else
-#define BOOTRAM
-#endif
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
 

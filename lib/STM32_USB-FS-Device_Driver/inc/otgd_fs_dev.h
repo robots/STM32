@@ -81,7 +81,7 @@
 #define _GetRxStallStatus(bEpNum)     (OTG_DEV_GetEPRxStatus(bEpNum) == EP_RX_STALL) 
 
 /* Define the callbacks for updating the USB state machine */
-#define OTGD_FS_DEVICE_RESET              pProperty->Reset()
+#define OTGD_FS_DEVICE_RESET              Device_Property.Reset()
 
 /* Exported define -----------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
