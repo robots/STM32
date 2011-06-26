@@ -16,7 +16,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f10x.h"
 #include "hw_config.h"
-#include "dfu_mal.h"
+//#include "dfu_mal.h"
 #include "usb_lib.h"
 #include "usb_desc.h"
 #include "usb_pwr.h"

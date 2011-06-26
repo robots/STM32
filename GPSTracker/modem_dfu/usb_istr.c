@@ -19,20 +19,77 @@
 #include "usb_pwr.h"
 #include "usb_istr.h"
 
+/* function prototypes Automatically built defining related macros */
+void NOP_Proc(void) {
+}
 
-/*
- * TODO: Callbacks into structure instead of DEFINES
- * so this can be made part of the usb "stack"
- */
+#define WEAK __attribute__ ((weak))
+void WEAK EP1_IN_Callback(void);
+void WEAK EP2_IN_Callback(void);
+void WEAK EP3_IN_Callback(void);
+void WEAK EP4_IN_Callback(void);
+void WEAK EP5_IN_Callback(void);
+void WEAK EP6_IN_Callback(void);
+void WEAK EP7_IN_Callback(void);
+
+void WEAK EP1_OUT_Callback(void);
+void WEAK EP2_OUT_Callback(void);
+void WEAK EP3_OUT_Callback(void);
+void WEAK EP4_OUT_Callback(void);
+void WEAK EP5_OUT_Callback(void);
+void WEAK EP6_OUT_Callback(void);
+void WEAK EP7_OUT_Callback(void);
+
+
+#pragma weak EP1_IN_Callback = NOP_Proc
+#pragma weak EP2_IN_Callback = NOP_Proc
+#pragma weak EP3_IN_Callback = NOP_Proc
+#pragma weak EP4_IN_Callback = NOP_Proc
+#pragma weak EP5_IN_Callback = NOP_Proc
+#pragma weak EP6_IN_Callback = NOP_Proc
+#pragma weak EP7_IN_Callback = NOP_Proc
+
+#pragma weak EP1_OUT_Callback = NOP_Proc
+#pragma weak EP2_OUT_Callback = NOP_Proc
+#pragma weak EP3_OUT_Callback = NOP_Proc
+#pragma weak EP4_OUT_Callback = NOP_Proc
+#pragma weak EP5_OUT_Callback = NOP_Proc
+#pragma weak EP6_OUT_Callback = NOP_Proc
+#pragma weak EP7_OUT_Callback = NOP_Proc
+
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
+__IO uint16_t wIstr;  /* ISTR register last read value */
 __IO uint8_t bIntPackSOF = 0;  /* SOFs received between 2 consecutive packets */
 
 /* Extern variables ----------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
+/* function pointers to non-control endpoints service routines */
+void (*pEpInt_IN[7])(void) =
+  {
+    EP1_IN_Callback,
+    EP2_IN_Callback,
+    EP3_IN_Callback,
+    EP4_IN_Callback,
+    EP5_IN_Callback,
+    EP6_IN_Callback,
+    EP7_IN_Callback,
+  };
+
+void (*pEpInt_OUT[7])(void) =
+  {
+    EP1_OUT_Callback,
+    EP2_OUT_Callback,
+    EP3_OUT_Callback,
+    EP4_OUT_Callback,
+    EP5_OUT_Callback,
+    EP6_OUT_Callback,
+    EP7_OUT_Callback,
+  };
+
 
 #ifndef STM32F10X_CL
 

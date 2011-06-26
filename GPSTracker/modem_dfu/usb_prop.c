@@ -20,10 +20,13 @@
 #include "usb_prop.h"
 #include "usb_desc.h"
 #include "usb_pwr.h"
-#include "dfu_mal.h"
+//#include "dfu_mal.h"
 #include "flash_if.h"
-static void NOP_Proc(void) {
+
+static void NOP_Proc()
+{
 }
+
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -31,14 +34,15 @@ static void NOP_Proc(void) {
 uint32_t wBlockNum = 0, wlength = 0;
 uint32_t Manifest_State = Manifest_complete;
 uint32_t Pointer = ApplicationAddress;  /* Base Address to Erase, Program or Read */
+uint8_t  MAL_Buffer[wTransferSize]; /* RAM Buffer for Downloaded Data */
 
-const DEVICE Device_Table =
+DEVICE Device_Table =
   {
     EP_NUM,
     1
   };
 
-const DEVICE_PROP Device_Property =
+DEVICE_PROP Device_Property =
   {
     DFU_init,
     DFU_Reset,
@@ -54,7 +58,7 @@ const DEVICE_PROP Device_Property =
     bMaxPacketSize0       /*Max Packet size*/
   };
 
-const USER_STANDARD_REQUESTS User_Standard_Requests =
+USER_STANDARD_REQUESTS User_Standard_Requests =
   {
     DFU_GetConfiguration,
     DFU_SetConfiguration,
@@ -67,13 +71,13 @@ const USER_STANDARD_REQUESTS User_Standard_Requests =
     DFU_SetDeviceAddress
   };
 
-const ONE_DESCRIPTOR Device_Descriptor =
+ONE_DESCRIPTOR Device_Descriptor =
   {
     (uint8_t*)DFU_DeviceDescriptor,
     DFU_SIZ_DEVICE_DESC
   };
 
-const ONE_DESCRIPTOR Config_Descriptor =
+ONE_DESCRIPTOR Config_Descriptor =
   {
     (uint8_t*)DFU_ConfigDescriptor,
     DFU_SIZ_CONFIG_DESC
@@ -83,7 +87,7 @@ const ONE_DESCRIPTOR Config_Descriptor =
 //#elif defined(USE_STM3210B_EVAL)
 //ONE_DESCRIPTOR DFU_String_Descriptor[6] =
 //#elif defined(USE_STM3210C_EVAL)
-const ONE_DESCRIPTOR DFU_String_Descriptor[5] =
+ONE_DESCRIPTOR DFU_String_Descriptor[5] =
 //#endif /* USE_STM3210E_EVAL */
   {
     {       (u8*)DFU_StringLangId,          DFU_SIZ_STRING_LANGID       },
@@ -258,9 +262,24 @@ void DFU_Status_Out (void)
       {
         Addr = ((wBlockNum - 2) * wTransferSize) + Pointer;
         //MAL_Write(Addr, wlength);
+				// dont let host erase us
 				if (Pointer >= ApplicationAddress) {
+					uint16_t idx = 0;
+					/* pad data */
+					if  (wlength & 0x3) /* Not an aligned data */
+					{
+						for (idx = wlength; idx < ((wlength & 0xFFFC) + 4); idx++)
+						{
+							MAL_Buffer[idx] = 0xFF;
+						}
+					}
 					FLASH_Unlock();
-					FLASH_If_Write(Addr, wlength);
+					/* Data received are Word multiple */
+					for (idx = 0; idx < wlength; idx = idx + 4)
+					{
+						FLASH_ProgramWord(Addr, *(uint32_t *)(MAL_Buffer + idx));
+						Addr += 4;
+					}
 				}
       }
       wlength = 0;
@@ -649,6 +668,17 @@ uint8_t *GETSTATE(uint16_t Length)
 * Output         : None.
 * Return         : Pointer to data.
 *******************************************************************************/
+#define _1st_BYTE(x)  (uint8_t)((x)&0xFF)             /* 1st addressing cycle */
+#define _2nd_BYTE(x)  (uint8_t)(((x)&0xFF00)>>8)      /* 2nd addressing cycle */
+#define _3rd_BYTE(x)  (uint8_t)(((x)&0xFF0000)>>16)   /* 3rd addressing cycle */
+#define _4th_BYTE(x)  (uint8_t)(((x)&0xFF000000)>>24) /* 4th addressing cycle */
+#define SET_POLLING_TIMING(x)   DeviceStatus[1] = _1st_BYTE(x);\
+                                DeviceStatus[2] = _2nd_BYTE(x);\
+                                DeviceStatus[3] = _3rd_BYTE(x);  
+static const uint16_t  TimingTable[2] =
+  {
+   100 , 104 /* Internal Flash */
+  };
 uint8_t *GETSTATUS(uint16_t Length)
 {
   switch (DeviceState)
@@ -660,11 +690,11 @@ uint8_t *GETSTATUS(uint16_t Length)
         DeviceStatus[4] = DeviceState;
         if ((wBlockNum == 0) && (MAL_Buffer[0] == CMD_ERASE))
         {
-          MAL_GetStatus(Pointer, 0, DeviceStatus);
+					SET_POLLING_TIMING(TimingTable[0]);  /* x: Erase/Write Timing */
         }
         else
         {
-          MAL_GetStatus(Pointer, 1, DeviceStatus);
+					SET_POLLING_TIMING(TimingTable[1]);  /* x: Erase/Write Timing */
         }
       }
       else  /* (wlength==0)*/

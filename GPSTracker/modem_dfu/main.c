@@ -20,7 +20,7 @@
 #include "usb_prop.h"
 #include "usb_pwr.h"
 #include "usb_istr.h"
-#include "dfu_mal.h"
+//#include "dfu_mal.h"
 #include "hw_config.h"
 #include "platform.h"
 
@@ -28,7 +28,7 @@
 typedef  void (*pFunction)(void);
 
 /* Private define ------------------------------------------------------------*/
-#define MAGIC_ADDR 0x200027FC
+#define MAGIC_ADDR 0x20002000
 #define MAGIC_KEY  0xDEADBEEF
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
@@ -58,7 +58,7 @@ GPIO_InitTypeDef GPIO_InitStructure = {
 
 extern uint32_t _isr_vectorsflash_offs;
 
-void inline RCC_Configuration(void)
+inline void RCC_Configuration(void)
 {
 	SystemInit();
 	SysTick_CLKSourceConfig( SysTick_CLKSource_HCLK );
@@ -68,7 +68,7 @@ void inline RCC_Configuration(void)
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB | RCC_APB2Periph_GPIOA, ENABLE);
 }
 
-void inline GPIO_Configuration(void)
+inline void GPIO_Configuration(void)
 {
 	// Configure USB pull-up pin
 	GPIO_InitStructure.GPIO_Pin = USB_DISCONNECT_PIN;
@@ -116,6 +116,8 @@ void main(void)
 		}
 	}
 	/* Otherwise enters DFU mode to allow user to program his application */
+	// reset magic word
+	*(volatile uint32_t*)MAGIC_ADDR = 0xFFFFFFFF;
 
 	RCC_Configuration();
 
@@ -127,8 +129,9 @@ void main(void)
 	/* light up led */
 	GPIO_ResetBits(GPIOB, GPIO_Pin_0);
 
+	USB_Init();
 
-	USB_Init(&Device_Table, &Device_Property, &User_Standard_Requests, NULL, NULL);
+	//USB_Init(&Device_Table, &Device_Property, &User_Standard_Requests, NULL, NULL);
 
 	while (1);
 }

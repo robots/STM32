@@ -20,9 +20,9 @@
 /* Includes ------------------------------------------------------------------*/
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
-extern const DEVICE_PROP Device_Property;
-extern const USER_STANDARD_REQUESTS User_Standard_Requests;
-extern const DEVICE  Device_Table;
+//extern const DEVICE_PROP Device_Property;
+//extern const USER_STANDARD_REQUESTS User_Standard_Requests;
+//extern const DEVICE  Device_Table;
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
 void DFU_init(void);

@@ -76,7 +76,7 @@ STMEEEMULINCDIR = $(STMEEEMULDIR)/include
 ## Application:
 SRC = main.c hw_config.c
 SRC += usb_desc.c usb_istr.c usb_prop.c usb_pwr.c
-SRC += dfu_mal.c flash_if.c
+#SRC += flash_if.c
 
 
 ## compiler-specific sources
