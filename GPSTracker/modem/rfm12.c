@@ -17,7 +17,7 @@ NVIC_InitTypeDef EXT_Int = {
 static uint8_t state = RFM_STATE_SLEEP; 
 static uint8_t RFM_GroupID = 0x48;
 static uint8_t RFM_Buffer[512];
-static uint8_t RFM_Idx;
+static uint16_t RFM_Idx;
 static uint8_t RFM_Len;
 
 uint16_t RFM_xfer(uint16_t d)

@@ -4,13 +4,14 @@
 
 #include <string.h>
 
+#include "hw_config.h"
 #include "modem.h"
 #include "adc.h"
 #include "rfm12.h"
 #include "buf.h"
 
 
-#define MAGIC_ADDR 0x200027FC
+#define MAGIC_ADDR 0x20002000
 #define MAGIC_KEY  0xDEADBEEF
 
 static uint8_t Mdm_state = MDM_STATE_CMD;
@@ -133,7 +134,7 @@ uint8_t Mdm_ProcessCmd()
 						return 1;
 					}
 					break;
-				case 'w':
+				case 'd':
 					Mdm_EnterDFU();
 					return 1;
 					break;

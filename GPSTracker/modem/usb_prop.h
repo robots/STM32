@@ -28,9 +28,6 @@ typedef struct
 }LINE_CODING;
 
 /* Exported constants --------------------------------------------------------*/
-extern const DEVICE_PROP Device_Property;
-extern const USER_STANDARD_REQUESTS User_Standard_Requests;
-extern const DEVICE  Device_Table;
 /* Exported macro ------------------------------------------------------------*/
 /* Exported define -----------------------------------------------------------*/
 

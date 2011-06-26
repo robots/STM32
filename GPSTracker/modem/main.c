@@ -15,6 +15,7 @@
 #include "usb_pwr.h"
 
 
+#include "adc.h"
 #include "rfm12.h"
 #include "modem.h"
 
@@ -32,21 +33,21 @@ void bli(void) {
 #ifdef VECT_TAB_RAM
 /* vector-offset (TBLOFF) from bottom of SRAM. defined in linker script */
 extern uint32_t _isr_vectorsram_offs;
-void inline NVIC_Configuration(void)
+inline void NVIC_Configuration(void)
 {
 	/* Set the Vector Table base location at 0x20000000+_isr_vectorsram_offs */
 	NVIC_SetVectorTable(NVIC_VectTab_RAM, (uint32_t)&_isr_vectorsram_offs);
 }
 #else
 extern uint32_t _isr_vectorsflash_offs;
-void inline NVIC_Configuration(void)
+inline void NVIC_Configuration(void)
 {
 	/* Set the Vector Table base location at 0x08000000+_isr_vectorsflash_offs */
 	NVIC_SetVectorTable(NVIC_VectTab_FLASH, (uint32_t)&_isr_vectorsflash_offs);
 }
 #endif /* VECT_TAB_RAM */
 
-void inline RCC_Configuration(void)
+inline void RCC_Configuration(void)
 {
 	SystemInit();
 	SysTick_CLKSourceConfig( SysTick_CLKSource_HCLK );
@@ -62,10 +63,10 @@ void inline RCC_Configuration(void)
 	 	
 }
 
-void inline GPIO_Configuration(void)
+inline void GPIO_Configuration(void)
 {
 	GPIO_InitTypeDef GPIO_InitStructure = {
-		.GPIO_Speed = GPIO_Speed_50MHz;
+		.GPIO_Speed = GPIO_Speed_50MHz,
 	};
 
 	//GPIO_PinRemapConfig(GPIO_Remap_SWJ_NoJTRST, ENABLE);
@@ -111,8 +112,8 @@ void inline GPIO_Configuration(void)
 	LED_YELLOW(LED_OFF);
 }
 
-int main(void) __attribute__ ((noreturn));
-int main(void)
+void main(void) __attribute__ ((noreturn));
+void main(void)
 {
 	NVIC_InitTypeDef NVIC_InitStructure = {
 		.NVIC_IRQChannel = USB_LP_CAN1_RX0_IRQn,
@@ -145,7 +146,8 @@ int main(void)
 	RFM_Init();
 	ADC_init();
 
-	USB_Init(&Device_Table, &Device_Property, &User_Standard_Requests, NULL, NULL);
+	//USB_Init(&Device_Table, &Device_Property, &User_Standard_Requests, NULL, NULL);
+	USB_Init();
 
 	while (1); /* _WFI() */
 }
