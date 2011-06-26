@@ -1,9 +1,9 @@
 #include "platform.h"
 #include "stm32f10x.h"
-
+#include <string.h>
 #include "nmea.h"
 
-gpsdata_t gpsdata;
+struct gpsdata_t gpsdata;
 
 static uint32_t NMEA_atoi(char *p)
 {
@@ -25,12 +25,13 @@ static uint32_t NMEA_atoi(char *p)
 
 void NMEA_Parse(uint8_t *buf, uint8_t len)
 {
-	uint8_t *p;
+	char *p;
 	uint32_t tmp;
 
-	if(!strncmp(buf, "$GPGGA", 6))
+	p = (char *)buf;
+
+	if(!strncmp(p, "$GPGGA", 6))
 	{	
-		p = buf;
 		p += 7;
 
 		gpsdata.hour = (p[0] - '0') * 10 + p[1] - '0';
@@ -70,9 +71,8 @@ void NMEA_Parse(uint8_t *buf, uint8_t len)
 
 		p = strstr(p, ",") + 1;
 		// alt
-		gpsdata.alt = NEMA_atoi(p);
-	} else if(!strncmp(buf, "$GPRMC", 6)) {	
-		p = buf;
+		gpsdata.alt = NMEA_atoi(p);
+	} else if(!strncmp(p, "$GPRMC", 6)) {	
 		p += 7;
 		gpsdata.hour = (p[0] - '0') * 10 + p[1] - '0';
 		gpsdata.min = (p[2] - '0') * 10 + p[3] - '0';
@@ -110,7 +110,7 @@ void NMEA_Parse(uint8_t *buf, uint8_t len)
 
 		p = strstr(p, ",") + 1;
 		// heading
-		gpsdata.heading = NMEA_atio(p);
+		gpsdata.heading = NMEA_atoi(p);
 
 		p = strstr(p, ",") + 1;
 		// date

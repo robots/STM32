@@ -2,17 +2,12 @@
 #include "stm32f10x.h"
 #include "rtc.h"
 
+#include "log.h"
+
 void RTC_IRQHandler(void)
 {
-/*	// Blinking
-	if (GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_15) == Bit_RESET) {
-		GPIO_WriteBit(GPIOA, GPIO_Pin_15, Bit_SET);
-		GPIO_WriteBit(GPIOA, GPIO_Pin_13, Bit_RESET);
-	} else {
-		GPIO_WriteBit(GPIOA, GPIO_Pin_15, Bit_RESET);
-		GPIO_WriteBit(GPIOA, GPIO_Pin_13, Bit_SET);
-	}
-*/
+	ADC_Timer();
+	Log_Timer();
 	RTC_ClearFlag(RTC_IT_SEC);
 }
 

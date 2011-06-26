@@ -25,7 +25,7 @@ struct gpsdata_t {
 	uint8_t hdop;
 };
 
-extern gpsdata_t gpsdata;
+extern struct gpsdata_t gpsdata;
 
 void NMEA_Parse(uint8_t *buf, uint8_t len);
 

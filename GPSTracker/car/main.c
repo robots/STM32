@@ -7,14 +7,8 @@
 
 #include "stm32f10x.h"
 #include "platform.h"
-#include "usb_lib.h"
-#include "usb_istr.h"
-#include "usb_prop.h"
-#include "usb_desc.h"
-#include "hw_config.h"
-#include "usb_pwr.h"
 
-
+#include "uart.h"
 #include "rfm12.h"
 #include "modem.h"
 
@@ -46,22 +40,22 @@ void NVIC_Configuration(void)
 }
 #endif /* VECT_TAB_RAM */
 
-void RCC_Configuration(void)
+inline void RCC_Configuration(void)
 {
 	SystemInit();
 	SysTick_CLKSourceConfig( SysTick_CLKSource_HCLK );
 
 	// Enable GPIO modules 
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOB | RCC_APB2Periph_AFIO | RCC_APB2Periph_ADC1 | RCC_APB2Periph_SPI1, ENABLE);
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOB | RCC_APB2Periph_USART1 | RCC_APB2Periph_AFIO | RCC_APB2Periph_ADC1 | RCC_APB2Periph_SPI1, ENABLE);
 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_CRC | RCC_AHBPeriph_DMA1, ENABLE);
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR | RCC_APB1Periph_BKP, ENABLE);  
 	 	
 }
 
-void GPIO_Configuration(void)
+inline void GPIO_Configuration(void)
 {
 	GPIO_InitTypeDef GPIO_InitStructure = {
-		.GPIO_Speed = GPIO_Speed_50MHz;
+		.GPIO_Speed = GPIO_Speed_50MHz,
 	};
 
 	//GPIO_PinRemapConfig(GPIO_Remap_SWJ_NoJTRST, ENABLE);
@@ -111,7 +105,7 @@ void GPIO_Configuration(void)
 	LED_YELLOW(LED_OFF);
 }
 
-void inline wdt_enable()
+inline void wdt_enable()
 {
   /* IWDG timeout equal to 280 ms (the timeout may varies due to LSI frequency
      dispersion) */
@@ -131,8 +125,8 @@ void inline wdt_enable()
   IWDG_Enable();
 }
 
-int main(void) __attribute__ ((noreturn));
-int main(void)
+void main(void) __attribute__ ((noreturn));
+void main(void)
 {
 	/* System Clocks Configuration */
 	RCC_Configuration();
@@ -153,17 +147,21 @@ int main(void)
 	RFM_RST(Bit_RESET);
 	RFM_RST(Bit_SET);
 
-	RFM_Init();
+//	RFM_Init();
 
 	UART_Init();
 	ADC_init();
+	Log_Init();
 
+	GPS_EN(Bit_SET); // enable gps
+
+	// wdt_enable();	
 	while (1); /* _WFI() */
 }
 
 void SysTick_Handler(void)
 {
-  IWDG_ReloadCounter();
+  //IWDG_ReloadCounter();
 }
 
 

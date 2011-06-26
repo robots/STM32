@@ -3,11 +3,13 @@
 
 
 #include "modem.h"
-#include "rfm12.h"
-#include "buf.h"
+#include "log.h"
 #include "adc.h"
 
 uint16_t AD_Data;
+/* debouncing timer */
+static uint8_t ADC_timeout = 0;
+uint8_t ADC_nextstate;
 
 void ADC_init()
 {
@@ -65,14 +67,14 @@ void ADC_init()
 	ADC_SoftwareStartConvCmd(ADC1, ENABLE);
 }
 
-void ADC_scan(uint8_t a)
+void ADC_watch(uint8_t a)
 {
 	ADC_ITConfig(ADC1, ADC_IT_AWD, DISABLE);
 	ADC_AnalogWatchdogCmd(ADC1, ADC_AnalogWatchdog_None);
 
-	if (a == 0 ) {
-		return 0;
-	} else if (a == 1 ) {
+	if (a == AD_DIS) {
+		return;
+	} else if (a == AD_LOW) {
 		ADC_AnalogWatchdogThresholdsConfig(ADC1, 2048, 4096);
 	} else {
 		ADC_AnalogWatchdogThresholdsConfig(ADC1, 0x0000, 2048);
@@ -83,17 +85,29 @@ void ADC_scan(uint8_t a)
 	ADC_ITConfig(ADC1, ADC_IT_AWD, ENABLE);
 }
 
-void ADC_start()
+void ADC_Timer()
 {
+	if (ADC_timeout > 0)
+		ADC_timeout--;
+
+	if (ADC_timeout == 1) {
+		if (ADC_nextstate == AD_LOW) {
+			Log_Stop();
+		} else {
+			Log_Start();
+		}
+	}
 }
 
-void ADC1_2_IRQHandler(void) {
+void ADC1_2_IRQHandler(void)
+{
 	ADC_ClearITPendingBit(ADC1, ADC_IT_AWD);
 
+	ADC_timeout = 3;
 	if (AD_Data > 2048) {
-		// we are on
+		ADC_nextstate = AD_HIGH;
 	} else {
-		// shutdown
+		ADC_nextstate = AD_LOW;
 	}
 }
 

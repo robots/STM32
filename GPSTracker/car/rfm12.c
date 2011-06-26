@@ -26,10 +26,11 @@ NVIC_InitTypeDef EXT_Int = {
 	.NVIC_IRQChannel = EXTI1_IRQn
 };
 
-static uint8_t state = RFM_STATE_SLEEP; 
+static uint8_t RFM_State = RFM_STATE_SLEEP; 
 static uint8_t RFM_GroupID = 0x48;
 static uint8_t RFM_Buffer[512];
-static uint8_t RFM_Idx;
+static uint8_t RFM_Chksum;
+static uint16_t RFM_Idx;
 static uint8_t RFM_Len;
 
 uint16_t RFM_xfer(uint16_t d)
@@ -143,7 +144,7 @@ void RFM_SetFreq(uint16_t f)
 	if (f >= 96 && f <= 3903)
 		RFM_xfer(0xA000 | f);
 
-	if (state == RFM_STATE_SCAN) {
+	if (RFM_State == RFM_STATE_SCAN) {
 		RFM_xfer(0xca81);
 		RFM_xfer(0xca83);
 	}
@@ -156,20 +157,20 @@ void RFM_IdleMode()
 	// enter idle mode
 	RFM_xfer(RFM_IDLE_MODE);
 
-	state = RFM_STATE_IDLE;
+	RFM_State = RFM_STATE_IDLE;
 }
 
 void RFM_RecvMode()
 {
+	RFM_Chksum = 0;
+	RFM_State = RFM_STATE_RX;
 	// enable recv mode
 	RFM_xfer(RFM_RECV_MODE);
-	
-	state = RFM_STATE_RX;
 }
 
 uint8_t RFM_IsIdle()
 {
-	if (state == RFM_STATE_SCAN || state == RFM_STATE_TX) {
+	if (RFM_State == RFM_STATE_SCAN || RFM_State == RFM_STATE_TX) {
 		return 0;
 	}
 
@@ -226,16 +227,14 @@ uint8_t RFM_Send(uint16_t id, uint8_t *data, uint8_t len)
 	// add data to fifo
 	RFM_xfer(RFM_TX_REG | 0xaa);
 
-	state = RFM_STATE_TX;
+	RFM_State = RFM_STATE_TX;
 	return 0;
 }
 
 
 void EXTI1_IRQHandler(void)
 {
-	static uint8_t chksum;
-	static uint16_t status;
-	static uint8_t data;
+	uint16_t status = 0;
 
 	EXTI_ClearITPendingBit(EXTI_Line1);
 
@@ -243,9 +242,10 @@ void EXTI1_IRQHandler(void)
 
 	// ignore LBD, EXT, WKUP, POR, FFOV 
 	if (status & 0x8000) {
-		if (state == RFM_STATE_IDLE) {
-			data = RFM_xfer(RFM_RX_REG);
-		} else if (state == RFM_STATE_RX) {
+		if (RFM_State == RFM_STATE_IDLE) {
+			// read data to drop flag
+			RFM_xfer(RFM_RX_REG);
+		} else if (RFM_State == RFM_STATE_RX) {
 			RFM_Buffer[RFM_Idx] = RFM_xfer(RFM_RX_REG);
 			chksum += RFM_Buffer[RFM_Idx];
 			RFM_Idx ++;
@@ -256,16 +256,15 @@ void EXTI1_IRQHandler(void)
 					// RX done 
 					RFM_IdleMode();
 
-					// send to host without groupid
-					Buf_PushString(&RFM_Buffer[4], 3 + RFM_Buffer[2]);
-					Buf_Send();
-
-					Mdm_RfmRxDoneCb();
+					Mdm_ProcessCmd(RFM_Buffer, RFM_Idx);
+					RFM_Idx = 0;
+					chksum = 0;
 				}	
 			}
-		} else if (state == RFM_STATE_TX) {
+		} else if (RFM_State == RFM_STATE_TX) {
 			if (RFM_Idx == RFM_Len) {
 				RFM_IdleMode();
+
 				RFM_Idx = 0;
 				chksum = 0;
 
@@ -273,6 +272,7 @@ void EXTI1_IRQHandler(void)
 				return;
 			}
 
+			// add next byte to FIFO
 			RFM_xfer(RFM_TX_REG | RFM_Buffer[RFM_Idx]);
 			RFM_Idx++;
 		} 

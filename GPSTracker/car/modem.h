@@ -16,10 +16,9 @@ extern uint16_t timer;
 
 extern uint16_t Mdm_SniffTimeout;
 
-void Mdm_Process(uint8_t *, uint8_t);
+void Mdm_ProcessCmd(uint8_t *, uint8_t);
 void Mdm_Worker();
 void Mdm_RfmTxDoneCb();
-void Mdm_RfmRxDoneCb();
 
 #endif
 

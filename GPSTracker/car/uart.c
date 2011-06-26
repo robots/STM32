@@ -10,22 +10,22 @@ uint8_t UART_GpsIdx = 0;
 
 void UART_Init() {
 	USART_InitTypeDef USART_InitStructure = {
-		.USART_BaudRate = 9200; //921600; //115200; //230400; // 921600
-		.USART_WordLength = USART_WordLength_8b;
-		.USART_StopBits = USART_StopBits_1;
-		.USART_Parity = USART_Parity_No;
-		.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
-		.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
+		.USART_BaudRate = 9200, //921600; //115200; //230400; // 921600
+		.USART_WordLength = USART_WordLength_8b,
+		.USART_StopBits = USART_StopBits_1,
+		.USART_Parity = USART_Parity_No,
+		.USART_HardwareFlowControl = USART_HardwareFlowControl_None,
+		.USART_Mode = USART_Mode_Rx | USART_Mode_Tx,
 	};
 
-  NVIC_InitTypeDef NVIC_InitStructure = {
+	NVIC_InitTypeDef NVIC_InitStructure = {
 		.NVIC_IRQChannel = USART1_IRQn,
 		.NVIC_IRQChannelPreemptionPriority = 1,
 		.NVIC_IRQChannelSubPriority = 0,
 		.NVIC_IRQChannelCmd = ENABLE
 	};
 
-	DMA_InitTypeDef DMA_InitStructure = {
+/*	DMA_InitTypeDef DMA_InitStructure = {
 		.DMA_PeripheralBaseAddr = (uint32_t)&USART1->DR,
 		.DMA_MemoryBaseAddr = (uint32_t)&AD_Data[0],
 		.DMA_BufferSize = AD_BUFFER,
@@ -38,7 +38,7 @@ void UART_Init() {
 		.DMA_Priority = DMA_Priority_VeryHigh,
 		.DMA_M2M = DMA_M2M_Disable
   };
-
+*/
 	/* DMA_Channel (triggered by USART Tx event) */
 //	DMA_DeInit(DMA1_Channel4);
 //	DMA_Init(DMA1_Channel4, &DMA_InitStructure);
@@ -64,28 +64,32 @@ void UART_Init() {
 	/* DMA event on TX */
 	//USART_DMACmd(USART1, USART_DMAReq_Tx, ENABLE);
 
-	/* Enable USART1 */
+	// Enable USART1
 	USART_Cmd(USART1, ENABLE);
 }
 
 static void UART_ProcessGPS(char ch) {
-	if ((UART_GpsIdx == UART_GPSSIZE-1) && (ch == '$')) {
+	if ((UART_GpsIdx == UART_GPSSIZE-1) || (ch == '$')) {
 		UART_GpsIdx = 0;
 	}
 
 	UART_GpsBuf[UART_GpsIdx] = ch;
 	UART_GpsIdx++;
 
-	if ((UART_GpsIdx > 6) && (UART_GpsBuf[0] == '$') && (ch == 0x0a)) {
+	if ((UART_GpsIdx > 6) && (UART_GpsBuf[0] == '$') && (ch == '\r')) {
 		NMEA_Parse(UART_GpsBuf, UART_GpsIdx);
 		UART_GpsIdx = 0;
+		// remove $ sign
+		UART_GpsBuf[0] = ' ';
 	}
 }
 
+/*
 void DMA1_Channel4_IRQHandler() {
 	DMA_Cmd(DMA1_Channel4, DISABLE);
 	DMA_ClearITPendingBit(DMA1_IT_TC4);
 }
+*/
 
 /* USART1 ISR routine */
 void USART1_IRQHandler() {

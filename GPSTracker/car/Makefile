@@ -46,7 +46,7 @@ VECTOR_TABLE_LOCATION=VECT_TAB_FLASH
 OUTDIR = $(RUN_MODE)
 
 # Target file name (without extension).
-TARGET = stm32_modem
+TARGET = stm32_car
 
 # Pathes to libraries
 APPLIBDIR = ../../lib
@@ -75,8 +75,8 @@ STMEEEMULINCDIR = $(STMEEEMULDIR)/include
 
 ## Application:
 SRC = main.c 
-SRC += rfm12.c modem.c spi.c spi_flash.c adc.c rtc.c
-SRC += nmea.c uart.c
+#SRC += rfm12.c modem.c spi.c spi_flash.c adc.c rtc.c
+SRC += nmea.c uart.c adc.c log.c
 #rtc_bkp.c spi.c adc.c lcd.c input.c menu.c i2c.c lisXXX.c timertest.c mems.c
 
 ## compiler-specific sources
@@ -98,7 +98,7 @@ SRC += $(STMSPDSRCDIR)/stm32f10x_spi.c
 SRC += $(STMSPDSRCDIR)/stm32f10x_rtc.c
 SRC += $(STMSPDSRCDIR)/stm32f10x_bkp.c
 SRC += $(STMSPDSRCDIR)/stm32f10x_pwr.c
-SRC += $(STMSPDSRCDIR)/stm32f10x_iwdt.c
+SRC += $(STMSPDSRCDIR)/stm32f10x_iwdg.c
 SRC += $(STMSPDSRCDIR)/stm32f10x_dma.c
 SRC += $(STMSPDSRCDIR)/stm32f10x_adc.c
 SRC += $(STMSPDSRCDIR)/misc.c
@@ -127,12 +127,12 @@ SRC += $(STMSPDSRCDIR)/misc.c
 #SRC += $(STMEEEMULSRCDIR)/eeprom.c
 
 # usb 
-SRC += $(STMUSBSRCDIR)/usb_sil.c
-SRC += $(STMUSBSRCDIR)/usb_init.c
-SRC += $(STMUSBSRCDIR)/usb_int.c
-SRC += $(STMUSBSRCDIR)/usb_mem.c
-SRC += $(STMUSBSRCDIR)/usb_core.c
-SRC += $(STMUSBSRCDIR)/usb_regs.c
+#SRC += $(STMUSBSRCDIR)/usb_sil.c
+#SRC += $(STMUSBSRCDIR)/usb_init.c
+#SRC += $(STMUSBSRCDIR)/usb_int.c
+#SRC += $(STMUSBSRCDIR)/usb_mem.c
+#SRC += $(STMUSBSRCDIR)/usb_core.c
+#SRC += $(STMUSBSRCDIR)/usb_regs.c
 
 
 # List C source files here which must be compiled in ARM-Mode (no -mthumb).
@@ -183,8 +183,7 @@ EXTRA_LIBDIRS =
 EXTRA_LIBS =
 
 # Path to Linker-Scripts
-LINKERSCRIPTPATH = .
-#./../lib/gcc
+LINKERSCRIPTPATH = ../../lib/gcc
 
 # Optimization level, can be [0, 1, 2, 3, s]. 
 # 0 = turn off optimization. s = optimize for size.
