@@ -171,6 +171,7 @@ static void TestAlarm(CO_Data* d, UNS32 id)
 	(void)d;
 	(void)id;
 	static uint8_t flip=0;
+
 	if ( flip ) {
 		LED_YELLOW(Bit_SET);
 	} else {
