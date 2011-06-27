@@ -1,0 +1,28 @@
+#ifndef COMMANDS_h_
+#define COMMANDS_h_
+
+
+enum {
+	CMD_ID = 1,
+	CMD_READPROG,
+	CMD_WRITEPROG,
+	CMD_ERASEPROG,
+	CMD_READCONF,
+	CMD_WRITECONF,
+	CMD_WRITERAM,
+	CMD_READRAM,
+	CMD_JMP,
+	CMD_CHKSUM,
+	CMD_RESET,
+};
+
+enum error {
+	ERR_OK = 0,
+	ERR_BAD_CMD,
+	ERR_ADDR,
+	ERR_SIZE,
+	ERR_CHKSUM,
+	ERR_FLASH,
+};
+
+#endif
