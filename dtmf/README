@@ -1,0 +1,8 @@
+DTMF generator + detector - Michal Demin <michaldemin@gmail.com>
+
+
+Generator based on AVR314 Appnote.
+Detector based on Goertzel algorithm.
+
+Intended to run on STM32-103STK olimex board. Uses boards
+audio connectors for audio input/output.
